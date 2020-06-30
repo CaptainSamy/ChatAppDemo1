@@ -72,8 +72,8 @@ public class RequestFragment extends Fragment {
                 new FirebaseRecyclerAdapter<User, RequestsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final RequestsViewHolder requestsViewHolder, int i, @NonNull User user) {
-                        requestsViewHolder.itemView.findViewById(R.id.request_accept_btn).setVisibility(View.VISIBLE);
-                        requestsViewHolder.itemView.findViewById(R.id.request_cancel_btn).setVisibility(View.VISIBLE);
+//                        requestsViewHolder.itemView.findViewById(R.id.request_accept_btn).setVisibility(View.VISIBLE);
+//                        requestsViewHolder.itemView.findViewById(R.id.request_cancel_btn).setVisibility(View.VISIBLE);
                         final String list_user_id = getRef(i).getKey();
                         DatabaseReference getTypeRef = getRef(i).child("request_type").getRef();
                         getTypeRef.addValueEventListener(new ValueEventListener() {
