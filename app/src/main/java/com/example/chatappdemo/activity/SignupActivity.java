@@ -89,10 +89,6 @@ public class SignupActivity extends AppCompatActivity {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
                             if (task.isSuccessful()) {
-                                final String currentUserID = firebaseAuth.getCurrentUser().getUid();
-                                final String deviceToken = FirebaseInstanceId.getInstance().getToken();
-                                //databaseReference.child("Users").child(currentUserID).setValue("");
-                                databaseReference.child("Users").child(currentUserID).child("device_token").setValue(deviceToken);
                                 SendEmailVerificationMessage();
                             } else {
                                 String message = task.getException().toString();
