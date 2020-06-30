@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ds">
+        <attr name="backgroundcolor" format="color"/>
+        <attr name="cardbackground" format="color"/>
+        <attr name="textcolor" format="color"/>
+        <attr name="tintcolor" format="color"/>
+        <attr name="buttoncolor" format="color"/>
+        <attr name="tabcolor" format="color"/>
+        <attr name="tabtextcolor" format="color"/>
+        <attr name="tabselectcolor" format="color"/>
+        <attr name="icon_search" format="reference"/>
+        <attr name="icon_create" format="reference"/>
+        <attr name="icon_add" format="reference"/>
+        <attr name="icon_email" format="reference"/>
+        <attr name="icon_pass" format="reference"/>
+        <attr name="no_search_result" format="reference"/>
+    </declare-styleable>
+
+</resources>

@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    android:orientation="vertical"
+    android:background="?attr/backgroundcolor"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.SettingActivity">
+
+    <LinearLayout
+        android:background="?attr/tabcolor"
+        android:id="@+id/liner"
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize">
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/back_setting"
+            android:layout_gravity="center"
+            android:layout_marginLeft="12dp"
+            android:background="?attr/tabcolor"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/back_dark_mode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:text="Setting"
+            android:textSize="20sp"
+            android:layout_gravity="center"
+            android:textColor="?attr/textcolor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/profile_image"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:src="@drawable/user_profile"
+        android:layout_gravity="center_horizontal"
+        app:civ_border_width="2dp"
+        android:layout_marginTop="20dp"
+        app:civ_border_color="@color/colorPrimary"/>
+    <TextView
+        android:id="@+id/user_Name"
+        android:layout_gravity="center_horizontal"
+        android:text="UserName"
+        android:textColor="?attr/tintcolor"
+        android:textSize="22dp"
+        android:textStyle="bold"
+        android:layout_width="wrap_content"
+        android:layout_height="30dp"/>
+
+    <androidx.cardview.widget.CardView
+        android:background="?attr/cardbackground"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:background="?attr/cardbackground"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:text="Choose theme"
+                android:layout_gravity="center"
+                android:textStyle="bold"
+                android:textSize="20sp"
+                android:textColor="?attr/tintcolor"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <LinearLayout
+                android:background="?attr/cardbackground"
+                android:layout_gravity="center_horizontal"
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <Button
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_light"
+                    android:layout_margin="8dp"
+                    android:id="@+id/btn_light"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+
+                <Button
+                    android:layout_gravity="center"
+                    android:background="@drawable/bg_dark"
+                    android:layout_margin="8dp"
+                    android:id="@+id/btn_dark"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"/>
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:id="@+id/txt_tt_taikhoan"
+                android:background="?attr/cardbackground"
+                android:text=" Update Profile"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/user_update"
+                android:drawableRight="@drawable/next"
+                android:drawablePadding="10dp"
+                android:textColor="?attr/tintcolor"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"/>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:background="@android:color/darker_gray"/>
+
+            <TextView
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:id="@+id/txt_taikhoan_setting"
+                android:background="?attr/cardbackground"
+                android:text="Setting account"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/setting_profile"
+                android:drawableRight="@drawable/next"
+                android:drawablePadding="10dp"
+                android:textColor="?attr/tintcolor"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+    <androidx.cardview.widget.CardView
+        android:background="?attr/cardbackground"
+        android:layout_margin="16dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <TextView
+                android:id="@+id/tv_Logout"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="?attr/cardbackground"
+                android:text="Logout"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/caps_lock"
+                android:drawableRight="@drawable/next"
+                android:drawablePadding="10dp"
+                android:textColor="?attr/tintcolor"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"/>
+
+            <TextView
+                android:id="@+id/tv_DelAccout"
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="?attr/cardbackground"
+                android:text="Delete account"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/remove_user"
+                android:drawableRight="@drawable/next"
+                android:drawablePadding="10dp"
+                android:textColor="#F44336"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"/>
+
+            <TextView
+                android:paddingRight="10dp"
+                android:paddingLeft="10dp"
+                android:background="?attr/cardbackground"
+                android:text="Information"
+                android:textSize="18dp"
+                android:gravity="center_vertical"
+                android:drawableLeft="@drawable/info"
+                android:drawableRight="@drawable/next"
+                android:drawablePadding="10dp"
+                android:textColor="?attr/tintcolor"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"/>
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+</LinearLayout>
