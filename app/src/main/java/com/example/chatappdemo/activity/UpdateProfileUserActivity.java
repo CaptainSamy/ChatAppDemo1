@@ -101,6 +101,8 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         progressDialog = new ProgressDialog(this);
 
+        DisplayProfile();
+
         imgBtnBG = findViewById(R.id.imgBtnBG);
         imgBtnBG.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,9 +148,6 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 UpdateProfileUser();
-                set_user_name.getEditText().setText("");
-                set_profile_status.getEditText().setText("");
-                set_profile_phone.setText("");
             }
         });
 
@@ -178,46 +177,51 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
         });
 
     }
+    private void DisplayProfile() {
+        databaseReference.child("Users").child(user.getUid())
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("imgAnhDD"))
+                                && (dataSnapshot.hasChild("imgAnhBia"))
+                                && (dataSnapshot.hasChild("name"))
+                                && (dataSnapshot.hasChild("status"))
+                                && (dataSnapshot.hasChild("gioiTinh"))
+                                && (dataSnapshot.hasChild("phone")))) {
+                            String ImageDD = dataSnapshot.child("imgAnhDD").getValue().toString();
+                            String ImageBG = dataSnapshot.child("imgAnhBia").getValue().toString();
+                            String UserName = dataSnapshot.child("name").getValue().toString();
+                            String Status = dataSnapshot.child("status").getValue().toString();
+                            String Phone = dataSnapshot.child("phone").getValue().toString();
+                            String GioiTinh = dataSnapshot.child("gioiTinh").getValue().toString();
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        Query query = databaseReference.orderByChild("uid").equalTo(user.getUid());
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds: snapshot.getChildren()) {
-                    //get data
-                    String name = ds.child("name").getValue().toString();
-                    String status = ds.child("status").getValue().toString();
-                    String gioiTinh = ds.child("gioiTinh").getValue().toString();
-                    String phone = ds.child("phone").getValue().toString();
-                    String imgAnhDD = ds.child("imgAnhDD").getValue().toString();
-                    String imgAnhBia = ds.child("imgAnhBia").getValue().toString();
 
-                    //set data
-                    set_user_name.getEditText().setText(name);
-                    set_profile_status.getEditText().setText(status);
-                    set_profile_phone.setText(phone);
+                            set_user_name.getEditText().setText(UserName);
+                            set_profile_status.getEditText().setText(Status);
+                            set_profile_phone.setText(Phone);
+                            Picasso.get().load(ImageDD).placeholder(R.drawable.user_profile).into(imgBtnDD);
+                            Picasso.get().load(ImageBG).placeholder(R.drawable.teabackground).into(imgBtnBG);
+                        } else if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("name"))
+                                && (dataSnapshot.hasChild("status"))
+                                && (dataSnapshot.hasChild("gioiTinh"))
+                                && (dataSnapshot.hasChild("phone")))) {
 
-                    try {
-                        Picasso.get().load(imgAnhDD).into(imgBtnDD);
-                    } catch (Exception e) {
-                        Picasso.get().load(R.drawable.user_profile).into(imgBtnDD);
+                            String UserName = dataSnapshot.child("name").getValue().toString();
+                            String Status = dataSnapshot.child("status").getValue().toString();
+                            String Phone = dataSnapshot.child("phone").getValue().toString();
+                            String GioiTinh = dataSnapshot.child("gioiTinh").getValue().toString();
+
+                            set_user_name.getEditText().setText(UserName);
+                            set_profile_status.getEditText().setText(Status);
+                            set_profile_phone.setText(Phone);
+                        }
                     }
-                    try {
-                        Picasso.get().load(imgAnhBia).into(imgBtnBG);
-                    } catch (Exception e) {
-                        Picasso.get().load(R.drawable.teabackground).into(imgBtnBG);
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError databaseError) {
+
                     }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+                });
     }
 
     private void UpdateProfileUser() {
