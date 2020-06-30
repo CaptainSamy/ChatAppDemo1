@@ -29,7 +29,7 @@ public class ViewProfileUserActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
     private ImageButton imgBtnBG;
-    private CircleImageView imgBtnCamBG, imgBtnDD;
+    private CircleImageView imgBtnDD;
     private TextView tv_userName, tv_Phone, tv_Status, tv_Gioitinh, tv_Done;
     private ProgressDialog progressDialog;
     private String currentUserId;
@@ -62,13 +62,7 @@ public class ViewProfileUserActivity extends AppCompatActivity {
                 ChoosePhoto();
             }
         });
-        imgBtnCamBG = findViewById(R.id.imgBtnCamBG);
-        imgBtnCamBG.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ChoosePhoto();
-            }
-        });
+
         imgBtnDD = findViewById(R.id.imgBtnDD_ViewProfile);
         imgBtnDD.setOnClickListener(new View.OnClickListener() {
             @Override

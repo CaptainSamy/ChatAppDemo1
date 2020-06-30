@@ -160,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
 
                         Picasso.get().load(userImage).into(profile_image);
                     } else {
-                        Intent intent = new Intent(MainActivity.this, View_Update_Profile_User_Activity.class);
+                        Intent intent = new Intent(MainActivity.this, UpdateProfileUserActivity.class);
                         startActivity(intent);
                     }
                 }

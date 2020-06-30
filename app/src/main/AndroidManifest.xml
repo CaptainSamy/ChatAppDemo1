@@ -14,7 +14,6 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.View_Update_Profile_User_Activity"></activity>
         <activity android:name=".activity.ChatActivity" />
         <activity android:name=".activity.ViewProfileUserActivity" />
         <activity

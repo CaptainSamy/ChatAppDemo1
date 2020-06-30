@@ -120,7 +120,7 @@ public class SettingActivity extends AppCompatActivity {
         txtTaiKhoanProfile.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(SettingActivity.this, View_Update_Profile_User_Activity.class));
+                startActivity(new Intent(SettingActivity.this, ViewProfileUserActivity.class));
             }
         });
 

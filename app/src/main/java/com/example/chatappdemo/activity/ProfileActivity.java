@@ -78,17 +78,20 @@ public class ProfileActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("imgAnhDD"))
+                        && (dataSnapshot.hasChild("imgAnhBia"))
                         && (dataSnapshot.hasChild("name"))
                         && (dataSnapshot.hasChild("status"))
                         && (dataSnapshot.hasChild("gioiTinh"))
                         && (dataSnapshot.hasChild("phone")))) {
                     String userImage = dataSnapshot.child("imgAnhDD").getValue().toString();
+                    String userImageBG = dataSnapshot.child("imgAnhBia").getValue().toString();
                     String userName = dataSnapshot.child("name").getValue().toString();
                     String userPhone = dataSnapshot.child("phone").getValue().toString();
                     String userStatus = dataSnapshot.child("status").getValue().toString();
                     String userSex = dataSnapshot.child("gioiTinh").getValue().toString();
 
                     Picasso.get().load(userImage).placeholder(R.drawable.user_profile).into(userProfileImage);
+                    Picasso.get().load(userImageBG).placeholder(R.drawable.teabackground).into(userProfileImageBG);
                     userProfileName.setText(userName);
                     userProfilePhone.setText(userPhone);
                     userProfileStatus.setText(userStatus);

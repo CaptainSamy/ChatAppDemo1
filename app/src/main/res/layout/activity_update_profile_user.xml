@@ -47,32 +47,52 @@
         android:layout_height="match_parent">
 
         <RelativeLayout
-            android:layout_marginTop="20dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
             <FrameLayout
                 android:id="@+id/frame_layout"
-                android:layout_centerHorizontal="true"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+                <ImageButton
+                    android:fitsSystemWindows="true"
+                    android:id="@+id/imgBtnBG"
+                    android:src="@drawable/teabackground"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp"/>
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_below="@+id/toolBarSelectImage"
-                    android:id="@+id/imgBtnDD"
-                    android:layout_width="150dp"
-                    android:layout_height="150dp"
-                    android:src="@drawable/user_profile"
-                    app:civ_border_width="2dp"
-                    app:civ_border_color="@color/colorPrimary"/>
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imgBtnCamDD"
-                    android:layout_gravity="bottom|right"
+                    android:id="@+id/imgBtnCamBG"
                     android:src="@drawable/camera"
                     android:layout_margin="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
+                <FrameLayout
+                    android:layout_gravity="center"
+                    android:layout_centerHorizontal="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imgBtnDD"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_width="150dp"
+                        android:layout_height="150dp"
+                        android:src="@drawable/user_profile"
+                        app:civ_border_width="2dp"
+                        android:layout_marginTop="120dp"
+                        app:civ_border_color="@color/colorPrimary"/>
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/imgBtnCamDD"
+                        android:layout_gravity="bottom|right"
+                        android:src="@drawable/camera"
+                        android:layout_margin="8dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </FrameLayout>
+
             </FrameLayout>
 
             <RadioGroup
