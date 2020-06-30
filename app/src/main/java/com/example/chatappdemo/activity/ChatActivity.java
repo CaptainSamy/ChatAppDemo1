@@ -18,6 +18,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.adapter.MessageAdapter;
@@ -72,6 +73,16 @@ public class ChatActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        // add swipe refresh layout
+        final SwipeRefreshLayout swiperefreshlayout = findViewById(R.id.swipeRefresh);
+        swiperefreshlayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                swiperefreshlayout.setRefreshing(false);
+            }
+        });
+
         imgProfileFriend = findViewById(R.id.image_user_chat);
         name_user_chat = findViewById(R.id.name_user_chat);
         userLastSeen = findViewById(R.id.user_last_seen);
