@@ -101,7 +101,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         progressDialog = new ProgressDialog(this);
 
-        DisplayProfile();
+//        DisplayProfile();
 
         imgBtnBG = findViewById(R.id.imgBtnBG);
         imgBtnBG.setOnClickListener(new View.OnClickListener() {
@@ -177,52 +177,52 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
         });
 
     }
-    private void DisplayProfile() {
-        databaseReference.child("Users").child(user.getUid())
-                .addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("imgAnhDD"))
-                                && (dataSnapshot.hasChild("imgAnhBia"))
-                                && (dataSnapshot.hasChild("name"))
-                                && (dataSnapshot.hasChild("status"))
-                                && (dataSnapshot.hasChild("gioiTinh"))
-                                && (dataSnapshot.hasChild("phone")))) {
-                            String ImageDD = dataSnapshot.child("imgAnhDD").getValue().toString();
-                            String ImageBG = dataSnapshot.child("imgAnhBia").getValue().toString();
-                            String UserName = dataSnapshot.child("name").getValue().toString();
-                            String Status = dataSnapshot.child("status").getValue().toString();
-                            String Phone = dataSnapshot.child("phone").getValue().toString();
-                            String GioiTinh = dataSnapshot.child("gioiTinh").getValue().toString();
-
-
-                            set_user_name.getEditText().setText(UserName);
-                            set_profile_status.getEditText().setText(Status);
-                            set_profile_phone.setText(Phone);
-                            Picasso.get().load(ImageDD).placeholder(R.drawable.user_profile).into(imgBtnDD);
-                            Picasso.get().load(ImageBG).placeholder(R.drawable.teabackground).into(imgBtnBG);
-                        } else if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("name"))
-                                && (dataSnapshot.hasChild("status"))
-                                && (dataSnapshot.hasChild("gioiTinh"))
-                                && (dataSnapshot.hasChild("phone")))) {
-
-                            String UserName = dataSnapshot.child("name").getValue().toString();
-                            String Status = dataSnapshot.child("status").getValue().toString();
-                            String Phone = dataSnapshot.child("phone").getValue().toString();
-                            String GioiTinh = dataSnapshot.child("gioiTinh").getValue().toString();
-
-                            set_user_name.getEditText().setText(UserName);
-                            set_profile_status.getEditText().setText(Status);
-                            set_profile_phone.setText(Phone);
-                        }
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-    }
+//    private void DisplayProfile() {
+//        databaseReference.child("Users").child(user.getUid())
+//                .addValueEventListener(new ValueEventListener() {
+//                    @Override
+//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+//                        if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("imgAnhDD"))
+//                                && (dataSnapshot.hasChild("imgAnhBia"))
+//                                && (dataSnapshot.hasChild("name"))
+//                                && (dataSnapshot.hasChild("status"))
+//                                && (dataSnapshot.hasChild("gioiTinh"))
+//                                && (dataSnapshot.hasChild("phone")))) {
+//                            String ImageDD = dataSnapshot.child("imgAnhDD").getValue().toString();
+//                            String ImageBG = dataSnapshot.child("imgAnhBia").getValue().toString();
+//                            String UserName = dataSnapshot.child("name").getValue().toString();
+//                            String Status = dataSnapshot.child("status").getValue().toString();
+//                            String Phone = dataSnapshot.child("phone").getValue().toString();
+//                            String GioiTinh = dataSnapshot.child("gioiTinh").getValue().toString();
+//
+//
+//                            set_user_name.getEditText().setText(UserName);
+//                            set_profile_status.getEditText().setText(Status);
+//                            set_profile_phone.setText(Phone);
+//                            Picasso.get().load(ImageDD).placeholder(R.drawable.user_profile).into(imgBtnDD);
+//                            Picasso.get().load(ImageBG).placeholder(R.drawable.teabackground).into(imgBtnBG);
+//                        } else if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("name"))
+//                                && (dataSnapshot.hasChild("status"))
+//                                && (dataSnapshot.hasChild("gioiTinh"))
+//                                && (dataSnapshot.hasChild("phone")))) {
+//
+//                            String UserName = dataSnapshot.child("name").getValue().toString();
+//                            String Status = dataSnapshot.child("status").getValue().toString();
+//                            String Phone = dataSnapshot.child("phone").getValue().toString();
+//                            String GioiTinh = dataSnapshot.child("gioiTinh").getValue().toString();
+//
+//                            set_user_name.getEditText().setText(UserName);
+//                            set_profile_status.getEditText().setText(Status);
+//                            set_profile_phone.setText(Phone);
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onCancelled(@NonNull DatabaseError databaseError) {
+//
+//                    }
+//                });
+//    }
 
     private void UpdateProfileUser() {
         String edtUserName = set_user_name.getEditText().getText().toString().trim();
