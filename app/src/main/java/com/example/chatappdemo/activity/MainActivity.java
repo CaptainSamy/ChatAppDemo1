@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.chatappdemo.R;
@@ -55,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences locationpref = getApplicationContext()
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
+        themeIdcurrent = locationpref.getInt("themeid", R.style.AppTheme);
         setTheme(themeIdcurrent);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -65,18 +66,16 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         //loadFragment(new ChatsFragment());
-<<<<<<< Updated upstream
+
         bottomNavigationView = findViewById(R.id.navigation);
-        bottomNavigationView.setOnNavigationItemSelectedListener(itemSelectedListener);
-=======
+
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.frame_container, new ChatsFragment(),null);
+        transaction.add(R.id.frame_container, new ChatsFragment(), null);
         transaction.commit();
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(itemSelectedListener);
 
->>>>>>> Stashed changes
 
         //Anh dai dien
         profile_image = findViewById(R.id.profile_image);
