@@ -37,6 +37,7 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
             <de.hdodenhof.circleimageview.CircleImageView
+                android:src="@drawable/online"
                 android:id="@+id/onlineStatusIv"
                 android:layout_gravity="right|bottom"
                 android:layout_width="12dp"
@@ -131,6 +132,7 @@
                     android:inputType="textMultiLine"
                     android:layout_height="match_parent"
                     android:ellipsize="end"
+                    android:paddingRight="32dp"
                     android:maxLines="1"/>
 
                 <de.hdodenhof.circleimageview.CircleImageView

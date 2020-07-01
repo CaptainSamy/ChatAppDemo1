@@ -43,7 +43,7 @@ public class ChatActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
     private String messReceiverId, messReceiverImage, messReceiverName, messSenderId;
-    private CircleImageView imgMore, imgProfileFriend, back_user_chat, imgSmile;
+    private CircleImageView imgMore, imgProfileFriend, back_user_chat, imgSmile, onlineStatusIv;
     private LinearLayout bottom_linear, sendImage, sendFile, sendGif, sendLocation;
     private TextView name_user_chat, userLastSeen;
     private EditText messageInput;
@@ -74,6 +74,7 @@ public class ChatActivity extends AppCompatActivity {
         });
         imgProfileFriend = findViewById(R.id.image_user_chat);
         name_user_chat = findViewById(R.id.name_user_chat);
+        onlineStatusIv = findViewById(R.id.onlineStatusIv);
         userLastSeen = findViewById(R.id.user_last_seen);
         userMessageList = (RecyclerView) findViewById(R.id.messager_list_of_users);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
@@ -100,11 +101,13 @@ public class ChatActivity extends AppCompatActivity {
                         String onlineStatus = ds.child("onlineStatus").getValue().toString();
                         if (onlineStatus.equals("online")) {
                             userLastSeen.setText(onlineStatus);
+                            onlineStatusIv.setVisibility(View.VISIBLE);
                         } else {
                             Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
                             calendar.setTimeInMillis(Long.parseLong(onlineStatus));
                             String dateTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
                             userLastSeen.setText("Last seen at: " + dateTime);
+                            onlineStatusIv.setVisibility(View.INVISIBLE);
                         }
                     }
 
@@ -314,9 +317,15 @@ public class ChatActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        checkOnlineStatus("online");
-    }
+//    @Override
+//    protected void onStop() {
+//        super.onStop();
+//        checkOnlineStatus("online");
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        super.onDestroy();
+//        checkOnlineStatus("online");
+//    }
 }
