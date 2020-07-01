@@ -101,6 +101,43 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
         progressDialog = new ProgressDialog(this);
 
+        Query query = databaseReference.orderByChild("uid").equalTo(user.getUid());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    //get data
+                    String name = ds.child("name").getValue().toString();
+                    String status = ds.child("status").getValue().toString();
+                    String gioiTinh = ds.child("gioiTinh").getValue().toString();
+                    String phone = ds.child("phone").getValue().toString();
+                    String imgAnhDD = ds.child("imgAnhDD").getValue().toString();
+                    String imgAnhBia = ds.child("imgAnhBia").getValue().toString();
+
+                    //set data
+                    set_user_name.getEditText().setText(name);
+                    set_profile_status.getEditText().setText(status);
+                    //tv_Gioitinh.setText(gioiTinh);
+                    set_profile_phone.setText(phone);
+                    try {
+                        Picasso.get().load(imgAnhDD).into(imgBtnDD);
+                    } catch (Exception e) {
+                        Picasso.get().load(R.drawable.user_profile).into(imgBtnDD);
+                    }
+                    try {
+                        Picasso.get().load(imgAnhBia).into(imgBtnBG);
+                    } catch (Exception e) {
+                        Picasso.get().load(R.drawable.teabackground).into(imgBtnBG);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
 //        DisplayProfile();
 
         imgBtnBG = findViewById(R.id.imgBtnBG);

@@ -219,6 +219,7 @@ public class ChatActivity extends AppCompatActivity {
                     messageAdapter = new MessageAdapter(messagesList, ChatActivity.this, messReceiverImage);
                     messageAdapter.notifyDataSetChanged();
                     userMessageList.setAdapter(messageAdapter);
+                    userMessageList.smoothScrollToPosition(userMessageList.getAdapter().getItemCount());
                 }
             }
 
@@ -241,6 +242,41 @@ public class ChatActivity extends AppCompatActivity {
         hashMap.put("isSeen", false);
         databaseReference.child("Chats").push().setValue(hashMap);
         messageInput.setText(""); // reset edt
+
+        //create chatlist
+        DatabaseReference chatRef1 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(messSenderId)
+                .child(messReceiverId);
+        chatRef1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    chatRef1.child("id").setValue(messReceiverId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference chatRef2 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(messReceiverId)
+                .child(messSenderId);
+        chatRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    chatRef2.child("id").setValue(messSenderId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void checkOnlineStatus(String status) {
@@ -276,5 +312,11 @@ public class ChatActivity extends AppCompatActivity {
     protected void onResume() {
         checkOnlineStatus("online");
         super.onResume();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        checkOnlineStatus("online");
     }
 }

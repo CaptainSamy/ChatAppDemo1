@@ -2,17 +2,20 @@ package com.example.chatappdemo.model;
 
 
 public class User{
-    private String imgAnhBia, imgAnhDD, name, status, gioiTinh, phone;
+    private String imgAnhBia, imgAnhDD, name, status, gioiTinh, phone, onlineStatus, typingTo, uid;
 
     public User() {}
 
-    public User(String imgAnhBia, String imgAnhDD, String name, String status, String gioiTinh, String phone) {
+    public User(String imgAnhBia, String imgAnhDD, String name, String status, String gioiTinh, String phone, String onlineStatus, String typingTo, String uid) {
         this.imgAnhBia = imgAnhBia;
         this.imgAnhDD = imgAnhDD;
         this.name = name;
         this.status = status;
         this.gioiTinh = gioiTinh;
         this.phone = phone;
+        this.onlineStatus = onlineStatus;
+        this.typingTo = typingTo;
+        this.uid = uid;
     }
 
     public String getImgAnhBia() {
@@ -61,5 +64,29 @@ public class User{
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getOnlineStatus() {
+        return onlineStatus;
+    }
+
+    public void setOnlineStatus(String onlineStatus) {
+        this.onlineStatus = onlineStatus;
+    }
+
+    public String getTypingTo() {
+        return typingTo;
+    }
+
+    public void setTypingTo(String typingTo) {
+        this.typingTo = typingTo;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

@@ -27,6 +27,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -141,9 +142,9 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                         //remove from chats
                         ds.getRef().removeValue();
                         //set value
-//                        HashMap<String, Object> hashMap = new HashMap<>();
-//                        hashMap.put("message", "This message was deleted...");
-//                        ds.getRef().updateChildren(hashMap);
+                        HashMap<String, Object> hashMap = new HashMap<>();
+                        hashMap.put("message", "This message was deleted...");
+                        ds.getRef().updateChildren(hashMap);
                         Toast.makeText(context,"Message deleted...",Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(context,"You can delete only your messages...",Toast.LENGTH_SHORT).show();
