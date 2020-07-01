@@ -65,8 +65,18 @@ public class MainActivity extends AppCompatActivity {
         databaseReference = FirebaseDatabase.getInstance().getReference();
 
         //loadFragment(new ChatsFragment());
+<<<<<<< Updated upstream
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(itemSelectedListener);
+=======
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.frame_container, new ChatsFragment(),null);
+        transaction.commit();
+        bottomNavigationView = findViewById(R.id.navigation);
+        bottomNavigationView.setOnNavigationItemSelectedListener(itemSelectedListener);
+
+>>>>>>> Stashed changes
 
         //Anh dai dien
         profile_image = findViewById(R.id.profile_image);
