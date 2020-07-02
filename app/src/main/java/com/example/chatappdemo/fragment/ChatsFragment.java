@@ -1,5 +1,6 @@
 package com.example.chatappdemo.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatappdemo.R;
+import com.example.chatappdemo.activity.MainActivity;
 import com.example.chatappdemo.adapter.ChatlistAdapter;
 import com.example.chatappdemo.model.Chatlist;
 import com.example.chatappdemo.model.Messages;
@@ -56,27 +58,40 @@ public class ChatsFragment extends Fragment {
         recyclerView = view.findViewById(R.id.recyclerView);
         chatlistList = new ArrayList<>();
 
-        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(currentUser.getUid());
-        reference.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                chatlistList.clear();
-                for (DataSnapshot ds: snapshot.getChildren()) {
-                    Chatlist chatlist = ds.getValue(Chatlist.class);
-                    chatlistList.add(chatlist);
-                }
-                loadChats();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (currentUser != null){
+            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(currentUser.getUid());
+            reference.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot snapshot) {
+                    chatlistList.clear();
+                    for (DataSnapshot ds: snapshot.getChildren()) {
+                        Chatlist chatlist = ds.getValue(Chatlist.class);
+                        chatlistList.add(chatlist);
+                    }
+                    loadChats();
+                }
+
+                @Override
+                public void onCancelled(@NonNull DatabaseError error) {
+
+                }
+            });
+
+        }else{
+            Intent intent = new Intent(getActivity(), MainActivity.class);
+            startActivity(intent);
+        }
+
+
     }
 
     private void loadChats() {
