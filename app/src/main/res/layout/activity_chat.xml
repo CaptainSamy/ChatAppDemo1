@@ -129,7 +129,7 @@
                     android:layout_marginRight="8dp"
                     android:layout_width="match_parent"
                     android:textColor="#000000"
-                    android:inputType="textMultiLine"
+                    android:inputType="textAutoCorrect|textAutoComplete|textMultiLine|textCapSentences"
                     android:layout_height="match_parent"
                     android:ellipsize="end"
                     android:paddingRight="32dp"

@@ -211,6 +211,7 @@ public class SigninActivity extends AppCompatActivity {
                 });
     }
 
+
     private void VerifyEmailAddress() {
         FirebaseUser user = firebaseAuth.getCurrentUser();
         emailChecker = user.isEmailVerified();

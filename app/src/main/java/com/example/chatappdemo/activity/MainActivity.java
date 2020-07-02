@@ -20,6 +20,7 @@ import com.example.chatappdemo.fragment.ChatsFragment;
 import com.example.chatappdemo.fragment.ContactsFragment;
 import com.example.chatappdemo.fragment.GroupsFragment;
 import com.example.chatappdemo.fragment.RequestFragment;
+import com.example.chatappdemo.notifications.Token;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -30,6 +31,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -95,6 +97,9 @@ public class MainActivity extends AppCompatActivity {
         });
 
         addBadgeView();
+        //checkUserStatus();
+        //phan notification
+        updateToken(String.valueOf(FirebaseInstanceId.getInstance().getToken()));
     }
 
     private void addBadgeView() {
@@ -150,6 +155,22 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
+        checkUserStatus();
+    }
+
+    @Override
+    protected void onResume() {
+        checkUserStatus();
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
+
+    private void checkUserStatus() {
         if (currentUser == null) {
             Intent loginIntent = new Intent(MainActivity.this, Dangnhap_Dangky_Activity.class);
             startActivity(loginIntent);
@@ -176,6 +197,21 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
+
+            //notification
+            SharedPreferences sp = getSharedPreferences("SP_USER", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("Current_USERID", currentUserId);
+            editor.apply();
+            //end notification
         }
     }
+
+    // phan notification
+    public void updateToken(String token) {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token mToken = new Token(token);
+        ref.child(currentUserId).setValue(mToken);
+    }
+    // end notification
 }

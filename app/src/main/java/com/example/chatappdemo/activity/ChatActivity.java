@@ -6,6 +6,7 @@ import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -19,9 +20,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.AuthFailureError;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.adapter.MessageAdapter;
 import com.example.chatappdemo.model.Messages;
+import com.example.chatappdemo.model.User;
+import com.example.chatappdemo.notifications.Data;
+import com.example.chatappdemo.notifications.Sender;
+import com.example.chatappdemo.notifications.Token;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -29,13 +40,18 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.google.gson.Gson;
 import com.squareup.picasso.Picasso;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -57,6 +73,9 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView userMessageList;
     private MessageAdapter messageAdapter;
 
+    private RequestQueue requestQueue;
+    private boolean notify = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences locationpref = getApplicationContext()
@@ -65,6 +84,9 @@ public class ChatActivity extends AppCompatActivity {
         setTheme(themeIdcurrent);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
+
+        requestQueue = Volley.newRequestQueue(getApplicationContext());
+
         back_user_chat = findViewById(R.id.back_user_chat);
         back_user_chat.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -146,12 +168,14 @@ public class ChatActivity extends AppCompatActivity {
                     imgSmile.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
+                            notify = true;
                             String messageText = messageInput.getText().toString().trim();
                             if (TextUtils.isEmpty(messageText)) {
                                 Toast.makeText(ChatActivity.this, "Cannot send the empty message", Toast.LENGTH_SHORT).show();
                             } else {
                                 sendMessage(messageText);
                             }
+                            messageInput.setText("");
                         }
                     });
                 }
@@ -244,7 +268,7 @@ public class ChatActivity extends AppCompatActivity {
         hashMap.put("timeStamp", timestamp);
         hashMap.put("isSeen", false);
         databaseReference.child("Chats").push().setValue(hashMap);
-        messageInput.setText(""); // reset edt
+
 
         //create chatlist
         DatabaseReference chatRef1 = FirebaseDatabase.getInstance().getReference("Chatlist")
@@ -280,6 +304,78 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
+
+        // notification
+        final String msg = messageText;
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users").child(messSenderId);
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if (notify) {
+                    senNotification(messReceiverId, user.getName(), messageText);
+                }
+                notify = false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+        // end notification
+    }
+
+    private void senNotification(final String messReceiverId, final String name, final String messageText) {
+        DatabaseReference allTokens = FirebaseDatabase.getInstance().getReference("Tokens");
+        Query query = allTokens.orderByKey().equalTo(messReceiverId);
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    Token token = ds.getValue(Token.class);
+                    Data data = new Data(messSenderId, R.drawable.logo, name + " :" + messageText, "New Message", messReceiverId);
+                    Sender sender = new Sender(data, token.getToken());
+
+                    try {
+                        JSONObject senderJsonObj = new JSONObject(new Gson().toJson(sender));
+                        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest("https://fcm.googleapis.com/fcm/send", senderJsonObj,
+                                new Response.Listener<JSONObject>() {
+                                    @Override
+                                    public void onResponse(JSONObject response) {
+                                        Log.d("JSON_RESPONSE", "onResponse: " + response.toString());
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                Log.d("JSON_RESPONSE", "onResponse: " + error.toString());
+                            }
+                        }) {
+                            @Override
+                            public Map<String, String> getHeaders() throws AuthFailureError {
+                                Map<String, String> headers = new HashMap<>();
+                                headers.put("Content-Type", "application/json");
+                                headers.put("Authorization", "key=AAAALr5_rao:APA91bFqmtMv_eK5ARooDx7iGyBLPuZzMvhy1IiAm82G17gb-umttVleSgkIS4j67s6xTUVfLzUsoD2rabroAcLfvYv7DxNFn1HgeljgMjG2FzJTJ6hIOQEAqaqYa9PavKWfgw_7y4QD");
+
+                                return headers;
+                            }
+                        };
+                        requestQueue.add(jsonObjectRequest);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void sendNotification(String RootRef, String name, String msg) {
+
     }
 
     private void checkOnlineStatus(String status) {
@@ -317,15 +413,13 @@ public class ChatActivity extends AppCompatActivity {
         super.onResume();
     }
 
-//    @Override
-//    protected void onStop() {
-//        super.onStop();
-//        checkOnlineStatus("online");
-//    }
-//
-//    @Override
-//    protected void onDestroy() {
-//        super.onDestroy();
-//        checkOnlineStatus("online");
-//    }
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+    }
 }

@@ -1,20 +1,20 @@
 package com.example.chatappdemo.fragment;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.adapter.ChatlistAdapter;
 import com.example.chatappdemo.model.Chatlist;
 import com.example.chatappdemo.model.Messages;
 import com.example.chatappdemo.model.User;
+import com.example.chatappdemo.notifications.Token;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -22,6 +22,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -36,7 +37,7 @@ public class ChatsFragment extends Fragment {
     RecyclerView recyclerView;
     List<Chatlist> chatlistList;
     List<User> userList;
-    DatabaseReference reference;
+//    DatabaseReference reference;
     FirebaseUser currentUser;
     ChatlistAdapter chatlistAdapter;
 
@@ -54,7 +55,8 @@ public class ChatsFragment extends Fragment {
         currentUser = FirebaseAuth.getInstance().getCurrentUser();
         recyclerView = view.findViewById(R.id.recyclerView);
         chatlistList = new ArrayList<>();
-        reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(currentUser.getUid());
+
+        final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(currentUser.getUid());
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -72,12 +74,14 @@ public class ChatsFragment extends Fragment {
             }
         });
 
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+
         return view;
     }
 
     private void loadChats() {
         userList = new ArrayList<>();
-        reference = FirebaseDatabase.getInstance().getReference("Users");
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -136,5 +140,11 @@ public class ChatsFragment extends Fragment {
 
             }
         });
+    }
+
+    private void updateToken(String token) {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+        Token token1 = new Token(token);
+        reference.child(currentUser.getUid()).setValue(token1);
     }
 }
