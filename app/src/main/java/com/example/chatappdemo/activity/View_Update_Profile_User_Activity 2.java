@@ -46,7 +46,7 @@ import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class View_Update_Profile_User_Activity extends AppCompatActivity {
+class View_Update_Profile_User_Activity extends AppCompatActivity {
     private ImageButton imgBtnBG;
     private CircleImageView imgBtnDD;
     private TextView tv_userName, tv_Phone, tv_Status, tv_Gioitinh, tv_Done;
@@ -73,7 +73,7 @@ public class View_Update_Profile_User_Activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_view__update__profile__user_);
+        setContentView(R.layout.activity_view_update_profile_user_2);
 
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();

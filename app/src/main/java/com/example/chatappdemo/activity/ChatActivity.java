@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.RequestQueue;
@@ -72,8 +73,15 @@ public class ChatActivity extends AppCompatActivity {
     private List<Messages> messagesList;
     private RecyclerView userMessageList;
     private MessageAdapter messageAdapter;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
-//demo adđ
+    public static final int TOTAL_ITEM_TO_LOAD = 10;
+    private int mCurrentPage = 1;
+
+    //Solution for descending list on refresh
+    private int itemPos = 0;
+    private String mLastKey = "";
+    private String mPrevKey = "";
 
 
     private RequestQueue requestQueue;
@@ -106,6 +114,18 @@ public class ChatActivity extends AppCompatActivity {
         linearLayoutManager.setStackFromEnd(true);
         userMessageList.setHasFixedSize(true);
         userMessageList.setLayoutManager(linearLayoutManager);
+
+        swipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                itemPos = 0;
+                mCurrentPage++;
+                loadMoreMessages();
+
+            }
+        });
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -236,14 +256,29 @@ public class ChatActivity extends AppCompatActivity {
     private void readMessages() {
         messagesList = new ArrayList<>();
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
-        dbRef.addValueEventListener(new ValueEventListener() {
+
+        Query messageQuery = dbRef.limitToLast(mCurrentPage * TOTAL_ITEM_TO_LOAD);
+
+        messageQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 messagesList.clear();
+
+
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Messages messages = ds.getValue(Messages.class);
                     if (messages.getTo().equals(messSenderId) && messages.getFrom().equals(messReceiverId) ||
                             messages.getTo().equals(messReceiverId) && messages.getFrom().equals(messSenderId)) {
+
+                        itemPos++;
+
+                        if (itemPos == 1) {
+                            String mMessageKey = dataSnapshot.getKey();
+
+                            mLastKey = mMessageKey;
+                            mPrevKey = mMessageKey;
+                        }
+
                         messagesList.add(messages);
                     }
                     messageAdapter = new MessageAdapter(messagesList, ChatActivity.this, messReceiverImage);
@@ -259,6 +294,56 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
     }
+
+    public void loadMoreMessages(){
+        messagesList = new ArrayList<>();
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
+        Query messageQuery = dbRef.limitToLast(mCurrentPage*TOTAL_ITEM_TO_LOAD);
+
+        messageQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                messagesList.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    Messages messages = ds.getValue(Messages.class);
+                    if (messages.getTo().equals(messSenderId) && messages.getFrom().equals(messReceiverId) ||
+                            messages.getTo().equals(messReceiverId) && messages.getFrom().equals(messSenderId)) {
+
+                        String messageKey = snapshot.getKey();
+
+
+                        if(!mPrevKey.equals(messageKey)){
+                            messagesList.add(itemPos++,messages);
+
+                        }
+                        else{
+                            mPrevKey = mLastKey;
+                        }
+
+                        if(itemPos == 1){
+                            String mMessageKey = snapshot.getKey();
+                            mLastKey = mMessageKey;
+                        }
+                        messagesList.add(messages);
+                    }
+                    messageAdapter = new MessageAdapter(messagesList, ChatActivity.this, messReceiverImage);
+                    messageAdapter.notifyDataSetChanged();
+                    userMessageList.setAdapter(messageAdapter);
+                    userMessageList.smoothScrollToPosition(userMessageList.getAdapter().getItemCount());
+                    swipeRefreshLayout.setRefreshing(false);
+                }
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+
+    }
+
 
     private void sendMessage(final String messageText) {
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
