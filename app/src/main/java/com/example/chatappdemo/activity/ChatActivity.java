@@ -73,6 +73,9 @@ public class ChatActivity extends AppCompatActivity {
     private RecyclerView userMessageList;
     private MessageAdapter messageAdapter;
 
+//demo adđ
+
+
     private RequestQueue requestQueue;
     private boolean notify = false;
 
