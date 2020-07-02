@@ -1,88 +1,107 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
-    android:background="?attr/backgroundcolor"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="?attr/backgroundcolor"
+    android:orientation="vertical"
     tools:context=".activity.ChatActivity">
 
+
     <LinearLayout
-        android:background="?attr/tabcolor"
         android:id="@+id/liner"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize">
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/tabcolor"
+        android:orientation="horizontal">
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/back_user_chat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginLeft="12dp"
-            android:background="?attr/tabcolor"
             android:layout_marginRight="8dp"
-            android:src="@drawable/back_dark_mode"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:background="?attr/tabcolor"
+            android:src="@drawable/back_dark_mode" />
 
+<<<<<<< Updated upstream
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_gravity="center_vertical"
             android:src="@drawable/user_profile"
             android:id="@+id/image_user_chat"
             android:layout_width="40dp"
             android:layout_height="40dp"/>
-
-        <LinearLayout
-            android:layout_weight="2"
+=======
+        <FrameLayout
+            android:id="@+id/framelayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:background="?attr/tabcolor">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/image_user_chat"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/user_profile" />
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/onlineStatusIv"
+                android:layout_width="12dp"
+                android:layout_height="12dp"
+                android:layout_gravity="right|bottom"
+                android:src="@drawable/online" />
+        </FrameLayout>
+>>>>>>> Stashed changes
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
             android:orientation="vertical">
+
             <TextView
-                android:layout_marginLeft="5dp"
                 android:id="@+id/name_user_chat"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="name"
                 android:textColor="?attr/textcolor"
                 android:textSize="18sp"
-                android:text="name"
-                android:textStyle="bold"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:textStyle="bold" />
+
             <TextView
-                android:layout_marginLeft="5dp"
                 android:id="@+id/user_last_seen"
-                android:textColor="?attr/textcolor"
-                android:textSize="14sp"
-                android:text="last seen"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="last seen"
+                android:textColor="?attr/textcolor"
+                android:textSize="14sp" />
         </LinearLayout>
 
         <ImageButton
-            android:background="?attr/tabcolor"
-            android:layout_marginRight="16dp"
-            android:layout_gravity="center"
-            android:src="@drawable/video_camera"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="16dp"
+            android:background="?attr/tabcolor"
+            android:src="@drawable/video_camera" />
 
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/messager_list_of_users"
-        android:layout_weight="2"
-        android:layout_marginRight="16dp"
-        android:layout_marginLeft="16dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:layout_weight="2" />
 
-    <View
-        android:layout_width="0dp"
-        android:layout_below="@+id/messager_list_of_users"
-        android:layout_height="2dp"
-        android:background="#dfdfdf"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
 
+<<<<<<< Updated upstream
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
@@ -120,170 +139,229 @@
                     android:inputType="textCapSentences"
                     android:layout_height="match_parent"
                     android:maxLines="6"/>
+=======
+>>>>>>> Stashed changes
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/img_smile"
-                    android:layout_gravity="center|right"
-                    android:paddingRight="16dp"
-                    android:src="@drawable/smile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"/>
-            </FrameLayout>
 
-        </LinearLayout>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="2dp"
+            android:layout_below="@+id/messager_list_of_users"
+            android:layout_marginBottom="0dp"
+            android:background="#dfdfdf"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent" />
+
         <LinearLayout
-            android:id="@+id/bottom_linear"
-            android:visibility="gone"
-            android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <LinearLayout
-                android:id="@+id/sendImage"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="vertical">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/picture" />
-
-                <TextView
-                    android:textColor="?attr/tintcolor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Gallery"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:orientation="vertical">
+                android:layout_marginBottom="5dp"
+                android:background="?attr/backgroundcolor"
+                android:orientation="horizontal">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/sendFile"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/note" />
+                    android:id="@+id/imgMore"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_marginLeft="5dp"
+                    android:src="@drawable/add" />
 
-                <TextView
-                    android:textColor="?attr/tintcolor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="File"
-                    android:textSize="10sp" />
+                <FrameLayout
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1">
+
+                    <EditText
+                        android:id="@+id/input_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginRight="8dp"
+                        android:background="@drawable/bg_input_message"
+                        android:ellipsize="end"
+                        android:hint="Enter message"
+                        android:inputType="textAutoCorrect|textAutoComplete|textMultiLine|textCapSentences"
+                        android:maxLines="1"
+                        android:paddingRight="32dp"
+                        android:textColor="#000000" />
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/img_smile"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center|right"
+                        android:paddingRight="16dp"
+                        android:src="@drawable/smile" />
+                </FrameLayout>
 
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/bottom_linear"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:orientation="vertical">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/sendLocation"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/map_point" />
-
-                <TextView
-                    android:textColor="?attr/tintcolor"
+                <LinearLayout
+                    android:id="@+id/sendImage"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Location"
-                    android:textSize="10sp" />
+                    android:layout_margin="8dp"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/picture" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Gallery"
+                        android:textColor="?attr/tintcolor"
+                        android:textSize="12sp" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/sendGif"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/gif" />
+                </LinearLayout>
 
-                <TextView
-                    android:textColor="?attr/tintcolor"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Gif"
-                    android:textSize="12sp" />
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/sendFile"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/note" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="File"
+                        android:textColor="?attr/tintcolor"
+                        android:textSize="10sp" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/picture" />
+                </LinearLayout>
 
-                <TextView
-                    android:textColor="?attr/tintcolor"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Gallery"
-                    android:textSize="12sp" />
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="vertical">
 
-            </LinearLayout>
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/sendLocation"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/map_point" />
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Location"
+                        android:textColor="?attr/tintcolor"
+                        android:textSize="10sp" />
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/note" />
+                </LinearLayout>
 
-                <TextView
-                    android:textColor="?attr/tintcolor"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="File"
-                    android:textSize="10sp" />
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="vertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:id="@+id/sendGif"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/gif" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Gif"
+                        android:textColor="?attr/tintcolor"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="8dp"
+                    android:orientation="vertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/picture" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="Gallery"
+                        android:textColor="?attr/tintcolor"
+                        android:textSize="12sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:orientation="vertical">
+
+                    <de.hdodenhof.circleimageview.CircleImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/note" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="File"
+                        android:textColor="?attr/tintcolor"
+                        android:textSize="10sp" />
+
+                </LinearLayout>
 
             </LinearLayout>
 
         </LinearLayout>
 
-    </LinearLayout>
+
 
 </LinearLayout>

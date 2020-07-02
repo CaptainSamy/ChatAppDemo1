@@ -15,14 +15,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.adapter.MessageAdapter;
 import com.example.chatappdemo.model.Messages;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -49,14 +52,29 @@ public class ChatActivity extends AppCompatActivity {
     private EditText messageInput;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
-    private DatabaseReference RootRef;
+    private DatabaseReference RootRef, mRootReference;
     private ValueEventListener seenListerner;
     private DatabaseReference userRefForSeen;
 
     private List<Messages> messagesList;
     private RecyclerView userMessageList;
     private MessageAdapter messageAdapter;
+    public static final int TOTAL_ITEM_TO_LOAD = 15;
+    private int mCurrentPage = 1;
+    private String mChatUser;
 
+<<<<<<< Updated upstream
+=======
+    private SwipeRefreshLayout swipeRefreshLayout;
+    private int itemPos = 0;
+    private String mLastKey = "";
+    private String mPrevKey = "";
+
+
+    private RequestQueue requestQueue;
+    private boolean notify = false;
+
+>>>>>>> Stashed changes
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences locationpref = getApplicationContext()
@@ -75,6 +93,9 @@ public class ChatActivity extends AppCompatActivity {
         imgProfileFriend = findViewById(R.id.image_user_chat);
         name_user_chat = findViewById(R.id.name_user_chat);
         userLastSeen = findViewById(R.id.user_last_seen);
+//        swipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
+
+
         userMessageList = (RecyclerView) findViewById(R.id.messager_list_of_users);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);
@@ -83,7 +104,9 @@ public class ChatActivity extends AppCompatActivity {
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseDatabase = FirebaseDatabase.getInstance();
+        mRootReference = FirebaseDatabase.getInstance().getReference();
         RootRef = FirebaseDatabase.getInstance().getReference("Users");
+        mChatUser = getIntent().getStringExtra("user_id");
         messSenderId = firebaseAuth.getCurrentUser().getUid();
         messReceiverId = getIntent().getExtras().get("visit_user_id").toString();
         Query query = RootRef.orderByChild("uid").equalTo(messReceiverId);
@@ -206,12 +229,28 @@ public class ChatActivity extends AppCompatActivity {
     private void readMessages() {
         messagesList = new ArrayList<>();
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
-        dbRef.addValueEventListener(new ValueEventListener() {
+
+        Query messageQuery = dbRef.limitToLast(mCurrentPage*TOTAL_ITEM_TO_LOAD);
+
+        messageQuery.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 messagesList.clear();
+<<<<<<< Updated upstream
                 for (DataSnapshot ds: dataSnapshot.getChildren()) {
+=======
+                itemPos++;
+
+                if(itemPos == 1){
+                    String mMessageKey = dataSnapshot.getKey();
+
+                    mLastKey = mMessageKey;
+                    mPrevKey = mMessageKey;
+                }
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
+>>>>>>> Stashed changes
                     Messages messages = ds.getValue(Messages.class);
+
                     if (messages.getTo().equals(messSenderId) && messages.getFrom().equals(messReceiverId) ||
                             messages.getTo().equals(messReceiverId) && messages.getFrom().equals(messSenderId)) {
                         messagesList.add(messages);
