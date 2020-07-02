@@ -80,7 +80,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences locationpref = getApplicationContext()
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
+        themeIdcurrent = locationpref.getInt("themeid", R.style.AppTheme);
         setTheme(themeIdcurrent);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
@@ -113,7 +113,7 @@ public class ChatActivity extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()){
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     messReceiverName = ds.child("name").getValue().toString();
                     messReceiverImage = ds.child("imgAnhDD").getValue().toString();
                     String typingStatus = ds.child("typingTo").getValue().toString();
@@ -189,15 +189,15 @@ public class ChatActivity extends AppCompatActivity {
 
 
         imgMore = findViewById(R.id.imgMore);
-        final Animation animation = AnimationUtils.loadAnimation(this,R.anim.anim_rotation);
-        final Animation animation2 = AnimationUtils.loadAnimation(this,R.anim.anim_rotation2);
+        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.anim_rotation);
+        final Animation animation2 = AnimationUtils.loadAnimation(this, R.anim.anim_rotation2);
         imgMore.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (bottom_linear.getVisibility() == View.GONE){
+                if (bottom_linear.getVisibility() == View.GONE) {
                     bottom_linear.setVisibility(View.VISIBLE);
                     imgMore.startAnimation(animation);
-                } else if (bottom_linear.getVisibility() == View.VISIBLE){
+                } else if (bottom_linear.getVisibility() == View.VISIBLE) {
                     bottom_linear.setVisibility(View.GONE);
                     imgMore.startAnimation(animation2);
                 }
@@ -213,7 +213,7 @@ public class ChatActivity extends AppCompatActivity {
         seenListerner = userRefForSeen.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Messages messages = ds.getValue(Messages.class);
                     if (messages.getTo().equals(messSenderId) && messages.getFrom().equals(messReceiverId)) {
                         HashMap<String, Object> hasSeenHashMap = new HashMap<>();
@@ -237,7 +237,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 messagesList.clear();
-                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     Messages messages = ds.getValue(Messages.class);
                     if (messages.getTo().equals(messSenderId) && messages.getFrom().equals(messReceiverId) ||
                             messages.getTo().equals(messReceiverId) && messages.getFrom().equals(messSenderId)) {
@@ -332,7 +332,7 @@ public class ChatActivity extends AppCompatActivity {
         query.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds: snapshot.getChildren()) {
+                for (DataSnapshot ds : snapshot.getChildren()) {
                     Token token = ds.getValue(Token.class);
                     Data data = new Data(messSenderId, R.drawable.logo, name + " :" + messageText, "New Message", messReceiverId);
                     Sender sender = new Sender(data, token.getToken());

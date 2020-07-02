@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
         addBadgeView();
         //checkUserStatus();
         //phan notification
-        updateToken(String.valueOf(FirebaseInstanceId.getInstance().getToken()));
+//        updateToken(String.valueOf(FirebaseInstanceId.getInstance().getToken()));
     }
 
     private void addBadgeView() {
