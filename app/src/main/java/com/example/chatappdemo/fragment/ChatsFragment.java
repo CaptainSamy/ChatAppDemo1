@@ -39,9 +39,8 @@ public class ChatsFragment extends Fragment {
     RecyclerView recyclerView;
     List<Chatlist> chatlistList;
     List<User> userList;
-//    DatabaseReference reference;
-    FirebaseUser currentUser;
     ChatlistAdapter chatlistAdapter;
+    String mUID;
 
     public ChatsFragment() {
 
@@ -54,21 +53,20 @@ public class ChatsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_chats, container, false);
 
         firebaseAuth = FirebaseAuth.getInstance();
-        currentUser = FirebaseAuth.getInstance().getCurrentUser();
         recyclerView = view.findViewById(R.id.recyclerView);
         chatlistList = new ArrayList<>();
 
-
         updateToken(FirebaseInstanceId.getInstance().getToken());
-
         return view;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        if (currentUser != null){
-            final DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(currentUser.getUid());
+        FirebaseUser fUser = firebaseAuth.getCurrentUser();
+        if (fUser != null){
+            mUID = fUser.getUid();
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chatlist").child(mUID);
             reference.addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -90,7 +88,6 @@ public class ChatsFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         }
-
 
     }
 
@@ -126,6 +123,8 @@ public class ChatsFragment extends Fragment {
     }
 
     private void lastMessage(String userId) {
+        FirebaseUser fUser = firebaseAuth.getCurrentUser();
+        mUID = fUser.getUid();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -141,8 +140,8 @@ public class ChatsFragment extends Fragment {
                     if (sender == null || receiver == null) {
                         continue;
                     }
-                    if (messages.getTo().equals(currentUser.getUid()) && messages.getFrom().equals(userId) ||
-                              messages.getTo().equals(userId) && messages.getFrom().equals(currentUser.getUid())) {
+                    if (messages.getTo().equals(mUID) && messages.getFrom().equals(userId) ||
+                            messages.getTo().equals(userId) && messages.getFrom().equals(mUID)) {
                         theLastMessage = messages.getMessage();
                     }
                 }
@@ -158,8 +157,11 @@ public class ChatsFragment extends Fragment {
     }
 
     private void updateToken(String token) {
-        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
-        Token token1 = new Token(token);
-        reference.child(currentUser.getUid()).setValue(token1);
+        FirebaseUser fUser = firebaseAuth.getCurrentUser();
+        if (fUser != null) {
+            DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Tokens");
+            Token token1 = new Token(token);
+            reference.child(fUser.getUid()).setValue(token1);
+        }
     }
 }

@@ -48,10 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView txtTitle;
     private View notificationBadge;
 
-    private FirebaseUser currentUser;
     private FirebaseAuth firebaseAuth;
-    private DatabaseReference databaseReference;
-    private String currentUserId;
+    String mUID;
 
 
     @Override
@@ -64,8 +62,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         txtTitle = findViewById(R.id.txt_Title);
         firebaseAuth = FirebaseAuth.getInstance();
-        currentUser = firebaseAuth.getCurrentUser();
-        databaseReference = FirebaseDatabase.getInstance().getReference();
 
         //loadFragment(new ChatsFragment());
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -99,7 +95,25 @@ public class MainActivity extends AppCompatActivity {
         addBadgeView();
         //checkUserStatus();
         //phan notification
-//        updateToken(String.valueOf(FirebaseInstanceId.getInstance().getToken()));
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkUserStatus();
+    }
+
+    @Override
+    protected void onResume() {
+        checkUserStatus();
+        super.onResume();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 
     private void addBadgeView() {
@@ -152,31 +166,16 @@ public class MainActivity extends AppCompatActivity {
         notificationBadge.setVisibility(badgeIsVisible ? VISIBLE : GONE);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        checkUserStatus();
-    }
-
-    @Override
-    protected void onResume() {
-        checkUserStatus();
-        super.onResume();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
 
     private void checkUserStatus() {
-        if (currentUser == null) {
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
+        if (user == null) {
             Intent loginIntent = new Intent(MainActivity.this, Dangnhap_Dangky_Activity.class);
             startActivity(loginIntent);
         } else {
-            currentUserId = firebaseAuth.getCurrentUser().getUid();
-            databaseReference.child("Users").child(currentUserId).addValueEventListener(new ValueEventListener() {
+            mUID = user.getUid();
+            databaseReference.child(mUID).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if ((dataSnapshot.child("name").exists())) {
@@ -197,21 +196,22 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
-
-            //notification
-            SharedPreferences sp = getSharedPreferences("SP_USER", MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString("Current_USERID", currentUserId);
-            editor.apply();
-            //end notification
         }
     }
 
     // phan notification
     public void updateToken(String token) {
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Tokens");
-        Token mToken = new Token(token);
-        ref.child(currentUserId).setValue(mToken);
+        FirebaseUser user = firebaseAuth.getCurrentUser();
+        if (user != null) {
+            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Tokens");
+            Token mToken = new Token(token);
+            ref.child(user.getUid()).setValue(mToken);
+
+            SharedPreferences sp = getSharedPreferences("SP_USER", MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("Current_USERID", user.getUid());
+            editor.apply();
+        }
     }
     // end notification
 }

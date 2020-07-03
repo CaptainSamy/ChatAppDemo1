@@ -75,7 +75,7 @@ public class ChatActivity extends AppCompatActivity {
     private MessageAdapter messageAdapter;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 10;
+    public static final int TOTAL_ITEM_TO_LOAD = 12;
     private int mCurrentPage = 1;
 
     //Solution for descending list on refresh
@@ -423,7 +423,7 @@ public class ChatActivity extends AppCompatActivity {
                 for (DataSnapshot ds : snapshot.getChildren()) {
                     Token token = ds.getValue(Token.class);
                     Data data = new Data(messSenderId, R.drawable.logo, name + " :" + messageText, "New Message", messReceiverId);
-                    Sender sender = new Sender(data, token.getToken());
+                    Sender sender = new Sender(data,token.getToken());
 
                     try {
                         JSONObject senderJsonObj = new JSONObject(new Gson().toJson(sender));
@@ -460,10 +460,6 @@ public class ChatActivity extends AppCompatActivity {
 
             }
         });
-    }
-
-    private void sendNotification(String RootRef, String name, String msg) {
-
     }
 
     private void checkOnlineStatus(String status) {
