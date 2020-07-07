@@ -60,12 +60,17 @@ public class ContactsFragment extends Fragment {
         currentUserId = firebaseAuth.getCurrentUser().getUid();
         contactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts").child(currentUserId);
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
+        loadContacts();
         return contactsView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        loadContacts();
+    }
+
+    private void loadContacts() {
         FirebaseRecyclerOptions options =
                 new FirebaseRecyclerOptions.Builder<User>()
                         .setQuery(contactsRef, User.class)
@@ -113,7 +118,7 @@ public class ContactsFragment extends Fragment {
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    Toast.makeText(getActivity(), "Updated...",Toast.LENGTH_SHORT).show();
+                                                    //Toast.makeText(getActivity(), "Updated...",Toast.LENGTH_SHORT).show();
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {

@@ -57,6 +57,7 @@ public class ChatsFragment extends Fragment {
         chatlistList = new ArrayList<>();
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
+        loadChats();
         return view;
     }
 

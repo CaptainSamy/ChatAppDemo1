@@ -131,7 +131,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Hold
     }
 
     class HolderGroupList extends RecyclerView.ViewHolder{
-        private CircleImageView groupIconIv;
+        private CircleImageView groupIconIv, imgDDuser1, imgDDuser2, imgDDuserN;
         private ImageButton moreGIv;
         private TextView groupTitleTv, nameSenderTv, messageTv, timeGTv;
 
@@ -143,6 +143,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Hold
             nameSenderTv = itemView.findViewById(R.id.nameSenderTv);
             messageTv = itemView.findViewById(R.id.messageTv);
             timeGTv = itemView.findViewById(R.id.timeGTv);
+            imgDDuser1 = itemView.findViewById(R.id.imgDDuser1);
         }
     }
 }

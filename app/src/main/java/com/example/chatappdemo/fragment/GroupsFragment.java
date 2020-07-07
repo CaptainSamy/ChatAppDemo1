@@ -46,6 +46,7 @@ public class GroupsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_groups, container, false);
         recyclerViewGroup = view.findViewById(R.id.recyclerGroup);
         firebaseAuth = FirebaseAuth.getInstance();
+        loadGroupChatsList();
         return view;
     }
 

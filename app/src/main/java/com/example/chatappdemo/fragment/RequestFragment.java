@@ -58,16 +58,21 @@ public class RequestFragment extends Fragment {
         contactReference = FirebaseDatabase.getInstance().getReference().child("Contacts");
         recyclerView = RequestFragmentView.findViewById(R.id.request_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        loadRequests();
         return RequestFragmentView;
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        loadRequests();
+    }
+
+    private void loadRequests() {
         FirebaseRecyclerOptions<User> options =
                 new FirebaseRecyclerOptions.Builder<User>()
-                .setQuery(requestReference.child(currentUserID), User.class)
-                .build();
+                        .setQuery(requestReference.child(currentUserID), User.class)
+                        .build();
 
         FirebaseRecyclerAdapter<User, RequestsViewHolder> adapter =
                 new FirebaseRecyclerAdapter<User, RequestsViewHolder>(options) {
@@ -90,17 +95,17 @@ public class RequestFragment extends Fragment {
                                                     requestUserAnhDD = dataSnapshot.child("imgAnhDD").getValue().toString();
                                                     Picasso.get().load(requestUserAnhDD).placeholder(R.drawable.user_profile).into(requestsViewHolder.profileImage);
                                                 }
-                                                    requestUserName = dataSnapshot.child("name").getValue().toString();
-                                                    requestUserStatus = dataSnapshot.child("status").getValue().toString();
+                                                requestUserName = dataSnapshot.child("name").getValue().toString();
+                                                requestUserStatus = dataSnapshot.child("status").getValue().toString();
 
-                                                    requestsViewHolder.tv_username.setText(requestUserName);
-                                                    requestsViewHolder.tv_status_item.setText("Want to connect with you!");
+                                                requestsViewHolder.tv_username.setText(requestUserName);
+                                                requestsViewHolder.tv_status_item.setText("Want to connect with you!");
 
                                                 requestsViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                                                     @Override
                                                     public void onClick(View v) {
                                                         CharSequence options[] = new CharSequence[] {
-                                                            "Accept", "Cancel"
+                                                                "Accept", "Cancel"
                                                         };
                                                         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
                                                         builder.setTitle(requestUserName + " request");

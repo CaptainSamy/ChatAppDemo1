@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.cardview.widget.CardView
+    android:background="?attr/cardbackground"
     android:layout_margin="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -68,6 +69,31 @@
             android:text="11:25PM"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
+        <FrameLayout
+            android:layout_below="@id/groupTitleTv"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:src="@drawable/user_profile"
+                android:id="@+id/imgDDuser1"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_marginLeft="20dp"
+                android:src="@drawable/user_profile"
+                android:id="@+id/imgDDuser2"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_marginLeft="40dp"
+                android:background="?attr/backgroundcolor"
+                android:id="@+id/imgDDuserN"
+                android:layout_width="30dp"
+                android:layout_height="30dp"/>
+
+        </FrameLayout>
 
     </RelativeLayout>
 
