@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
 
-                <Button
+                <ImageButton
                     android:layout_gravity="center"
                     android:background="@drawable/bg_light"
                     android:layout_margin="8dp"
@@ -88,7 +88,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"/>
 
-                <Button
+                <ImageButton
                     android:layout_gravity="center"
                     android:background="@drawable/bg_dark"
                     android:layout_margin="8dp"

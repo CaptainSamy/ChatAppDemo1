@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    android:orientation="vertical"
+<RelativeLayout
     android:background="?attr/backgroundcolor"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -15,6 +14,7 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
+
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/back_user_chat"
             android:layout_gravity="center"
@@ -80,41 +80,35 @@
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:layout_weight="2"
+        android:layout_below="@id/liner"
+        android:layout_above="@id/chatlayout"
         android:layout_width="match_parent"
         android:id="@+id/swiperefreshlayout"
         android:layout_height="wrap_content">
         <androidx.recyclerview.widget.RecyclerView
+            tools:listitem="@layout/row_chat_left"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             android:id="@+id/messager_list_of_users"
             android:layout_marginRight="16dp"
             android:layout_marginLeft="16dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
-    <View
-        android:layout_width="0dp"
-        android:layout_below="@+id/messager_list_of_users"
-        android:layout_height="2dp"
-        android:background="#dfdfdf"
-        android:layout_marginBottom="0dp"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"/>
 
     <LinearLayout
+        android:id="@+id/chatlayout"
+        android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <LinearLayout
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:layout_marginBottom="5dp"
-            android:layout_alignParentStart="true"
-            android:background="?attr/backgroundcolor"
             android:orientation="horizontal"
-            android:layout_alignParentBottom="true"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:background="?attr/backgroundcolor"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true">
+            android:layout_height="wrap_content">
+
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/imgMore"
                 android:layout_marginLeft="5dp"
@@ -122,24 +116,21 @@
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
             <FrameLayout
-                android:layout_height="match_parent"
+                android:layout_weight="1"
                 android:layout_width="0dp"
-                android:layout_weight="1">
+                android:layout_height="wrap_content">
                 <EditText
                     android:id="@+id/input_message"
                     android:hint="Enter message"
                     android:background="@drawable/bg_input_message"
-                    android:layout_gravity="center"
+                    android:inputType="textCapSentences|textMultiLine"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:layout_width="match_parent"
                     android:textColor="#000000"
-                    android:inputType="textAutoCorrect|textAutoComplete|textMultiLine|textCapSentences"
-                    android:layout_height="match_parent"
-                    android:ellipsize="end"
+                    android:maxHeight="70dp"
                     android:paddingRight="32dp"
-                    android:maxLines="1"/>
-
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:id="@+id/img_smile"
                     android:layout_gravity="center|right"
@@ -147,6 +138,7 @@
                     android:src="@drawable/smile"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"/>
+
             </FrameLayout>
 
         </LinearLayout>
@@ -305,4 +297,4 @@
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>

@@ -212,14 +212,13 @@
                 </RelativeLayout>
             </androidx.cardview.widget.CardView>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:id="@+id/btnSend_Mess"
                 android:layout_below="@+id/cardView"
                 android:layout_marginTop="15dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginRight="60dp"
-                android:background="@drawable/botron_button2"
-                android:textColor="?attr/tintcolor"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:text="Send request"
@@ -227,14 +226,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                 android:id="@+id/btnDecline"
                 android:layout_below="@+id/btnSend_Mess"
                 android:layout_marginTop="8dp"
-                android:layout_marginLeft="60dp"
-                android:layout_marginRight="60dp"
-                android:background="@drawable/botron_button2"
-                android:textColor="?attr/tintcolor"
+                android:layout_marginLeft="80dp"
+                android:layout_marginRight="80dp"
                 android:textStyle="bold"
                 android:textSize="20sp"
                 android:text="Cancel Request"

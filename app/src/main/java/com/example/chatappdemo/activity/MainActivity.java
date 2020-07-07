@@ -20,10 +20,13 @@ import com.example.chatappdemo.fragment.ChatsFragment;
 import com.example.chatappdemo.fragment.ContactsFragment;
 import com.example.chatappdemo.fragment.GroupsFragment;
 import com.example.chatappdemo.fragment.RequestFragment;
+import com.example.chatappdemo.model.Messages;
+import com.example.chatappdemo.model.User;
 import com.example.chatappdemo.notifications.Token;
 import com.google.android.material.bottomnavigation.BottomNavigationItemView;
 import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.badge.BadgeDrawable;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -44,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
     String SHARED_PREFS = "codeTheme";
     private BottomNavigationView bottomNavigationView;
     private CircleImageView profile_image;
-    private ImageButton btnSearch;
+    private ImageButton btnSearch, btnCreate;
     private TextView txtTitle;
     private View notificationBadge;
 
@@ -82,20 +85,45 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        //Search
-        btnSearch = findViewById(R.id.btnSearch);
-        btnSearch.setOnClickListener(new View.OnClickListener() {
+        //Create
+        btnCreate = findViewById(R.id.btnCreate);
+
+        // up token
+        updateToken(FirebaseInstanceId.getInstance().getToken());
+    }
+
+
+    private void BadgeChats() {
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent_search = new Intent(MainActivity.this, SearchActivity.class);
-                startActivity(intent_search);
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                int unread = 0;
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    int menuItemId = bottomNavigationView.getMenu().getItem(0).getItemId();
+                    BadgeDrawable badgeDrawable = bottomNavigationView.getOrCreateBadge(menuItemId);
+                    Messages mess = ds.getValue(Messages.class);
+                    if (mess.getTo() != null && mess.getTo().equals(firebaseAuth.getCurrentUser().getUid()) && !mess.isSeen()){
+                        unread++;
+                    }
+                    if (unread == 0) {
+                        FragmentManager fragmentManager = getSupportFragmentManager();
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.add(R.id.frame_container, new ChatsFragment(), null);
+                        badgeDrawable.setVisible(false);
+
+                    } else {
+                        badgeDrawable.setVisible(true);
+                        badgeDrawable.setNumber(unread);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
-
-        addBadgeView();
-        //checkUserStatus();
-        //phan notification
-        updateToken(FirebaseInstanceId.getInstance().getToken());
     }
 
     @Override
@@ -116,15 +144,6 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-    private void addBadgeView() {
-        BottomNavigationMenuView menuView = (BottomNavigationMenuView) bottomNavigationView.getChildAt(0);
-        BottomNavigationItemView itemView = (BottomNavigationItemView) menuView.getChildAt(0);
-
-        notificationBadge = LayoutInflater.from(this).inflate(R.layout.custom_badge_layout, menuView, false);
-
-        itemView.addView(notificationBadge);
-    }
-
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
@@ -142,29 +161,42 @@ public class MainActivity extends AppCompatActivity {
                 case R.id.navigation_chat:
                     fragment = new ChatsFragment();
                     loadFragment(fragment);
-                    refreshBadgeView();
+                    btnCreate.setVisibility(GONE);
                     return true;
                 case R.id.navigation_contact:
                     fragment = new ContactsFragment();
                     loadFragment(fragment);
+                    btnCreate.setVisibility(View.VISIBLE);
+                    btnCreate.setImageResource(R.drawable.add_friend);
+                    btnCreate.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(new Intent(MainActivity.this, SearchFriendActivity.class));
+                        }
+                    });
                     return true;
                 case R.id.navigation_group:
                     fragment = new GroupsFragment();
                     loadFragment(fragment);
+                    btnCreate.setVisibility(View.VISIBLE);
+                    btnCreate.setImageResource(R.drawable.message);
+                    btnCreate.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            startActivity(new Intent(MainActivity.this, GroupCreateActivity.class));
+                        }
+                    });
                     return true;
                 case R.id.navigation_request:
                     fragment = new RequestFragment();
                     loadFragment(fragment);
+                    btnCreate.setVisibility(GONE);
                     return true;
             }
             return false;
         }
     };
 
-    private void refreshBadgeView() {
-        boolean badgeIsVisible = notificationBadge.getVisibility() != VISIBLE;
-        notificationBadge.setVisibility(badgeIsVisible ? VISIBLE : GONE);
-    }
 
 
     private void checkUserStatus() {
@@ -196,6 +228,7 @@ public class MainActivity extends AppCompatActivity {
 
                 }
             });
+            BadgeChats();
         }
     }
 

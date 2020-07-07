@@ -21,6 +21,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -219,7 +220,7 @@ public class RequestFragment extends Fragment {
         TextView tv_username, tv_status_item;
         CircleImageView profileImage;
         CircleImageView img_On_Off;
-        Button btnAccept, btnCancel;
+        MaterialButton btnAccept, btnCancel;
 
         public RequestsViewHolder(@NonNull View itemView) {
             super(itemView);

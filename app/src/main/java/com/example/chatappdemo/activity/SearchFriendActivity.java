@@ -29,7 +29,7 @@ import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class SearchActivity extends AppCompatActivity {
+public class SearchFriendActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
     private CircleImageView imgBtnBack;
@@ -46,7 +46,7 @@ public class SearchActivity extends AppCompatActivity {
         themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
         setTheme(themeIdcurrent);
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_search);
+        setContentView(R.layout.activity_search_friend);
         imgBtnBack = findViewById(R.id.back_search);
         imgBtnBack.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,7 +83,7 @@ public class SearchActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (txtSearch.getText().toString().equals("")) {
-                    Toast.makeText(SearchActivity.this,"Please write name to search",Toast.LENGTH_LONG).show();
+                    Toast.makeText(SearchFriendActivity.this,"Please write name to search",Toast.LENGTH_LONG).show();
                 } else {
                     stringSearch = s.toString();
                     SearchFriend(stringSearch);
@@ -125,7 +125,7 @@ public class SearchActivity extends AppCompatActivity {
                             @Override
                             public void onClick(View v) {
                                 String visit_userId = getRef(i).getKey();
-                                Intent profileIntent = new Intent(SearchActivity.this, ProfileActivity.class);
+                                Intent profileIntent = new Intent(SearchFriendActivity.this, ProfileActivity.class);
                                 profileIntent.putExtra("visit_userId", visit_userId);
                                 startActivity(profileIntent);
                             }

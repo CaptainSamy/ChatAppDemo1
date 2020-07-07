@@ -1,7 +1,5 @@
 package com.example.chatappdemo.fragment;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -10,19 +8,19 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
-import android.widget.Toast;
 
 import com.example.chatappdemo.R;
-import com.example.chatappdemo.adapter.RecyclerViewAdapterGroup;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.example.chatappdemo.adapter.GroupListAdapter;
+import com.example.chatappdemo.model.GroupsList;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -31,14 +29,12 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class GroupsFragment extends Fragment {
-    private View groupFragmentView;
-    private RecyclerView recyclerGroup;
-    private RecyclerViewAdapterGroup adapterGroup;
+
+    private RecyclerView recyclerViewGroup;
     private static final int NUM_COLUMNS = 2;
-//    private ArrayAdapter<String> arrayAdapter;
-    private ArrayList<String> listGroup = new ArrayList<>();
-//    private DatabaseReference groupRef;
-    private DatabaseReference databaseReference;
+    private FirebaseAuth firebaseAuth;
+    private ArrayList<GroupsList> groupsLists;
+    private GroupListAdapter groupListAdapter;
     public GroupsFragment() {
         // Required empty public constructor
     }
@@ -47,81 +43,72 @@ public class GroupsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        groupFragmentView = inflater.inflate(R.layout.fragment_groups, container, false);
-//        groupRef = FirebaseDatabase.getInstance().getReference().child("Groups");
-        databaseReference = FirebaseDatabase.getInstance().getReference();
-        AnhXa();
-//        Retrieve_DisplayGroups();
-        return groupFragmentView;
+        View view = inflater.inflate(R.layout.fragment_groups, container, false);
+        recyclerViewGroup = view.findViewById(R.id.recyclerGroup);
+        firebaseAuth = FirebaseAuth.getInstance();
+        return view;
     }
 
-//    private void Retrieve_DisplayGroups() {
-//        groupRef.addValueEventListener(new ValueEventListener() {
-//            @Override
-//            public void onDataChange(DataSnapshot dataSnapshot) {
-//                Set<String> set = new HashSet<>();
-//                Iterator iterator = dataSnapshot.getChildren().iterator();
-//                while (iterator.hasNext()) {
-//                    set.add(((DataSnapshot)iterator.next()).getKey());
-//                }
-//                listGroup.clear();
-//                listGroup.addAll(set);
-//                adapterGroup .notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            public void onCancelled(DatabaseError databaseError) {
-//
-//            }
-//        });
-//    }
+    @Override
+    public void onStart() {
+        super.onStart();
+        loadGroupChatsList();
+    }
 
-    private void AnhXa() {
-        recyclerGroup = groupFragmentView.findViewById(R.id.recyclerGroup);
-        adapterGroup = new RecyclerViewAdapterGroup(listGroup, getActivity(), new RecyclerViewAdapterGroup.AdapterListener() {
+    private void loadGroupChatsList() {
+        groupsLists = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Groups");
+        reference.addValueEventListener(new ValueEventListener() {
             @Override
-            public void OnClick() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.AlertDialog);
-                builder.setTitle("Enter Group Name");
-                final EditText groupNameField = new EditText(getActivity());
-                groupNameField.setHint("Name group");
-                builder.setView(groupNameField);
-                builder.setPositiveButton("Create", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        String groupName = groupNameField.getText().toString();
-                        if (TextUtils.isEmpty(groupName)) {
-                            Toast.makeText(getActivity(), "Write name group",Toast.LENGTH_SHORT).show();
-                        } else {
-                            CreateNewGroup(groupName);
-                        }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                groupsLists.size();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    if (ds.child("Participants").child(firebaseAuth.getUid()).exists()) {
+                        GroupsList model = ds.getValue(GroupsList.class);
+                        groupsLists.add(model);
                     }
-                });
+                }
+                groupListAdapter = new GroupListAdapter(getActivity(), groupsLists);
+                StaggeredGridLayoutManager staggeredGridLayoutManager = new
+                        StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
+                recyclerViewGroup.setLayoutManager(staggeredGridLayoutManager);
+                recyclerViewGroup.setAdapter(groupListAdapter);
+            }
 
-                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                builder.show();
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
-        StaggeredGridLayoutManager staggeredGridLayoutManager = new
-                StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
-        recyclerGroup.setLayoutManager(staggeredGridLayoutManager);
-        recyclerGroup.setAdapter(adapterGroup);
     }
 
-    private void CreateNewGroup(String groupName) {
-        databaseReference.child("Groups").child(groupName).setValue("")
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getActivity(),"group is create successefully",Toast.LENGTH_LONG).show();
+    private void searchGroupChatsList(String query) {
+        groupsLists = new ArrayList<>();
+        DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Groups");
+        reference.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                groupsLists.size();
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    if (ds.child("Participants").child(firebaseAuth.getUid()).exists()) {
+                        if (ds.child("groupTitle").toString().toLowerCase().contains(query.toLowerCase())) {
+                            GroupsList model = ds.getValue(GroupsList.class);
+                            groupsLists.add(model);
                         }
+
                     }
-                });
+                }
+                groupListAdapter = new GroupListAdapter(getActivity(), groupsLists);
+                StaggeredGridLayoutManager staggeredGridLayoutManager = new
+                        StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
+                recyclerViewGroup.setLayoutManager(staggeredGridLayoutManager);
+                recyclerViewGroup.setAdapter(groupListAdapter);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 }

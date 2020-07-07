@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.chatappdemo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
@@ -33,7 +35,7 @@ public class SignupActivity extends AppCompatActivity {
     private CircleImageView btn_Back;
     private FirebaseAuth firebaseAuth;
     private DatabaseReference databaseReference;
-    private Button register_button;
+    private MaterialButton register_button;
     private TextInputLayout register_Email, register_Password, register_ConfirmPassword;
     private ProgressDialog loadingBar;
     private String email_signup, password_signup, rePassword_signup;

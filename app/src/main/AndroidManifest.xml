@@ -14,6 +14,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.GroupParticipantAddActivity"></activity>
+        <activity android:name=".activity.GroupCreateActivity" />
         <activity android:name=".activity.ChatActivity" />
         <activity android:name=".activity.ViewProfileUserActivity" />
         <activity
@@ -34,7 +36,7 @@
             android:name=".activity.SettingActivity"
             android:parentActivityName=".activity.MainActivity" />
         <activity
-            android:name=".activity.SearchActivity"
+            android:name=".activity.SearchFriendActivity"
             android:parentActivityName=".activity.MainActivity" />
         <activity
             android:name=".activity.UpdateProfileUserActivity"
@@ -48,15 +50,13 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.MainActivity" />
-        <activity
-            android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
-            android:theme="@style/Base.Theme.AppCompat" />
 
-        <service android:name=".notifications.FirebaseMessaging"
+        <service
+            android:name=".notifications.FirebaseMessaging"
             android:enabled="true"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
     </application>

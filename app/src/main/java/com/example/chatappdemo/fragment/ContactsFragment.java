@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -14,9 +15,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.ChatActivity;
+import com.example.chatappdemo.activity.UpdateProfileUserActivity;
 import com.example.chatappdemo.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -24,6 +28,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -76,8 +82,6 @@ public class ContactsFragment extends Fragment {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                 if (dataSnapshot.exists()) {
-
-
                                     if (dataSnapshot.hasChild("imgAnhDD")) {
                                         userImage = dataSnapshot.child("imgAnhDD").getValue().toString();
                                         Picasso.get().load(userImage)
@@ -86,30 +90,42 @@ public class ContactsFragment extends Fragment {
 
                                     final String userName = dataSnapshot.child("name").getValue().toString();
                                     final String userStatus = dataSnapshot.child("status").getValue().toString();
+                                    final String imgAnhBia = dataSnapshot.child("imgAnhBia").getValue().toString();
+                                    final String gioiTinh = dataSnapshot.child("gioiTinh").getValue().toString();
+                                    final String phone = dataSnapshot.child("phone").getValue().toString();
+                                    final String onlineStatus = dataSnapshot.child("onlineStatus").getValue().toString();
+                                    final String typingTo = dataSnapshot.child("typingTo").getValue().toString();
+                                    final String uid = dataSnapshot.child("uid").getValue().toString();
+
+                                    HashMap<String, Object> hashMap = new HashMap<>();
+                                    hashMap.put("uid", uid);
+                                    hashMap.put("name", userName);
+                                    hashMap.put("status", userStatus);
+                                    hashMap.put("phone", phone);
+                                    hashMap.put("gioiTinh", gioiTinh);
+                                    hashMap.put("onlineStatus", onlineStatus);
+                                    hashMap.put("typingTo", typingTo);
+                                    hashMap.put("imgAnhBia", imgAnhBia);
+                                    hashMap.put("imgAnhDD", userImage);
+
+                                    DatabaseReference refContacts = FirebaseDatabase.getInstance().getReference("Contacts");
+                                    refContacts.child(currentUserId).child(userIds).updateChildren(hashMap)
+                                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                @Override
+                                                public void onSuccess(Void aVoid) {
+                                                    Toast.makeText(getActivity(), "Updated...",Toast.LENGTH_SHORT).show();
+                                                }
+                                            })
+                                            .addOnFailureListener(new OnFailureListener() {
+                                                @Override
+                                                public void onFailure(@NonNull Exception e) {
+                                                    Toast.makeText(getActivity(), ""+ e.getMessage(),Toast.LENGTH_SHORT).show();
+                                                }
+                                            });
+
 
                                     contactsViewHolder.tv_username.setText(userName);
                                     contactsViewHolder.tv_status_item.setText(userStatus);
-
-//                                    if (dataSnapshot.child("userState").hasChild("state")){
-//                                        String state = dataSnapshot.child("userState").child("state").getValue().toString();
-//                                        String date = dataSnapshot.child("userState").child("date").getValue().toString();
-//                                        String time = dataSnapshot.child("userState").child("time").getValue().toString();
-//                                        if (state.equals("online")){
-//                                            contactsViewHolder.onlineIcon.setVisibility(View.VISIBLE);
-//                                            contactsViewHolder.tv_status_item.setText("online");
-//
-//                                        }else if (state.equals("offline")){
-//                                            contactsViewHolder.onlineIcon.setVisibility(View.INVISIBLE);
-//                                            contactsViewHolder.tv_status_item.setText("Last seen: "  +time  +" "+ date);
-//
-//                                        }
-//
-//
-//                                    }else {
-//                                        contactsViewHolder.tv_status_item.setText("offline");
-//                                        contactsViewHolder.onlineIcon.setVisibility(View.INVISIBLE);
-//
-//                                    }
 
                                     contactsViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override

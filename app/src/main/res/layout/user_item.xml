@@ -63,28 +63,27 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
                     android:id="@+id/request_accept_btn"
                     android:text="Accept"
                     android:textSize="16sp"
-                    android:textColor="@android:color/background_light"
                     android:textAllCaps="false"
-                    android:background="@android:color/holo_green_light"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"/>
+                    android:layout_height="wrap_content"/>
 
-                <Button
+                <com.google.android.material.button.MaterialButton
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:id="@+id/request_cancel_btn"
                     android:text="Cancel"
                     android:layout_marginLeft="16dp"
-                    android:visibility="invisible"
+                    android:visibility="gone"
                     android:textSize="16sp"
-                    android:textColor="@android:color/background_light"
                     android:textAllCaps="false"
                     android:background="@android:color/holo_blue_dark"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"/>
+                    android:layout_height="wrap_content"/>
 
             </LinearLayout>
         </LinearLayout>

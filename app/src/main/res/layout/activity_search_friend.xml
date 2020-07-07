@@ -7,7 +7,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.SearchActivity">
+    tools:context=".activity.SearchFriendActivity">
 
     <LinearLayout
         android:background="?attr/tabcolor"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"/>
 
         <TextView
-            android:text="Search"
+            android:text="Search User"
             android:textSize="23sp"
             android:layout_gravity="center"
             android:textColor="?attr/textcolor"
@@ -40,7 +40,7 @@
         <EditText
             android:id="@+id/txt_search"
             android:hint="Name"
-            android:drawableLeft="?attr/icon_search"
+            android:drawableLeft="@drawable/search"
             android:drawableRight="@drawable/close"
             android:textColorHint="?attr/textcolor"
             android:textColor="?attr/textcolor"

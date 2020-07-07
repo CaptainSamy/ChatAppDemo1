@@ -27,27 +27,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <Button
-        android:text="LOGIN"
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignin"
         android:layout_marginTop="16dp"
-        android:textColor="?attr/backgroundcolor"
-        android:background="@drawable/botron_button2"
+        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+        android:text="Sign in"
         android:layout_marginLeft="100dp"
         android:layout_marginRight="100dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="60dp"/>
 
-    <Button
-        android:text="REGISTER"
+    <com.google.android.material.button.MaterialButton
         android:id="@+id/btnSignup"
-        android:textColor="?attr/backgroundcolor"
-        android:background="@drawable/botron_button"
+        style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+        android:text="Resignter"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="50dp"
         android:layout_marginLeft="100dp"
         android:layout_marginRight="100dp"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="60dp"/>
 
 </LinearLayout>

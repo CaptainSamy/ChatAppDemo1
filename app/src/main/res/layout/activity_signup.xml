@@ -68,17 +68,17 @@
                 android:layout_height="150dp"/>
 
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/AppTextField"
                 android:id="@+id/register_email"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:boxBackgroundMode="outline"
-                android:backgroundTint="@color/colorAccent"
                 app:errorEnabled="true">
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="wrap_content"
                     android:drawablePadding="8dp"
                     android:drawableStart="?attr/icon_email"
                     android:hint="Email"
@@ -89,13 +89,13 @@
                     android:drawableLeft="?attr/icon_email" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/AppTextField"
                 android:id="@+id/register_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:boxBackgroundMode="outline"
-                android:backgroundTint="@color/colorAccent"
                 app:errorEnabled="true"
                 app:passwordToggleEnabled="true">
                 <com.google.android.material.textfield.TextInputEditText
@@ -111,13 +111,13 @@
                     android:drawableLeft="?attr/icon_pass" />
             </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/AppTextField"
                 android:id="@+id/register_confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="20dp"
                 app:boxBackgroundMode="outline"
-                android:backgroundTint="@color/colorAccent"
                 app:errorEnabled="true"
                 app:passwordToggleEnabled="true">
                 <com.google.android.material.textfield.TextInputEditText
@@ -133,15 +133,15 @@
                     android:drawableLeft="?attr/icon_pass" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <Button
+            <com.google.android.material.button.MaterialButton
                 android:id="@+id/register_button"
-                android:layout_width="170dp"
-                android:layout_height="50dp"
+                android:layout_marginLeft="100dp"
+                android:layout_marginRight="100dp"
+                android:layout_width="match_parent"
+                android:layout_height="55dp"
                 android:layout_gravity="center_horizontal"
-                android:background="@drawable/botron_button"
-                android:text="Register"
-                android:textColor="#ffffff"
-                android:textSize="20dp" />
+                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                android:text="Resignter" />
         </LinearLayout>
 
     </ScrollView>

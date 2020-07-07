@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.chatappdemo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -25,7 +26,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     String SHARED_PREFS = "codeTheme";
     private Toolbar toolbar;
     private TextInputLayout inputEmail;
-    private Button btnReset;
+    private MaterialButton btnReset;
     private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
     private static final Pattern EMAIL_PATTERN = Pattern.compile("^[a-zA-Z][\\w-]+@([\\w]+\\.[\\w]+|[\\w]+\\.[\\w]{2,}\\.[\\w]{2,})$");

@@ -3,11 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/cardbackground"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="?attr/backgroundcolor"
     tools:context=".fragment.GroupsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
-        android:background="?attr/cardbackground"
+        tools:listitem="@layout/row_groupchats_list"
+        android:background="?attr/backgroundcolor"
         android:id="@+id/recyclerGroup"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

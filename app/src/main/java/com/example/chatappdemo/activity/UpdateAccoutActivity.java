@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.chatappdemo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -24,8 +25,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class UpdateAccoutActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
-    private Button btnChangeEmail, btnChangePassword;
-    private CircleImageView changeEmail, changePassword, btn_Back;
+    private MaterialButton btnChangeEmail, btnChangePassword, changeEmail, changePassword;
+    private CircleImageView btn_Back;
     private TextInputLayout oldEmail, newEmail, password, newPassword;
     private ProgressBar progressBar;
     private FirebaseAuth firebaseAuth;
@@ -50,8 +51,8 @@ public class UpdateAccoutActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
-        btnChangeEmail = (Button) findViewById(R.id.change_email_button);
-        btnChangePassword = (Button) findViewById(R.id.change_password_button);
+        btnChangeEmail = findViewById(R.id.change_email_button);
+        btnChangePassword = findViewById(R.id.change_password_button);
         changeEmail = findViewById(R.id.changeEmail);
         changePassword = findViewById(R.id.changePass);
 

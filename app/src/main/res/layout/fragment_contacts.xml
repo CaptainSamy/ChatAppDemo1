@@ -3,10 +3,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?attr/cardbackground"
     tools:context=".fragment.ContactsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
+        tools:listitem="@layout/user_item_chats"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         android:layout_margin="8dp"
         android:id="@+id/recycler_contact_list"
         android:layout_width="match_parent"

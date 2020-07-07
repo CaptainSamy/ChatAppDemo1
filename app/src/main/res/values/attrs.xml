@@ -9,7 +9,6 @@
         <attr name="tabcolor" format="color"/>
         <attr name="tabtextcolor" format="color"/>
         <attr name="tabselectcolor" format="color"/>
-        <attr name="icon_search" format="reference"/>
         <attr name="icon_create" format="reference"/>
         <attr name="icon_add" format="reference"/>
         <attr name="icon_email" format="reference"/>

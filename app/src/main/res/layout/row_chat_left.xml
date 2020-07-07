@@ -1,50 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<RelativeLayout
+    android:layout_margin="8dp"
     android:id="@+id/messageLayout"
-    android:orientation="vertical"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content">
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/message_profile_image"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:src="@drawable/user_profile" />
 
     <LinearLayout
-        android:orientation="horizontal"
-        android:layout_width="match_parent"
+        android:padding="5dp"
+        android:orientation="vertical"
+        android:id="@+id/liner_gr"
+        android:background="@drawable/receiver_messages_layout"
+        android:layout_toRightOf="@id/message_profile_image"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/message_profile_image"
-            android:layout_width="47dp"
-            android:layout_height="47dp"
-            android:src="@drawable/user_profile"
-            android:layout_marginTop="10dp"/>
         <TextView
             android:maxWidth="200dp"
             android:id="@+id/message_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginTop="14dp"
-            android:layout_marginLeft="3dp"
-            android:layout_toEndOf="@+id/message_profile_image"
-            android:background="@drawable/receiver_messages_layout"
             android:text="receiver messages here"
-            android:padding="10dp"
+            android:padding="8dp"
             android:textSize="14sp"
-            android:textStyle="bold"
-            android:textColor="?attr/tintcolor"
-            android:layout_toRightOf="@+id/message_profile_image" />
-
-        <TextView
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:id="@+id/timeTv"
-            android:text="02/03/2020 05:50PM"
-            android:textColor="?attr/tintcolor"
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:textColor="?attr/tintcolor"/>
 
     </LinearLayout>
+    <TextView
+        android:layout_toRightOf="@id/liner_gr"
+        android:layout_centerVertical="true"
+        android:id="@+id/timeTv"
+        android:textColor="?attr/tintcolor"
+        android:text="Time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_marginLeft="5dp" />
 
     <TextView
         android:id="@+id/isSeenTv"
@@ -55,4 +52,4 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-</LinearLayout>
+</RelativeLayout>

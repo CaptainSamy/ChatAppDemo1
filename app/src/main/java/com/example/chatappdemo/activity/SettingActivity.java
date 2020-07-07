@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,7 +30,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 public class SettingActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
-    private Button btn_Light, btn_Dark;
+    private ImageButton btn_Light, btn_Dark;
     private TextView txtTaiKhoanSetting, txtTaiKhoanProfile, user_Name, tv_Logout, tv_DelAccout;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;

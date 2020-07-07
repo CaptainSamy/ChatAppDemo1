@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="homeAsUpIndicator">@drawable/back_dark_mode</item>
         <item name="colorPrimary">#2cb9b0</item>
@@ -15,7 +15,6 @@
         <item name="tabcolor">#00bdb5</item>
         <item name="tabtextcolor">#424242</item>
         <item name="tabselectcolor">#00c7bf</item>
-        <item name="icon_search">@drawable/search_dark_mode</item>
         <item name="icon_create">@drawable/create_light_mode</item>
         <item name="icon_add">@drawable/add_light_mode</item>
         <item name="icon_email">@drawable/email_light_mode</item>
@@ -23,7 +22,7 @@
         <item name="no_search_result">@drawable/no_search_light</item>
     </style>
 
-    <style name="DarkTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="DarkTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="homeAsUpIndicator">@drawable/back_dark_mode</item>
         <item name="colorPrimary">#2cb9b0</item>
@@ -37,7 +36,6 @@
         <item name="tabcolor">#00bdb5</item>
         <item name="tabtextcolor">#424242</item>
         <item name="tabselectcolor">#00c7bf</item>
-        <item name="icon_search">@drawable/search_dark_mode</item>
         <item name="icon_create">@drawable/create_dark_mode</item>
         <item name="icon_add">@drawable/add_dark_mode</item>
         <item name="icon_email">@drawable/email_dark_mode</item>
@@ -46,5 +44,11 @@
     </style>
 
     <style name="AlertDialog" parent="Theme.AppCompat.DayNight.Dialog"/>
+    <style name="AppTextField" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/colorPrimary</item>
+        <item name="boxBackgroundColor">?attr/backgroundcolor</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
+
 
 </resources>
