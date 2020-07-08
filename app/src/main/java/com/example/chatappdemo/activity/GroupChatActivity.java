@@ -6,12 +6,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -103,6 +103,11 @@ public class GroupChatActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         groupId = intent.getStringExtra("groupId");
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);
+        groupchatRv.setHasFixedSize(true);
+        groupchatRv.setLayoutManager(linearLayoutManager);
 
         cameraPermission = new String[]{
                 Manifest.permission.CAMERA,

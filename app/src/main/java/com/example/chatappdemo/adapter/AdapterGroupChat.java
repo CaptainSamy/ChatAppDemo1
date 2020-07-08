@@ -84,6 +84,28 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
 
         holder.timeTv.setText(dateTime);
         setUserName(model, holder);
+
+        //click show time
+        holder.messageIv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.timeTv.getVisibility() == View.GONE){
+                    holder.timeTv.setVisibility(View.VISIBLE);
+                } else {
+                    holder.timeTv.setVisibility(View.GONE);
+                }
+            }
+        });
+        holder.messageTv.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (holder.timeTv.getVisibility() == View.GONE){
+                    holder.timeTv.setVisibility(View.VISIBLE);
+                } else {
+                    holder.timeTv.setVisibility(View.GONE);
+                }
+            }
+        });
     }
 
     private void setUserName(GroupChat model, HolderGroupChat holder) {

@@ -35,22 +35,35 @@
         android:layout_marginLeft="8dp"
         android:id="@+id/nameTv"
         android:text="His Name"
+        android:textStyle="bold"
         android:textColor="?attr/tintcolor"
         android:textSize="18sp"
         android:layout_toRightOf="@id/framelayout"
         android:layout_toEndOf="@id/framelayout"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/seenCv"
+        android:visibility="gone"
+        android:layout_marginTop="8dp"
+        android:layout_marginLeft="5dp"
+        android:layout_toRightOf="@id/nameTv"
+        android:src="@drawable/seen"
+        android:layout_width="10dp"
+        android:layout_height="10dp"/>
     <TextView
-        android:maxLines="2"
+        android:textColor="?attr/tintcolor"
         android:layout_marginLeft="8dp"
         android:id="@+id/lastMessageTv"
+        android:maxLines="1"
         android:text="Last Message"
+        android:maxWidth="200dp"
         android:textSize="15sp"
         android:layout_toRightOf="@id/framelayout"
         android:layout_toEndOf="@id/framelayout"
         android:layout_below="@id/nameTv"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <View
@@ -61,5 +74,11 @@
         android:layout_marginLeft="60dp"
         android:layout_marginRight="8dp"
         android:background="@android:color/darker_gray"/>
+
+    <TextView
+        android:visibility="gone"
+        android:id="@+id/timeLastMess"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -62,7 +63,6 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                 holder.avatarIv.setImageResource(R.drawable.user_profile);
             }
             checkIfAlreadyExists(modelContact, holder);
-            //
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -93,7 +93,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                                                         }
                                                     }
                                                 }).show();
-                                            } else if (hisPreviosRole.equals("Participants")) {
+                                            } else if (hisPreviosRole.equals("Participant")) {
                                                 options = new String[]{"Make Admin", "Remove User"};
                                                 builder.setItems(options, new DialogInterface.OnClickListener() {
                                                     @Override
@@ -187,6 +187,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                     @Override
                     public void onSuccess(Void aVoid) {
                         Toast.makeText(context, "Added successfully",Toast.LENGTH_SHORT).show();
+
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -263,8 +264,10 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                             if (snapshot.exists()){
                                 String hisRole = ""+snapshot.child("role").getValue();
                                 holder.statusTv.setText(hisRole);
+                                holder.memberTickIv.setVisibility(View.VISIBLE);
                             } else {
-                                holder.statusTv.setText("");
+                                holder.statusTv.setText(modelContact.getStatus());
+                                holder.memberTickIv.setVisibility(View.GONE);
                             }
                         }
 
@@ -284,11 +287,13 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
     class HolderParticipantAdd extends RecyclerView.ViewHolder{
         private CircleImageView avatarIv;
         private TextView nameTv, statusTv;
+        private ImageView memberTickIv;
         public HolderParticipantAdd(@NonNull View itemView) {
             super(itemView);
             avatarIv = itemView.findViewById(R.id.avatarIv);
             nameTv = itemView.findViewById(R.id.nameTv);
             statusTv = itemView.findViewById(R.id.statusTv);
+            memberTickIv = itemView.findViewById(R.id.memberTickIv);
         }
     }
 }

@@ -28,11 +28,11 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.HolderGroupList>{
+public class AdapterGroupList extends RecyclerView.Adapter<AdapterGroupList.HolderGroupList>{
     private Context context;
     private ArrayList<GroupsList> groupsLists;
 
-    public GroupListAdapter(Context context, ArrayList<GroupsList> groupsLists) {
+    public AdapterGroupList(Context context, ArrayList<GroupsList> groupsLists) {
         this.context = context;
         this.groupsLists = groupsLists;
     }
@@ -123,6 +123,41 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Hold
 
                     }
                 });
+
+        ref.child(groupsListmodel.getGroupId()).child("Participants")
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        int members = 0;
+                        for (DataSnapshot ds: snapshot.getChildren()){
+                            String uIdPar = ""+ds.child("uid").getValue();
+                            //get imgDD Par
+                            DatabaseReference ref1 = FirebaseDatabase.getInstance().getReference("Users");
+                            ref1.orderByChild("uid").equalTo(uIdPar)
+                                    .addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot ds: snapshot.getChildren()) {
+                                                String imgDD = ""+ds.child("imgAnhDD").getValue();
+                                                Picasso.get().load(imgDD).placeholder(R.drawable.user_profile).into(holder.imgDDuser1);
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
+                            members++;
+                            holder.memberTv.setText(""+members);
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
     @Override
@@ -131,9 +166,9 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Hold
     }
 
     class HolderGroupList extends RecyclerView.ViewHolder{
-        private CircleImageView groupIconIv, imgDDuser1, imgDDuser2, imgDDuserN;
+        private CircleImageView groupIconIv, imgDDuser1;
         private ImageButton moreGIv;
-        private TextView groupTitleTv, nameSenderTv, messageTv, timeGTv;
+        private TextView groupTitleTv, nameSenderTv, messageTv, timeGTv, memberTv;
 
         public HolderGroupList(@NonNull View itemView) {
             super(itemView);
@@ -144,6 +179,7 @@ public class GroupListAdapter extends RecyclerView.Adapter<GroupListAdapter.Hold
             messageTv = itemView.findViewById(R.id.messageTv);
             timeGTv = itemView.findViewById(R.id.timeGTv);
             imgDDuser1 = itemView.findViewById(R.id.imgDDuser1);
+            memberTv = itemView.findViewById(R.id.memberTv);
         }
     }
 }

@@ -20,15 +20,17 @@ import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class ChatlistAdapter extends RecyclerView.Adapter<ChatlistAdapter.MyHolder> {
+public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHolder> {
     Context context;
     List<User> userList;
     private HashMap<String, String> lastMessageMap;
+    private HashMap<String, String> seenMessageMap;
 
-    public ChatlistAdapter(Context context, List<User> userList) {
+    public AdapterChatlist(Context context, List<User> userList) {
         this.context = context;
         this.userList = userList;
         lastMessageMap = new HashMap<>();
+        seenMessageMap = new HashMap<>();
     }
 
     @NonNull
@@ -44,6 +46,8 @@ public class ChatlistAdapter extends RecyclerView.Adapter<ChatlistAdapter.MyHold
         String userImage = userList.get(position).getImgAnhDD();
         String userName = userList.get(position).getName();
         String lastMessage = lastMessageMap.get(hisUid);
+        String seenMessage = seenMessageMap.get(hisUid);
+
 
         //set data
         holder.nameTv.setText(userName);
@@ -52,6 +56,16 @@ public class ChatlistAdapter extends RecyclerView.Adapter<ChatlistAdapter.MyHold
         } else {
             holder.lastMessageTv.setVisibility(View.VISIBLE);
             holder.lastMessageTv.setText(lastMessage);
+        }
+
+        if (seenMessage == null || seenMessage.equals("default")){
+            holder.seenCv.setVisibility(View.GONE);
+        }else if(seenMessage != null) {
+            if (seenMessage.equals("true")){
+                holder.seenCv.setVisibility(View.GONE);
+            }else if (seenMessage.equals("false")){
+                holder.seenCv.setVisibility(View.VISIBLE);
+            }
         }
 
         try {
@@ -80,13 +94,17 @@ public class ChatlistAdapter extends RecyclerView.Adapter<ChatlistAdapter.MyHold
         lastMessageMap.put(userId, lastMessage);
     }
 
+    public void setSeenMessageMap(String userId, String seen) {
+        seenMessageMap.put(userId, seen);
+    }
+
     @Override
     public int getItemCount() {
         return userList.size();
     }
 
     class MyHolder extends RecyclerView.ViewHolder {
-        CircleImageView profileIv, onlineStatusIv;
+        CircleImageView profileIv, onlineStatusIv, seenCv;
         TextView nameTv, lastMessageTv;
 
         public MyHolder(@NonNull View itemView) {
@@ -94,6 +112,7 @@ public class ChatlistAdapter extends RecyclerView.Adapter<ChatlistAdapter.MyHold
 
             profileIv = itemView.findViewById(R.id.profileIv);
             onlineStatusIv = itemView.findViewById(R.id.onlineStatusIv);
+            seenCv = itemView.findViewById(R.id.seenCv);
             nameTv = itemView.findViewById(R.id.nameTv);
             lastMessageTv = itemView.findViewById(R.id.lastMessageTv);
         }

@@ -55,11 +55,13 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
-<!--        <ImageView-->
-<!--            android:id="@+id/"-->
-<!--            android:layout_gravity="center_vertical"-->
-<!--            android:src="@drawable/choose"-->
-<!--            android:layout_width="wrap_content"-->
-<!--            android:layout_height="wrap_content"/>-->
+        <ImageView
+            android:background="?attr/cardbackground"
+            android:id="@+id/memberTickIv"
+            android:visibility="gone"
+            android:layout_gravity="center_vertical"
+            android:src="@drawable/choose"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
 
 </LinearLayout>

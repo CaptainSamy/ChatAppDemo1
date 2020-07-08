@@ -28,7 +28,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.chatappdemo.R;
-import com.example.chatappdemo.adapter.MessageAdapter;
+import com.example.chatappdemo.adapter.AdapterMessage;
 import com.example.chatappdemo.model.Messages;
 import com.example.chatappdemo.model.User;
 import com.example.chatappdemo.notifications.Data;
@@ -72,7 +72,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private List<Messages> messagesList;
     private RecyclerView userMessageList;
-    private MessageAdapter messageAdapter;
+    private AdapterMessage adapterMessage;
     private SwipeRefreshLayout swipeRefreshLayout;
 
     public static final int TOTAL_ITEM_TO_LOAD = 12;
@@ -281,9 +281,9 @@ public class ChatActivity extends AppCompatActivity {
 
                         messagesList.add(messages);
                     }
-                    messageAdapter = new MessageAdapter(messagesList, ChatActivity.this, messReceiverImage);
-                    messageAdapter.notifyDataSetChanged();
-                    userMessageList.setAdapter(messageAdapter);
+                    adapterMessage = new AdapterMessage(messagesList, ChatActivity.this, messReceiverImage);
+                    adapterMessage.notifyDataSetChanged();
+                    userMessageList.setAdapter(adapterMessage);
                     userMessageList.smoothScrollToPosition(userMessageList.getAdapter().getItemCount());
                 }
             }
@@ -326,9 +326,9 @@ public class ChatActivity extends AppCompatActivity {
                         }
                         messagesList.add(messages);
                     }
-                    messageAdapter = new MessageAdapter(messagesList, ChatActivity.this, messReceiverImage);
-                    messageAdapter.notifyDataSetChanged();
-                    userMessageList.setAdapter(messageAdapter);
+                    adapterMessage = new AdapterMessage(messagesList, ChatActivity.this, messReceiverImage);
+                    adapterMessage.notifyDataSetChanged();
+                    userMessageList.setAdapter(adapterMessage);
                     userMessageList.smoothScrollToPosition(userMessageList.getAdapter().getItemCount());
                     swipeRefreshLayout.setRefreshing(false);
                 }

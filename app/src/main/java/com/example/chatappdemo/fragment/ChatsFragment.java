@@ -12,7 +12,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.MainActivity;
-import com.example.chatappdemo.adapter.ChatlistAdapter;
+import com.example.chatappdemo.adapter.AdapterChatlist;
 import com.example.chatappdemo.model.Chatlist;
 import com.example.chatappdemo.model.Messages;
 import com.example.chatappdemo.model.User;
@@ -39,7 +39,7 @@ public class ChatsFragment extends Fragment {
     RecyclerView recyclerView;
     List<Chatlist> chatlistList;
     List<User> userList;
-    ChatlistAdapter chatlistAdapter;
+    AdapterChatlist adapterChatlist;
     String mUID;
 
     public ChatsFragment() {
@@ -57,7 +57,6 @@ public class ChatsFragment extends Fragment {
         chatlistList = new ArrayList<>();
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
-        loadChats();
         return view;
     }
 
@@ -107,8 +106,8 @@ public class ChatsFragment extends Fragment {
                             break;
                         }
                     }
-                    chatlistAdapter = new ChatlistAdapter(getContext(), userList);
-                    recyclerView.setAdapter(chatlistAdapter);
+                    adapterChatlist = new AdapterChatlist(getContext(), userList);
+                    recyclerView.setAdapter(adapterChatlist);
                     //set last message
                     for (int i=0; i<userList.size(); i++) {
                         lastMessage(userList.get(i).getUid());
@@ -131,6 +130,7 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 String theLastMessage = "default";
+                String seen = "default";
                 for (DataSnapshot ds: snapshot.getChildren()) {
                     Messages messages = ds.getValue(Messages.class);
                     if (messages == null) {
@@ -141,13 +141,17 @@ public class ChatsFragment extends Fragment {
                     if (sender == null || receiver == null) {
                         continue;
                     }
-                    if (messages.getTo().equals(mUID) && messages.getFrom().equals(userId) ||
-                            messages.getTo().equals(userId) && messages.getFrom().equals(mUID)) {
+
+                    if (messages.getTo().equals(mUID) && messages.getFrom().equals(userId)){
                         theLastMessage = messages.getMessage();
+                        seen = ""+messages.isSeen();
+                    } else if (messages.getTo().equals(userId) && messages.getFrom().equals(mUID)){
+                        theLastMessage = "You: " + messages.getMessage();
                     }
                 }
-                chatlistAdapter.setLastMessageMap(userId, theLastMessage);
-                chatlistAdapter.notifyDataSetChanged();
+                adapterChatlist.setLastMessageMap(userId, theLastMessage);
+                adapterChatlist.setSeenMessageMap(userId, seen);
+                adapterChatlist.notifyDataSetChanged();
             }
 
             @Override

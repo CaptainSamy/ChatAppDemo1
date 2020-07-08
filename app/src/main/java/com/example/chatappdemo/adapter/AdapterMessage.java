@@ -7,7 +7,6 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +33,7 @@ import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageViewHolder> {
+public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageViewHolder> {
     private static final int MSG_TYPE_LEFT = 0;
     private static final int MSG_TYPE_RIGHT = 1;
     private List<Messages> userMessagesList;
@@ -42,7 +41,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
     private Context context;
     String imageUrl;
 
-    public MessageAdapter(List<Messages> userMessagesList, Context context, String imageUrl) {
+    public AdapterMessage(List<Messages> userMessagesList, Context context, String imageUrl) {
         this.userMessagesList = userMessagesList;
         this.context = context;
         this.imageUrl = imageUrl;
@@ -96,10 +95,22 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
         } catch (Exception e) {
 
         }
-        //click to show delete dialog
+        //click to show time
         messageViewHolder.messageLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (messageViewHolder.timeTv.getVisibility() == View.GONE) {
+                    messageViewHolder.timeTv.setVisibility(View.VISIBLE);
+                } else {
+                    messageViewHolder.timeTv.setVisibility(View.GONE);
+                }
+            }
+        });
+
+        // delete dialog
+        messageViewHolder.messageLayout.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);
                 builder.setTitle("Delete");
                 builder.setMessage("Are you sure to delete this message?");
@@ -116,6 +127,7 @@ public class MessageAdapter extends RecyclerView.Adapter<MessageAdapter.MessageV
                     }
                 });
                 builder.create().show();
+                return false;
             }
         });
 

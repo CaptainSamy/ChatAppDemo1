@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.chatappdemo.R;
-import com.example.chatappdemo.adapter.GroupListAdapter;
+import com.example.chatappdemo.adapter.AdapterGroupList;
 import com.example.chatappdemo.model.GroupsList;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +34,7 @@ public class GroupsFragment extends Fragment {
     private static final int NUM_COLUMNS = 2;
     private FirebaseAuth firebaseAuth;
     private ArrayList<GroupsList> groupsLists;
-    private GroupListAdapter groupListAdapter;
+    private AdapterGroupList adapterGroupList;
     public GroupsFragment() {
         // Required empty public constructor
     }
@@ -46,7 +46,6 @@ public class GroupsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_groups, container, false);
         recyclerViewGroup = view.findViewById(R.id.recyclerGroup);
         firebaseAuth = FirebaseAuth.getInstance();
-        loadGroupChatsList();
         return view;
     }
 
@@ -69,11 +68,11 @@ public class GroupsFragment extends Fragment {
                         groupsLists.add(model);
                     }
                 }
-                groupListAdapter = new GroupListAdapter(getActivity(), groupsLists);
+                adapterGroupList = new AdapterGroupList(getActivity(), groupsLists);
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new
                         StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
                 recyclerViewGroup.setLayoutManager(staggeredGridLayoutManager);
-                recyclerViewGroup.setAdapter(groupListAdapter);
+                recyclerViewGroup.setAdapter(adapterGroupList);
             }
 
             @Override
@@ -99,11 +98,11 @@ public class GroupsFragment extends Fragment {
 
                     }
                 }
-                groupListAdapter = new GroupListAdapter(getActivity(), groupsLists);
+                adapterGroupList = new AdapterGroupList(getActivity(), groupsLists);
                 StaggeredGridLayoutManager staggeredGridLayoutManager = new
                         StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
                 recyclerViewGroup.setLayoutManager(staggeredGridLayoutManager);
-                recyclerViewGroup.setAdapter(groupListAdapter);
+                recyclerViewGroup.setAdapter(adapterGroupList);
             }
 
             @Override

@@ -2,6 +2,7 @@ package com.example.chatappdemo.fragment;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -58,7 +61,6 @@ public class RequestFragment extends Fragment {
         contactReference = FirebaseDatabase.getInstance().getReference().child("Contacts");
         recyclerView = RequestFragmentView.findViewById(R.id.request_list);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        loadRequests();
         return RequestFragmentView;
     }
 
@@ -136,6 +138,12 @@ public class RequestFragment extends Fragment {
                                                                                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                                                                                 if (task.isSuccessful()) {
                                                                                                                                     Toast.makeText(getContext(),"New contact saved", Toast.LENGTH_SHORT).show();
+                                                                                                                                    FragmentManager fragmentManager = getFragmentManager();
+                                                                                                                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                                                                                                    ContactsFragment contactsFragment = new ContactsFragment();
+                                                                                                                                    fragmentTransaction.add(R.id.frame_container, contactsFragment);
+                                                                                                                                    fragmentTransaction.commit();
+                                                                                                                                   
                                                                                                                                 }
                                                                                                                             }
                                                                                                                         });

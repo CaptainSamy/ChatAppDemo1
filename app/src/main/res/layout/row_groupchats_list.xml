@@ -7,7 +7,8 @@
     android:layout_height="wrap_content">
 
     <RelativeLayout
-        android:layout_margin="8dp"
+        android:background="?attr/cardbackground"
+        android:padding="8dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -75,23 +76,31 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
 
+            <FrameLayout
+                android:layout_marginLeft="28dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_gravity="center"
+                    android:src="@drawable/member"
+                    android:background="?attr/cardbackground"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"/>
+                <TextView
+                    android:text="N"
+                    android:id="@+id/memberTv"
+                    android:textStyle="bold"
+                    android:textColor="?attr/tintcolor"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </FrameLayout>
             <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_marginTop="3dp"
                 android:src="@drawable/user_profile"
                 android:id="@+id/imgDDuser1"
-                android:layout_width="30dp"
-                android:layout_height="30dp"/>
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_marginLeft="20dp"
-                android:src="@drawable/user_profile"
-                android:id="@+id/imgDDuser2"
-                android:layout_width="30dp"
-                android:layout_height="30dp"/>
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_marginLeft="40dp"
-                android:background="?attr/backgroundcolor"
-                android:id="@+id/imgDDuserN"
-                android:layout_width="30dp"
-                android:layout_height="30dp"/>
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
 
         </FrameLayout>
 

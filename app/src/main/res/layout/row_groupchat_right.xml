@@ -42,6 +42,7 @@
         android:layout_height="200dp"/>
 
     <TextView
+        android:visibility="gone"
         android:layout_toLeftOf="@id/messageTv"
         android:id="@+id/timeTv"
         android:text="Time"

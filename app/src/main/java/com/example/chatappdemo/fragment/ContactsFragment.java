@@ -15,7 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.ChatActivity;
+import com.example.chatappdemo.activity.ProfileActivity;
+import com.example.chatappdemo.activity.SearchFriendActivity;
 import com.example.chatappdemo.activity.UpdateProfileUserActivity;
+import com.example.chatappdemo.activity.ViewProfileUserActivity;
 import com.example.chatappdemo.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -60,7 +63,6 @@ public class ContactsFragment extends Fragment {
         currentUserId = firebaseAuth.getCurrentUser().getUid();
         contactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts").child(currentUserId);
         userRef = FirebaseDatabase.getInstance().getReference().child("Users");
-        loadContacts();
         return contactsView;
     }
 
@@ -138,6 +140,17 @@ public class ContactsFragment extends Fragment {
                                             Intent chatIntent = new Intent(getContext(), ChatActivity.class);
                                             chatIntent.putExtra("visit_user_id", userIds);
                                             startActivity(chatIntent);
+                                        }
+                                    });
+
+                                    contactsViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                                        @Override
+                                        public boolean onLongClick(View v) {
+                                            String visit_userId = getRef(i).getKey();
+                                            Intent profileIntent = new Intent(getActivity(), ProfileActivity.class);
+                                            profileIntent.putExtra("visit_userId", visit_userId);
+                                            startActivity(profileIntent);
+                                            return false;
                                         }
                                     });
                                 }
