@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -147,7 +148,8 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
     class HolderGroupChat extends RecyclerView.ViewHolder {
         private CircleImageView message_profile_image;
         private TextView nameTv, messageTv, timeTv;
-        private ImageView messageIv;
+//        private ImageView messageIv;
+        private RoundedImageView messageIv;
 
         public HolderGroupChat(@NonNull View itemView) {
             super(itemView);

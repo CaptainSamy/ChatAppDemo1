@@ -61,7 +61,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             timeTv = itemView.findViewById(R.id.timeTv);
             isSeenTv = itemView.findViewById(R.id.isSeenTv);
             messageLayout = itemView.findViewById(R.id.messageLayout);
-            message_image = itemView.findViewById(R.id.message_image);
+            message_image = itemView.findViewById(R.id.messageIv);
         }
     }
 

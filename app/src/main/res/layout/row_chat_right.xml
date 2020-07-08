@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    android:id="@+id/messageLayout"
+<RelativeLayout android:id="@+id/messageLayout"
     android:layout_margin="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <de.hdodenhof.circleimageview.CircleImageView
         android:visibility="gone"
         android:id="@+id/message_profile_image"
@@ -23,15 +23,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <ImageView
-        android:layout_below="@id/message_text"
+    <com.makeramen.roundedimageview.RoundedImageView
+        android:id="@+id/messageIv"
         android:layout_alignParentRight="true"
-        android:layout_marginTop="5dp"
-        android:id="@+id/message_image"
-        android:scaleType="centerCrop"
+        android:scaleType="fitCenter"
+        app:riv_corner_radius="30dip"
+        app:riv_border_width="2dip"
+        app:riv_border_color="#333333"
+        app:riv_mutate_background="true"
         android:src="@drawable/image_iv"
-        android:layout_width="200dp"
-        android:layout_height="200dp"/>
+        android:layout_height="200dp"
+        android:layout_width="200dp" />
 
     <TextView
         android:visibility="gone"

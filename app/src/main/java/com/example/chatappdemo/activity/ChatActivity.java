@@ -96,7 +96,7 @@ public class ChatActivity extends AppCompatActivity {
     private AdapterMessage adapterMessage;
     private SwipeRefreshLayout swipeRefreshLayout;
 
-    public static final int TOTAL_ITEM_TO_LOAD = 12;
+    public static final int TOTAL_ITEM_TO_LOAD = 15;
     private int mCurrentPage = 1;
 
     //Solution for descending list on refresh
