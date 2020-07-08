@@ -106,7 +106,10 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
                                     if (snapshot.exists()){
                                         myGroupRole = ""+snapshot.child("role").getValue();
                                         groupTitleTv.setText(groupTitle + "-" + myGroupRole);
+
 //                                        Picasso.get().load(groupIcon).placeholder(R.drawable.group_dark_mode).into(groupIconIv);
+
+
                                         try {
                                             Picasso.get().load(groupIcon).placeholder(R.drawable.group_dark_mode).into(groupIconIv);
                                         }catch (Exception e){
