@@ -143,10 +143,18 @@ public class ChatsFragment extends Fragment {
                     }
 
                     if (messages.getTo().equals(mUID) && messages.getFrom().equals(userId)){
-                        theLastMessage = messages.getMessage();
+                        if (messages.getType().equals("image")) {
+                            theLastMessage = "Sent a photo";
+                        } else {
+                            theLastMessage = messages.getMessage();
+                        }
                         seen = ""+messages.isSeen();
                     } else if (messages.getTo().equals(userId) && messages.getFrom().equals(mUID)){
-                        theLastMessage = "You: " + messages.getMessage();
+                        if (messages.getType().equals("image")) {
+                            theLastMessage = "You sent a photo";
+                        }else {
+                            theLastMessage = "You: " + messages.getMessage();
+                        }
                     }
                 }
                 adapterChatlist.setLastMessageMap(userId, theLastMessage);

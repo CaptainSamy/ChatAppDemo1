@@ -7,6 +7,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,16 +52,16 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
         public TextView MessageText,  timeTv, isSeenTv;
         public CircleImageView ProfileImage;
         public RelativeLayout messageLayout;
-
+        private ImageView message_image;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-
             MessageText = (TextView) itemView.findViewById(R.id.message_text);
             ProfileImage = (CircleImageView) itemView.findViewById(R.id.message_profile_image);
             timeTv = itemView.findViewById(R.id.timeTv);
             isSeenTv = itemView.findViewById(R.id.isSeenTv);
             messageLayout = itemView.findViewById(R.id.messageLayout);
+            message_image = itemView.findViewById(R.id.message_image);
         }
     }
 
@@ -83,12 +84,27 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
     public void onBindViewHolder(@NonNull final MessageViewHolder messageViewHolder, final int i) {
         String message = userMessagesList.get(i).getMessage();
         String timeStamp = userMessagesList.get(i).getTimeStamp();
+        String type = userMessagesList.get(i).getType();
 
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(Long.parseLong(timeStamp));
         String dateTime = DateFormat.format("dd/MM/yyyy hh:mm aa", calendar).toString();
 
-        messageViewHolder.MessageText.setText(message);
+        if (type.equals("image")) {
+            messageViewHolder.MessageText.setVisibility(View.GONE);
+            messageViewHolder.message_image.setVisibility(View.VISIBLE);
+            try {
+                Picasso.get().load(message).placeholder(R.drawable.image_iv).into(messageViewHolder.message_image);
+            } catch (Exception e) {
+                messageViewHolder.message_image.setImageResource(R.drawable.image_iv);
+            }
+        }else {
+            messageViewHolder.MessageText.setVisibility(View.VISIBLE);
+            messageViewHolder.message_image.setVisibility(View.GONE);
+            messageViewHolder.MessageText.setText(message);
+        }
+
+
         messageViewHolder.timeTv.setText(dateTime);
         try{
             Picasso.get().load(imageUrl).placeholder(R.drawable.user_profile).into(messageViewHolder.ProfileImage);

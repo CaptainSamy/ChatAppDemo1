@@ -143,7 +143,6 @@ public class RequestFragment extends Fragment {
                                                                                                                                     ContactsFragment contactsFragment = new ContactsFragment();
                                                                                                                                     fragmentTransaction.add(R.id.frame_container, contactsFragment);
                                                                                                                                     fragmentTransaction.commit();
-                                                                                                                                   
                                                                                                                                 }
                                                                                                                             }
                                                                                                                         });
