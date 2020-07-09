@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +18,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.model.User;
@@ -45,6 +47,7 @@ public class RequestFragment extends Fragment {
     private DatabaseReference requestReference, userReference, contactReference;
     private FirebaseAuth firebaseAuth;
     private String currentUserID, requestUserName, requestUserStatus, requestUserAnhDD;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public RequestFragment() {
         // Required empty public constructor
@@ -54,6 +57,21 @@ public class RequestFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         RequestFragmentView = inflater.inflate(R.layout.fragment_request, container, false);
+        swipeRefreshLayout = RequestFragmentView.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //swipeRefreshLayout.setRefreshing(true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadRequests();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserID = firebaseAuth.getCurrentUser().getUid();
         requestReference = FirebaseDatabase.getInstance().getReference().child("Requests");
@@ -68,6 +86,7 @@ public class RequestFragment extends Fragment {
     public void onStart() {
         super.onStart();
         loadRequests();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void loadRequests() {
@@ -226,6 +245,7 @@ public class RequestFragment extends Fragment {
                 };
         recyclerView.setAdapter(adapter);
         adapter.startListening();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     public static class RequestsViewHolder extends RecyclerView.ViewHolder {

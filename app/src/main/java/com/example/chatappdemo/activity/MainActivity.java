@@ -2,12 +2,15 @@ package com.example.chatappdemo.activity;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import cn.pedant.SweetAlert.SweetAlertDialog;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,10 +24,7 @@ import com.example.chatappdemo.fragment.ContactsFragment;
 import com.example.chatappdemo.fragment.GroupsFragment;
 import com.example.chatappdemo.fragment.RequestFragment;
 import com.example.chatappdemo.model.Messages;
-import com.example.chatappdemo.model.User;
 import com.example.chatappdemo.notifications.Token;
-import com.google.android.material.bottomnavigation.BottomNavigationItemView;
-import com.google.android.material.bottomnavigation.BottomNavigationMenuView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.badge.BadgeDrawable;
 import com.google.firebase.auth.FirebaseAuth;
@@ -40,20 +40,17 @@ import com.squareup.picasso.Picasso;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
 
 public class MainActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
     private BottomNavigationView bottomNavigationView;
-    private CircleImageView profile_image;
+    private CircleImageView profile_image, user_on_off_chat;
     private ImageButton btnSearch, btnCreate;
     private TextView txtTitle;
-    private View notificationBadge;
 
     private FirebaseAuth firebaseAuth;
     String mUID;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
         setTheme(themeIdcurrent);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         txtTitle = findViewById(R.id.txt_Title);
+        user_on_off_chat = findViewById(R.id.user_on_off_chat);
         firebaseAuth = FirebaseAuth.getInstance();
 
         //loadFragment(new ChatsFragment());
@@ -200,6 +199,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     private void checkUserStatus() {
+        SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Loading ...");
+        pDialog.setCancelable(true);
+        pDialog.show();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
         if (user == null) {
@@ -211,13 +215,20 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                     if ((dataSnapshot.child("name").exists())) {
-//                        Toast.makeText(MainActivity.this, "Welcome", Toast.LENGTH_LONG).show();
                         String userImage = dataSnapshot.child("imgAnhDD").getValue().toString();
                         String userName = dataSnapshot.child("name").getValue().toString();
                         txtTitle.setText(userName);
-
-                        Picasso.get().load(userImage).into(profile_image);
+                        try {
+                            Picasso.get().load(userImage).placeholder(R.drawable.user_profile).into(profile_image);
+                            pDialog.dismiss();
+                            user_on_off_chat.setVisibility(View.VISIBLE);
+                        }catch (Exception e) {
+                            profile_image.setImageResource(R.drawable.user_profile);
+                            pDialog.dismiss();
+                            user_on_off_chat.setVisibility(View.VISIBLE);
+                        }
                     } else {
+                        pDialog.dismiss();
                         Intent intent = new Intent(MainActivity.this, UpdateProfileUserActivity.class);
                         startActivity(intent);
                     }
@@ -225,7 +236,8 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-
+                    pDialog.dismiss();
+                    Toast.makeText(MainActivity.this,""+databaseError.getMessage(),Toast.LENGTH_LONG).show();
                 }
             });
             BadgeChats();

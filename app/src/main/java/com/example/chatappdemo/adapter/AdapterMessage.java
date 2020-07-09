@@ -25,6 +25,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
@@ -52,7 +53,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
         public TextView MessageText,  timeTv, isSeenTv;
         public CircleImageView ProfileImage;
         public RelativeLayout messageLayout;
-        private ImageView message_image;
+        private RoundedImageView message_image;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);

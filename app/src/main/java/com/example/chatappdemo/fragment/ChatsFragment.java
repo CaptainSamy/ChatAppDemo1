@@ -2,13 +2,16 @@ package com.example.chatappdemo.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.MainActivity;
@@ -41,6 +44,7 @@ public class ChatsFragment extends Fragment {
     List<User> userList;
     AdapterChatlist adapterChatlist;
     String mUID;
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public ChatsFragment() {
 
@@ -55,6 +59,21 @@ public class ChatsFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         recyclerView = view.findViewById(R.id.recyclerView);
         chatlistList = new ArrayList<>();
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //swipeRefreshLayout.setRefreshing(true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadChats();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
         return view;
@@ -88,10 +107,11 @@ public class ChatsFragment extends Fragment {
             Intent intent = new Intent(getActivity(), MainActivity.class);
             startActivity(intent);
         }
-
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void loadChats() {
+        swipeRefreshLayout.setRefreshing(true);
         userList = new ArrayList<>();
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Users");
         reference.addValueEventListener(new ValueEventListener() {
@@ -117,7 +137,8 @@ public class ChatsFragment extends Fragment {
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
+                swipeRefreshLayout.setRefreshing(false);
+                Toast.makeText(getActivity(),""+error.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -160,6 +181,7 @@ public class ChatsFragment extends Fragment {
                 adapterChatlist.setLastMessageMap(userId, theLastMessage);
                 adapterChatlist.setSeenMessageMap(userId, seen);
                 adapterChatlist.notifyDataSetChanged();
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override

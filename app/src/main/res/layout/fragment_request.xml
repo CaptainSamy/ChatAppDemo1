@@ -7,13 +7,20 @@
     android:background="?attr/cardbackground"
     tools:context=".fragment.RequestFragment">
 
-    <androidx.recyclerview.widget.RecyclerView
-        tools:listitem="@layout/user_item"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
-        android:id="@+id/request_list"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_height="match_parent"
-        android:layout_alignParentLeft="true" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            tools:listitem="@layout/user_item"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            android:layout_width="match_parent"
+            android:id="@+id/request_list"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true" />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 </RelativeLayout>

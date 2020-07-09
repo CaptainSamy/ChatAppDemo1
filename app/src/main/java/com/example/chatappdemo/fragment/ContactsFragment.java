@@ -2,6 +2,7 @@ package com.example.chatappdemo.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.ChatActivity;
@@ -47,6 +49,7 @@ public class ContactsFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private String currentUserId;
     private String userImage = "default_image";
+    SwipeRefreshLayout swipeRefreshLayout;
 
     public ContactsFragment() {
         // Required empty public constructor
@@ -59,6 +62,21 @@ public class ContactsFragment extends Fragment {
         contactsView = inflater.inflate(R.layout.fragment_contacts, container, false);
         recyclerViewContacts = contactsView.findViewById(R.id.recycler_contact_list);
         recyclerViewContacts.setLayoutManager(new LinearLayoutManager(getContext()));
+        swipeRefreshLayout = contactsView.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //swipeRefreshLayout.setRefreshing(true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadContacts();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
         firebaseAuth = FirebaseAuth.getInstance();
         currentUserId = firebaseAuth.getCurrentUser().getUid();
         contactsRef = FirebaseDatabase.getInstance().getReference().child("Contacts").child(currentUserId);
@@ -70,6 +88,7 @@ public class ContactsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         loadContacts();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void loadContacts() {
@@ -173,6 +192,7 @@ public class ContactsFragment extends Fragment {
                 };
         recyclerViewContacts.setAdapter(adapter);
         adapter.startListening();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     public static class ContactsViewHolder extends RecyclerView.ViewHolder {

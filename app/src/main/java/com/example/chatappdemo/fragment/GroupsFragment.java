@@ -7,7 +7,9 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.StaggeredGridLayoutManager;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +37,7 @@ public class GroupsFragment extends Fragment {
     private FirebaseAuth firebaseAuth;
     private ArrayList<GroupsList> groupsLists;
     private AdapterGroupList adapterGroupList;
+    SwipeRefreshLayout swipeRefreshLayout;
     public GroupsFragment() {
         // Required empty public constructor
     }
@@ -45,6 +48,21 @@ public class GroupsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_groups, container, false);
         recyclerViewGroup = view.findViewById(R.id.recyclerGroup);
+        swipeRefreshLayout = view.findViewById(R.id.swipeRefreshLayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //swipeRefreshLayout.setRefreshing(true);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadGroupChatsList();
+                        swipeRefreshLayout.setRefreshing(false);
+                    }
+                }, 2000);
+            }
+        });
         firebaseAuth = FirebaseAuth.getInstance();
         return view;
     }
@@ -53,6 +71,7 @@ public class GroupsFragment extends Fragment {
     public void onStart() {
         super.onStart();
         loadGroupChatsList();
+        swipeRefreshLayout.setRefreshing(false);
     }
 
     private void loadGroupChatsList() {
@@ -73,6 +92,7 @@ public class GroupsFragment extends Fragment {
                         StaggeredGridLayoutManager(NUM_COLUMNS, LinearLayoutManager.VERTICAL);
                 recyclerViewGroup.setLayoutManager(staggeredGridLayoutManager);
                 recyclerViewGroup.setAdapter(adapterGroupList);
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override

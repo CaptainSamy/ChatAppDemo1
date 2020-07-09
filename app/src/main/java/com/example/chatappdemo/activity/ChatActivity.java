@@ -148,7 +148,7 @@ public class ChatActivity extends AppCompatActivity {
         userMessageList.setLayoutManager(linearLayoutManager);
 
         swipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
-
+        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
