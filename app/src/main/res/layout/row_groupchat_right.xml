@@ -43,8 +43,8 @@
         app:riv_mutate_background="true"
         app:riv_border_color="@color/colorPrimary"
         android:src="@drawable/image_iv"
-        android:layout_width="200dp"
-        android:layout_height="200dp"/>
+        android:layout_height="200dp"
+        android:layout_width="200dp" />
 
     <TextView
         android:visibility="gone"
