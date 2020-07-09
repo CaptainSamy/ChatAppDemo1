@@ -33,6 +33,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageViewHolder> {
@@ -135,22 +136,24 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
         messageViewHolder.MessageText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
-                AlertDialog.Builder builder = new AlertDialog.Builder(context);
-                builder.setTitle("Delete");
-                builder.setMessage("Are you sure to delete this message?");
-                builder.setPositiveButton("Delete", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        deleteMessage(i);
-                    }
-                });
-                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
-                builder.create().show();
+                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Are you sure?")
+                        .setContentText("You won't be able to recover this message!")
+                        .setConfirmText("Delete!")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                deleteMessage(i);
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sweetAlertDialog) {
+                                sweetAlertDialog.dismiss();
+                            }
+                        })
+                        .show();
                 return false;
             }
         });
@@ -170,7 +173,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
         final String myUID = FirebaseAuth.getInstance().getCurrentUser().getUid();
         String msgTimeStamp = userMessagesList.get(i).getTimeStamp();
         DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Chats");
-        Query query = dbRef.orderByChild("timestamp").equalTo(msgTimeStamp);
+        Query query = dbRef.orderByChild("timeStamp").equalTo(msgTimeStamp);
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -178,13 +181,9 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
                     if (ds.child("from").getValue().equals(myUID)) {
                         //remove from chats
                         ds.getRef().removeValue();
-                        //set value
-                        HashMap<String, Object> hashMap = new HashMap<>();
-                        hashMap.put("message", "This message was deleted...");
-                        ds.getRef().updateChildren(hashMap);
-                        Toast.makeText(context,"Message deleted...",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"Message deleted!",Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(context,"You can delete only your messages...",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context,"You can delete only your messages!",Toast.LENGTH_SHORT).show();
                     }
                 }
             }
