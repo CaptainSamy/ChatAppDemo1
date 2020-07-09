@@ -6,9 +6,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,6 +16,8 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 import android.provider.MediaStore;
 import android.text.TextUtils;
 import android.view.View;
@@ -37,6 +39,7 @@ import com.google.firebase.storage.UploadTask;
 
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class GroupCreateActivity extends AppCompatActivity {
@@ -57,7 +60,6 @@ public class GroupCreateActivity extends AppCompatActivity {
     private CircleImageView groupIconIv, back_createGroup;
     private EditText groupTitleEt, groupDescriptionEt;
     private FloatingActionButton createGroupBtn;
-    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,8 +106,9 @@ public class GroupCreateActivity extends AppCompatActivity {
     }
 
     private void startCreatingGroup() {
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Creating Group");
+        new SweetAlertDialog(GroupCreateActivity.this)
+                .setTitleText("Creating Group!")
+                .show();
 
         final String groupTitle = groupTitleEt.getText().toString().trim();
         final String groupDescription = groupDescriptionEt.getText().toString().trim();
@@ -114,7 +117,7 @@ public class GroupCreateActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter group title...",Toast.LENGTH_SHORT).show();
             return;
         }
-        progressDialog.show();
+        //progressDialog.show();
 
         //time
         String g_timestamp = "" + System.currentTimeMillis();
@@ -137,7 +140,7 @@ public class GroupCreateActivity extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    progressDialog.dismiss();
+                    //progressDialog.dismiss();
                     Toast.makeText(GroupCreateActivity.this, "" + e.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             });
@@ -170,14 +173,16 @@ public class GroupCreateActivity extends AppCompatActivity {
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
                                     public void onSuccess(Void aVoid) {
-                                        progressDialog.dismiss();
-                                        Toast.makeText(GroupCreateActivity.this, "Group create...",Toast.LENGTH_SHORT).show();
-                                        startActivity(new Intent(GroupCreateActivity.this, MainActivity.class));
+                                        //progressDialog.dismiss();
+                                        Toast.makeText(GroupCreateActivity.this, "Group create",Toast.LENGTH_SHORT).show();
+                                        Intent intent = new Intent(GroupCreateActivity.this, GroupChatActivity.class);
+                                        intent.putExtra("groupId", g_timestamp);
+                                        startActivity(intent);
                                     }
                                 }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                progressDialog.dismiss();
+                                //progressDialog.dismiss();
                                 Toast.makeText(GroupCreateActivity.this, "" + e.getMessage(),Toast.LENGTH_SHORT).show();
                             }
                         });
@@ -185,7 +190,7 @@ public class GroupCreateActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                progressDialog.dismiss();
+                //progressDialog.dismiss();
                 Toast.makeText(GroupCreateActivity.this, "" + e.getMessage(),Toast.LENGTH_SHORT).show();
             }
         });

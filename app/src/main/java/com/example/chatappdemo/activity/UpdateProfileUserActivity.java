@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,6 +31,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -48,6 +50,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 import java.util.regex.Pattern;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 public class UpdateProfileUserActivity extends AppCompatActivity {
@@ -55,13 +58,13 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
     String SHARED_PREFS = "codeTheme";
     private RadioGroup radioGroup;
     private TextView tv_Cancel;
-    private RadioButton radioButtonOption;
+    private RadioButton radioButtonOption, male_checkbox, female_checkbox;
     private TextInputLayout set_user_name, set_profile_status;
     private CountryCodePicker ccp;
     private EditText set_profile_phone;
     private ImageButton imgBtnBG;
-    private CircleImageView update_button, imgBtnCamBG, imgBtnDD, imgBtnCamDD;
-    private ProgressDialog progressDialog;
+    private MaterialButton update_button;
+    private CircleImageView  imgBtnCamBG, imgBtnDD, imgBtnCamDD;
     private String imgAnhBia, imgAnhDD, name, status, gioiTinh, phone;
 
     private FirebaseAuth firebaseAuth;
@@ -80,7 +83,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
     String storagePermissions[];
     Uri image_uri;
     String profileOrCoverPhoto;
-
+    SweetAlertDialog pDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +93,8 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
         setTheme(themeIdcurrent);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile_user);
-
+        pDialog = new SweetAlertDialog(UpdateProfileUserActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#00c7bf"));
         firebaseAuth = FirebaseAuth.getInstance();
         user = firebaseAuth.getCurrentUser();
         firebaseDatabase = FirebaseDatabase.getInstance();
@@ -99,46 +103,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
 
         cameraPermissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
         storagePermissions = new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE};
-        progressDialog = new ProgressDialog(this);
 
-        Query query = databaseReference.orderByChild("uid").equalTo(user.getUid());
-        query.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot ds: snapshot.getChildren()) {
-                    //get data
-                    String name = ds.child("name").getValue().toString();
-                    String status = ds.child("status").getValue().toString();
-                    String gioiTinh = ds.child("gioiTinh").getValue().toString();
-                    String phone = ds.child("phone").getValue().toString();
-                    String imgAnhDD = ds.child("imgAnhDD").getValue().toString();
-                    String imgAnhBia = ds.child("imgAnhBia").getValue().toString();
-
-                    //set data
-                    set_user_name.getEditText().setText(name);
-                    set_profile_status.getEditText().setText(status);
-                    //tv_Gioitinh.setText(gioiTinh);
-                    set_profile_phone.setText(phone);
-                    try {
-                        Picasso.get().load(imgAnhDD).into(imgBtnDD);
-                    } catch (Exception e) {
-                        Picasso.get().load(R.drawable.user_profile).into(imgBtnDD);
-                    }
-                    try {
-                        Picasso.get().load(imgAnhBia).into(imgBtnBG);
-                    } catch (Exception e) {
-                        Picasso.get().load(R.drawable.teabackground).into(imgBtnBG);
-                    }
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-
-//        DisplayProfile();
 
         imgBtnBG = findViewById(R.id.imgBtnBG);
         imgBtnBG.setOnClickListener(new View.OnClickListener() {
@@ -197,16 +162,18 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
         });
 
         radioGroup = findViewById(R.id.radio_group);
+        male_checkbox = findViewById(R.id.male_checkbox);
+        female_checkbox = findViewById(R.id.female_checkbox);
         radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 radioButtonOption = radioGroup.findViewById(checkedId);
                 switch (checkedId) {
                     case R.id.male_checkbox:
-                        gioiTinh = radioButtonOption.getText().toString();
+                        gioiTinh = "male";
                         break;
                     case R.id.female_checkbox:
-                        gioiTinh = radioButtonOption.getText().toString();
+                        gioiTinh = "female";
                         break;
                     default:
                 }
@@ -214,52 +181,59 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
         });
 
     }
-//    private void DisplayProfile() {
-//        databaseReference.child("Users").child(user.getUid())
-//                .addValueEventListener(new ValueEventListener() {
-//                    @Override
-//                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-//                        if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("imgAnhDD"))
-//                                && (dataSnapshot.hasChild("imgAnhBia"))
-//                                && (dataSnapshot.hasChild("name"))
-//                                && (dataSnapshot.hasChild("status"))
-//                                && (dataSnapshot.hasChild("gioiTinh"))
-//                                && (dataSnapshot.hasChild("phone")))) {
-//                            String ImageDD = dataSnapshot.child("imgAnhDD").getValue().toString();
-//                            String ImageBG = dataSnapshot.child("imgAnhBia").getValue().toString();
-//                            String UserName = dataSnapshot.child("name").getValue().toString();
-//                            String Status = dataSnapshot.child("status").getValue().toString();
-//                            String Phone = dataSnapshot.child("phone").getValue().toString();
-//                            String GioiTinh = dataSnapshot.child("gioiTinh").getValue().toString();
-//
-//
-//                            set_user_name.getEditText().setText(UserName);
-//                            set_profile_status.getEditText().setText(Status);
-//                            set_profile_phone.setText(Phone);
-//                            Picasso.get().load(ImageDD).placeholder(R.drawable.user_profile).into(imgBtnDD);
-//                            Picasso.get().load(ImageBG).placeholder(R.drawable.teabackground).into(imgBtnBG);
-//                        } else if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("name"))
-//                                && (dataSnapshot.hasChild("status"))
-//                                && (dataSnapshot.hasChild("gioiTinh"))
-//                                && (dataSnapshot.hasChild("phone")))) {
-//
-//                            String UserName = dataSnapshot.child("name").getValue().toString();
-//                            String Status = dataSnapshot.child("status").getValue().toString();
-//                            String Phone = dataSnapshot.child("phone").getValue().toString();
-//                            String GioiTinh = dataSnapshot.child("gioiTinh").getValue().toString();
-//
-//                            set_user_name.getEditText().setText(UserName);
-//                            set_profile_status.getEditText().setText(Status);
-//                            set_profile_phone.setText(Phone);
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onCancelled(@NonNull DatabaseError databaseError) {
-//
-//                    }
-//                });
-//    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        loadInformation();
+    }
+
+    private void loadInformation() {
+        Query query = databaseReference.orderByChild("uid").equalTo(user.getUid());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()) {
+                    //get data
+                    String name = ds.child("name").getValue().toString();
+                    String status = ds.child("status").getValue().toString();
+                    String gioiTinh = ds.child("gioiTinh").getValue().toString();
+                    String phone = ds.child("phone").getValue().toString();
+                    String imgAnhDD = ds.child("imgAnhDD").getValue().toString();
+                    String imgAnhBia = ds.child("imgAnhBia").getValue().toString();
+
+                    if (gioiTinh.equals("male")){
+                        male_checkbox.setChecked(true);
+                        female_checkbox.setChecked(false);
+                    }else {
+                        female_checkbox.setChecked(true);
+                        male_checkbox.setChecked(false);
+                    }
+
+                    //set data
+                    set_user_name.getEditText().setText(name);
+                    set_profile_status.getEditText().setText(status);
+                    //tv_Gioitinh.setText(gioiTinh);
+                    set_profile_phone.setText(phone);
+                    try {
+                        Picasso.get().load(imgAnhDD).into(imgBtnDD);
+                    } catch (Exception e) {
+                        Picasso.get().load(R.drawable.user_profile).into(imgBtnDD);
+                    }
+                    try {
+                        Picasso.get().load(imgAnhBia).into(imgBtnBG);
+                    } catch (Exception e) {
+                        Picasso.get().load(R.drawable.teabackground).into(imgBtnBG);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
 
     private void UpdateProfileUser() {
         String edtUserName = set_user_name.getEditText().getText().toString().trim();
@@ -282,8 +256,6 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            progressDialog.dismiss();
-                            update_button.setImageResource(R.drawable.tick);
                             Toast.makeText(UpdateProfileUserActivity.this, "Updated...",Toast.LENGTH_SHORT).show();
                             startActivity(new Intent(UpdateProfileUserActivity.this, ViewProfileUserActivity.class));
                             finish();
@@ -292,7 +264,6 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            progressDialog.dismiss();
                             Toast.makeText(UpdateProfileUserActivity.this, "" + e.getMessage(),Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -361,7 +332,9 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
     }
 
     private void uploadProfileCoverPhoto(Uri uri) {
-        progressDialog.show();
+        pDialog.setTitleText("Update Image");
+        pDialog.setCancelable(true);
+        pDialog.show();
         String filePathAndName = storagePath + "" + profileOrCoverPhoto + "_" + user.getUid();
         StorageReference storageReference2nd = storageReference.child(filePathAndName);
         storageReference2nd.putFile(uri)
@@ -378,19 +351,19 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                                         @Override
                                         public void onSuccess(Void aVoid) {
-                                            progressDialog.dismiss();
+                                            pDialog.dismiss();
                                             Toast.makeText(UpdateProfileUserActivity.this, "Image Updated...",Toast.LENGTH_SHORT).show();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            progressDialog.dismiss();
+                                            pDialog.dismiss();
                                             Toast.makeText(UpdateProfileUserActivity.this, "Error Updating Image...",Toast.LENGTH_SHORT).show();
                                         }
                                     });
                         } else {
-                            progressDialog.dismiss();
+                            pDialog.dismiss();
                             Toast.makeText(UpdateProfileUserActivity.this, "Some error occured",Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -398,7 +371,6 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        progressDialog.dismiss();
                         Toast.makeText(UpdateProfileUserActivity.this, e.getMessage(),Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -454,7 +426,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
     private boolean validateName() {
         String edtUserName = set_user_name.getEditText().getText().toString().trim();
         if (edtUserName.isEmpty()) {
-            set_user_name.setError("Hay dien ten ban muon hien thi!");
+            set_user_name.setError("Please write your name!");
             return false;
         } else {
             set_user_name.setError(null);
@@ -465,7 +437,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
     private boolean validateStatus() {
         String edtStatus = set_profile_status.getEditText().getText().toString().trim();
         if (edtStatus.isEmpty()) {
-            set_profile_status.setError("Hay them loi gioi thieu ve ban!");
+            set_profile_status.setError("Please write your status!");
             return false;
         } else {
             set_profile_status.setError(null);
@@ -476,7 +448,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
     private boolean validatePhone() {
         String edtPhone = ccp.getFullNumberWithPlus();
         if (edtPhone.isEmpty()) {
-            set_profile_phone.setError("Bạn không được để trống!");
+            set_profile_phone.setError("Please phone your number!");
             return false;
         } else {
             set_profile_phone.setError(null);
@@ -487,7 +459,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
     private boolean validateSex() {
         int isSelecter = radioGroup.getCheckedRadioButtonId();
         if (isSelecter == -1) {
-            Toast.makeText(this, "Bạn chưa chọn giới tính!", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, "Please select a gender!", Toast.LENGTH_LONG).show();
             return false;
         }
         return true;

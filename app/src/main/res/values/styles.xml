@@ -3,7 +3,7 @@
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="homeAsUpIndicator">@drawable/back_dark_mode</item>
+        <item name="homeAsUpIndicator">@drawable/back_arrow</item>
         <item name="colorPrimary">#2cb9b0</item>
         <item name="colorPrimaryDark">#00bdb5</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -15,16 +15,14 @@
         <item name="tabcolor">#00bdb5</item>
         <item name="tabtextcolor">#424242</item>
         <item name="tabselectcolor">#00c7bf</item>
-        <item name="icon_create">@drawable/create_light_mode</item>
-        <item name="icon_add">@drawable/add_light_mode</item>
-        <item name="icon_email">@drawable/email_light_mode</item>
-        <item name="icon_pass">@drawable/lock_light_mode</item>
+        <item name="icon_email">@drawable/email_icon</item>
+        <item name="icon_pass">@drawable/password_icon</item>
         <item name="no_search_result">@drawable/no_search_light</item>
     </style>
 
     <style name="DarkTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
-        <item name="homeAsUpIndicator">@drawable/back_dark_mode</item>
+        <item name="homeAsUpIndicator">@drawable/back_arrow</item>
         <item name="colorPrimary">#2cb9b0</item>
         <item name="colorPrimaryDark">#00bdb5</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -36,10 +34,8 @@
         <item name="tabcolor">#00bdb5</item>
         <item name="tabtextcolor">#424242</item>
         <item name="tabselectcolor">#00c7bf</item>
-        <item name="icon_create">@drawable/create_dark_mode</item>
-        <item name="icon_add">@drawable/add_dark_mode</item>
-        <item name="icon_email">@drawable/email_dark_mode</item>
-        <item name="icon_pass">@drawable/lock_dark_mode</item>
+        <item name="icon_email">@drawable/email_icon</item>
+        <item name="icon_pass">@drawable/password_icon</item>
         <item name="no_search_result">@drawable/no_search_dark</item>
     </style>
 

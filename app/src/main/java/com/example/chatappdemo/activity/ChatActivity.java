@@ -142,10 +142,10 @@ public class ChatActivity extends AppCompatActivity {
         onlineStatusIv = findViewById(R.id.onlineStatusIv);
         userLastSeen = findViewById(R.id.user_last_seen);
         userMessageList = (RecyclerView) findViewById(R.id.messager_list_of_users);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setStackFromEnd(true);
-        userMessageList.setHasFixedSize(true);
-        userMessageList.setLayoutManager(linearLayoutManager);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        linearLayoutManager.setStackFromEnd(true);
+//        userMessageList.setHasFixedSize(true);
+//        userMessageList.setLayoutManager(linearLayoutManager);
 
         swipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);

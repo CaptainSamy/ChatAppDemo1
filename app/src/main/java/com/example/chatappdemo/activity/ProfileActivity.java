@@ -95,7 +95,11 @@ public class ProfileActivity extends AppCompatActivity {
                     userProfileName.setText(userName);
                     userProfilePhone.setText(userPhone);
                     userProfileStatus.setText(userStatus);
-                    userProfileSex.setText(userSex);
+                    if (userSex.equals("male")){
+                        userProfileSex.setText("Nam");
+                    }else {
+                        userProfileSex.setText("Nữ");
+                    }
                     ManageRequests();
                 }
                 String userName = dataSnapshot.child("name").getValue().toString();
@@ -106,7 +110,11 @@ public class ProfileActivity extends AppCompatActivity {
                 userProfileName.setText(userName);
                 userProfilePhone.setText(userPhone);
                 userProfileStatus.setText(userStatus);
-                userProfileSex.setText(userSex);
+                if (userSex.equals("male")){
+                    userProfileSex.setText("Nam");
+                }else {
+                    userProfileSex.setText("Nữ");
+                }
 
                 ManageRequests();
             }

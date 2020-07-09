@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
-    android:backgroundTint="?attr/backgroundcolor"
-    android:background="#ffffff"
+    android:background="?attr/backgroundcolor"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -132,15 +131,14 @@
                 android:layout_below="@+id/radio_group"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:backgroundTint="@color/colorAccent"
                 android:layout_centerHorizontal="true"
                 app:errorEnabled="true">
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
-                    android:background="@drawable/edit_style"
                     android:textStyle="bold"
                     android:hint="Username"
                     android:inputType="textMultiLine"
@@ -157,14 +155,13 @@
                 android:id="@+id/set_profile_status"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxBackgroundMode="outline"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                 android:backgroundTint="@color/colorAccent"
                 android:layout_centerHorizontal="true"
                 app:errorEnabled="true">
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="45dp"
-                    android:background="@drawable/edit_style"
+                    android:layout_height="wrap_content"
                     android:hint="Thêm lời giới thiệu"
                     android:inputType="textMultiLine"
                     android:maxLines="1"
@@ -225,10 +222,10 @@
                     android:textColor="?attr/tintcolor" />
             </com.google.android.material.textfield.TextInputLayout>
 
-            <de.hdodenhof.circleimageview.CircleImageView
+            <com.google.android.material.button.MaterialButton
+                android:text="Xong"
                 android:layout_marginTop="10dp"
                 android:layout_centerHorizontal="true"
-                android:src="@drawable/redo"
                 android:id="@+id/update_button"
                 android:layout_below="@+id/txtCode"
                 android:layout_width="wrap_content"

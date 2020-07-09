@@ -112,8 +112,15 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
         } catch (Exception e) {
 
         }
-        //click to show time
-        messageViewHolder.messageLayout.setOnClickListener(new View.OnClickListener() {
+        // click to mess image
+        messageViewHolder.message_image.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
+        //click to mess text
+        messageViewHolder.MessageText.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (messageViewHolder.timeTv.getVisibility() == View.GONE) {
@@ -125,7 +132,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
         });
 
         // delete dialog
-        messageViewHolder.messageLayout.setOnLongClickListener(new View.OnLongClickListener() {
+        messageViewHolder.MessageText.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
                 AlertDialog.Builder builder = new AlertDialog.Builder(context);

@@ -65,12 +65,6 @@ public class MainActivity extends AppCompatActivity {
         user_on_off_chat = findViewById(R.id.user_on_off_chat);
         firebaseAuth = FirebaseAuth.getInstance();
 
-        //loadFragment(new ChatsFragment());
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.frame_container, new ChatsFragment(), null);
-        transaction.commit();
-
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(itemSelectedListener);
 
@@ -129,6 +123,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         checkUserStatus();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.add(R.id.frame_container, new ChatsFragment(), null);
+        transaction.commit();
     }
 
     @Override
@@ -178,7 +176,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new GroupsFragment();
                     loadFragment(fragment);
                     btnCreate.setVisibility(View.VISIBLE);
-                    btnCreate.setImageResource(R.drawable.message);
+                    btnCreate.setImageResource(R.drawable.create_group);
                     btnCreate.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
@@ -201,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
     private void checkUserStatus() {
         SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Loading ...");
+        pDialog.setTitleText("Loading...");
         pDialog.setCancelable(true);
         pDialog.show();
         FirebaseUser user = firebaseAuth.getCurrentUser();

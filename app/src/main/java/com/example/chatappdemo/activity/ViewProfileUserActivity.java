@@ -56,13 +56,6 @@ public class ViewProfileUserActivity extends AppCompatActivity {
 
     private void AnhXa() {
         imgBtnBG = findViewById(R.id.imgBtnBG);
-        imgBtnBG.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ChoosePhoto();
-            }
-        });
-
         imgBtnDD = findViewById(R.id.imgBtnDD_ViewProfile);
         imgBtnDD.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,9 +80,7 @@ public class ViewProfileUserActivity extends AppCompatActivity {
         });
     }
 
-    private void ChoosePhoto() {
 
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -119,7 +110,12 @@ public class ViewProfileUserActivity extends AppCompatActivity {
                             tv_userName.setText(UserName);
                             tv_Status.setText(Status);
                             tv_Phone.setText(Phone);
-                            tv_Gioitinh.setText(GioiTinh);
+                            if (GioiTinh.equals("male")){
+                                tv_Gioitinh.setText("Nam");
+                            }else {
+                                tv_Gioitinh.setText("Nữ");
+                            }
+
                             Picasso.get().load(ImageDD).placeholder(R.drawable.user_profile).into(imgBtnDD);
                             Picasso.get().load(ImageBG).placeholder(R.drawable.teabackground).into(imgBtnBG);
                         } else if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("name"))

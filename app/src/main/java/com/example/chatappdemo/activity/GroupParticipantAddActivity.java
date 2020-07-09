@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.TextView;
 
 import com.example.chatappdemo.R;
@@ -30,7 +31,7 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
 
     private RecyclerView usersRv;
     private String groupId, myGroupRole;
-    private CircleImageView groupIconIv;
+    private CircleImageView groupIconIv, backGroupAddParticipant;
     private TextView groupTitleTv;
     private ArrayList<Contact> contactList;
     private AdapterParticipantAdd adapterParticipantAdd;
@@ -47,10 +48,16 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         usersRv = findViewById(R.id.usersRv);
+        backGroupAddParticipant = findViewById(R.id.backGroupAddParticipant);
         groupTitleTv = findViewById(R.id.groupTitleTv);
         groupIconIv = findViewById(R.id.groupIconIv);
         groupId = getIntent().getStringExtra("groupId");
-
+        backGroupAddParticipant.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
         checkUserState();
     }
 
@@ -106,14 +113,10 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
                                     if (snapshot.exists()){
                                         myGroupRole = ""+snapshot.child("role").getValue();
                                         groupTitleTv.setText(groupTitle + "-" + myGroupRole);
-
-//                                        Picasso.get().load(groupIcon).placeholder(R.drawable.group_dark_mode).into(groupIconIv);
-
-
                                         try {
-                                            Picasso.get().load(groupIcon).placeholder(R.drawable.group_dark_mode).into(groupIconIv);
+                                            Picasso.get().load(groupIcon).placeholder(R.drawable.group_icon_bottom).into(groupIconIv);
                                         }catch (Exception e){
-                                            groupIconIv.setImageResource(R.drawable.group_dark_mode);
+                                            groupIconIv.setImageResource(R.drawable.group_icon_bottom);
                                         }
                                         getAllContacts();
                                     }

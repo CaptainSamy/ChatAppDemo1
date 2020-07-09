@@ -104,10 +104,10 @@ public class GroupChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         groupId = intent.getStringExtra("groupId");
 
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setStackFromEnd(true);
-        groupchatRv.setHasFixedSize(true);
-        groupchatRv.setLayoutManager(linearLayoutManager);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        linearLayoutManager.setStackFromEnd(true);
+//        groupchatRv.setHasFixedSize(true);
+//        groupchatRv.setLayoutManager(linearLayoutManager);
 
         cameraPermission = new String[]{
                 Manifest.permission.CAMERA,
@@ -330,9 +330,9 @@ public class GroupChatActivity extends AppCompatActivity {
 
                             groupTitleTv.setText(groupTitle);
                             try {
-                                Picasso.get().load(groupIcon).placeholder(R.drawable.group_dark_mode).into(groupIconIv);
+                                Picasso.get().load(groupIcon).placeholder(R.drawable.group_icon_bottom).into(groupIconIv);
                             } catch (Exception e) {
-                                groupIconIv.setImageResource(R.drawable.group_dark_mode);
+                                groupIconIv.setImageResource(R.drawable.group_icon_bottom);
                             }
                         }
                     }
