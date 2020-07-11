@@ -52,6 +52,15 @@
             android:src="@drawable/group"
             android:layout_width="35dp"
             android:layout_height="35dp"/>
+
+        <ImageButton
+            android:id="@+id/ibInformationGroup"
+            android:background="?attr/tabcolor"
+            android:layout_gravity="center_vertical"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/information_icon"
+            android:layout_width="35dp"
+            android:layout_height="35dp"/>
     </LinearLayout>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

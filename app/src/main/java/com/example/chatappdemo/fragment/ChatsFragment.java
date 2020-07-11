@@ -1,6 +1,7 @@
 package com.example.chatappdemo.fragment;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.MainActivity;
 import com.example.chatappdemo.adapter.AdapterChatlist;
+import com.example.chatappdemo.helper.MyButtonClickListener;
+import com.example.chatappdemo.helper.MySwipeHelper;
 import com.example.chatappdemo.model.Chatlist;
 import com.example.chatappdemo.model.Messages;
 import com.example.chatappdemo.model.User;
@@ -74,6 +77,23 @@ public class ChatsFragment extends Fragment {
                 }, 2000);
             }
         });
+
+        MySwipeHelper swipeHelper = new MySwipeHelper(getActivity(), recyclerView, 200) {
+
+            @Override
+            public void instantiateMyButton(RecyclerView.ViewHolder viewHolder, List<MySwipeHelper.MyButton> buffer) {
+                buffer.add(new MyButton(getActivity(),
+                        0,
+                        "Delete", 35,
+                        Color.parseColor("#FF3C30"),
+                        new MyButtonClickListener() {
+                            @Override
+                            public void onClick(int pos) {
+                                Toast.makeText(getActivity(), "Delete click", Toast.LENGTH_LONG).show();
+                            }
+                        }));
+            }
+        };
 
         updateToken(FirebaseInstanceId.getInstance().getToken());
         return view;

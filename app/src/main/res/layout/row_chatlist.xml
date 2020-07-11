@@ -66,15 +66,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <View
-        android:layout_below="@id/lastMessageTv"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="60dp"
-        android:layout_marginRight="8dp"
-        android:background="@android:color/darker_gray"/>
-
     <TextView
         android:visibility="gone"
         android:id="@+id/timeLastMess"

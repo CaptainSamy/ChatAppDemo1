@@ -57,7 +57,7 @@ public class GroupChatActivity extends AppCompatActivity {
     String SHARED_PREFS = "codeTheme";
     private CircleImageView backGroupChat, groupIconIv, imgMore, img_smile;
     private LinearLayout bottom_linear, sendImage, sendFile, sendGif, sendLocation;
-    private ImageButton ibAddParticipant;
+    private ImageButton ibAddParticipant, ibInformationGroup;
     private TextView groupTitleTv;
     private EditText messageEt;
     private RecyclerView groupchatRv;
@@ -92,6 +92,7 @@ public class GroupChatActivity extends AppCompatActivity {
         groupIconIv = findViewById(R.id.groupIconIv);
         groupTitleTv = findViewById(R.id.groupTitleTv);
         ibAddParticipant = findViewById(R.id.ibAddParticipant);
+        ibInformationGroup = findViewById(R.id.ibInformationGroup);
         imgMore = findViewById(R.id.imgMore);
         bottom_linear = findViewById(R.id.bottom_linear);
         sendImage = findViewById(R.id.sendImage);
@@ -104,10 +105,26 @@ public class GroupChatActivity extends AppCompatActivity {
         Intent intent = getIntent();
         groupId = intent.getStringExtra("groupId");
 
+        backGroupChat.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
+
 //        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
 //        linearLayoutManager.setStackFromEnd(true);
 //        groupchatRv.setHasFixedSize(true);
 //        groupchatRv.setLayoutManager(linearLayoutManager);
+
+        ibInformationGroup.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intentInforGroup = new Intent(GroupChatActivity.this, InforGroupActivity.class);
+                intentInforGroup.putExtra("groupId", groupId);
+                startActivity(intentInforGroup);
+            }
+        });
 
         cameraPermission = new String[]{
                 Manifest.permission.CAMERA,

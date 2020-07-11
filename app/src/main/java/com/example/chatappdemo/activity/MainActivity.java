@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.navigation);
         bottomNavigationView.setOnNavigationItemSelectedListener(itemSelectedListener);
+        Fragment fragment = new ChatsFragment();
+        loadFragment(fragment);
 
         //Anh dai dien
         profile_image = findViewById(R.id.profile_image);
@@ -123,10 +125,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         checkUserStatus();
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.frame_container, new ChatsFragment(), null);
-        transaction.commit();
     }
 
     @Override
@@ -200,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
         SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
         pDialog.setTitleText("Loading...");
-        pDialog.setCancelable(true);
+        pDialog.setCancelable(false);
         pDialog.show();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");

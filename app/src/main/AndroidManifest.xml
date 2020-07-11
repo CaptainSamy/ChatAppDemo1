@@ -12,11 +12,13 @@
         android:hardwareAccelerated="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:largeHeap="true"
+        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.GroupParticipantAddActivity"></activity>
+        <activity android:name=".activity.GroupEditActivity"></activity>
+        <activity android:name=".activity.InforGroupActivity" />
+        <activity android:name=".activity.GroupParticipantAddActivity" />
         <activity android:name=".activity.GroupCreateActivity" />
         <activity android:name=".activity.ChatActivity" />
         <activity android:name=".activity.ViewProfileUserActivity" />
