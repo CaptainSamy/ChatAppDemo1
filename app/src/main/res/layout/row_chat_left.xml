@@ -4,7 +4,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:emojicon="http://schemas.android.com/tools">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/message_profile_image"
         android:layout_width="47dp"
@@ -22,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <TextView
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
             android:maxWidth="200dp"
             android:id="@+id/message_text"
             android:layout_width="wrap_content"
@@ -30,7 +31,7 @@
             android:layout_alignParentTop="true"
             android:text="receiver messages here"
             android:padding="8dp"
-            android:textSize="14sp"
+            android:textSize="20dp"
             android:textColor="?attr/tintcolor"/>
 
         <com.makeramen.roundedimageview.RoundedImageView
@@ -39,9 +40,7 @@
             android:scaleType="centerCrop"
             app:riv_corner_radius_bottom_right="20dip"
             app:riv_corner_radius="10dip"
-            app:riv_border_width="2dip"
             android:layout_alignParentRight="true"
-            app:riv_border_color="#333333"
             app:riv_mutate_background="true"
             android:src="@drawable/image_iv"
             android:layout_height="200dp"

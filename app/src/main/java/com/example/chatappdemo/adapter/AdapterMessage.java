@@ -1,13 +1,10 @@
 package com.example.chatappdemo.adapter;
 
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,12 +26,12 @@ import com.makeramen.roundedimageview.RoundedImageView;
 import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageViewHolder> {
     private static final int MSG_TYPE_LEFT = 0;
@@ -51,15 +48,16 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
     }
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView MessageText,  timeTv, isSeenTv;
+        public TextView timeTv, isSeenTv;
+        public EmojiconTextView MessageText;
         public CircleImageView ProfileImage;
         public RelativeLayout messageLayout;
-        private RoundedImageView message_image;
+        public RoundedImageView message_image;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
-            MessageText = (TextView) itemView.findViewById(R.id.message_text);
-            ProfileImage = (CircleImageView) itemView.findViewById(R.id.message_profile_image);
+            MessageText = itemView.findViewById(R.id.message_text);
+            ProfileImage = itemView.findViewById(R.id.message_profile_image);
             timeTv = itemView.findViewById(R.id.timeTv);
             isSeenTv = itemView.findViewById(R.id.isSeenTv);
             messageLayout = itemView.findViewById(R.id.messageLayout);
@@ -100,15 +98,18 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             } catch (Exception e) {
                 messageViewHolder.message_image.setImageResource(R.drawable.image_iv);
             }
-        }else {
+        } else if (type.equals("text")) {
             messageViewHolder.MessageText.setVisibility(View.VISIBLE);
             messageViewHolder.message_image.setVisibility(View.GONE);
             messageViewHolder.MessageText.setText(message);
+        } else if (type.equals("file")) {
+            messageViewHolder.MessageText.setVisibility(View.GONE);
+            messageViewHolder.message_image.setVisibility(View.VISIBLE);
+            messageViewHolder.message_image.setImageResource(R.drawable.file);
         }
 
-
         messageViewHolder.timeTv.setText(dateTime);
-        try{
+        try {
             Picasso.get().load(imageUrl).placeholder(R.drawable.user_profile).into(messageViewHolder.ProfileImage);
         } catch (Exception e) {
 
@@ -158,7 +159,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             }
         });
 
-        if (i == userMessagesList.size()-1) {
+        if (i == userMessagesList.size() - 1) {
             if (userMessagesList.get(i).isSeen()) {
                 messageViewHolder.isSeenTv.setText("Seen");
             } else {
@@ -177,13 +178,13 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
         query.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                for (DataSnapshot ds: dataSnapshot.getChildren()) {
+                for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds.child("from").getValue().equals(myUID)) {
                         //remove from chats
                         ds.getRef().removeValue();
-                        Toast.makeText(context,"Message deleted!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "Message deleted!", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(context,"You can delete only your messages!",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(context, "You can delete only your messages!", Toast.LENGTH_SHORT).show();
                     }
                 }
             }

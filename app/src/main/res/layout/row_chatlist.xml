@@ -52,7 +52,7 @@
         android:src="@drawable/seen"
         android:layout_width="10dp"
         android:layout_height="10dp"/>
-    <TextView
+    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
         android:textColor="?attr/tintcolor"
         android:layout_marginLeft="8dp"
         android:id="@+id/lastMessageTv"

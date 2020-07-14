@@ -6,16 +6,15 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -43,6 +42,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.squareup.picasso.Picasso;
@@ -50,7 +50,10 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 public class GroupChatActivity extends AppCompatActivity {
     int themeIdcurrent;
@@ -59,7 +62,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private LinearLayout bottom_linear, sendImage, sendFile, sendGif, sendLocation;
     private ImageButton ibAddParticipant, ibInformationGroup;
     private TextView groupTitleTv;
-    private EditText messageEt;
+    private EmojiconEditText messageEt;
     private RecyclerView groupchatRv;
 
     private FirebaseAuth firebaseAuth;
@@ -73,17 +76,22 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private static final int IMAGE_PICK_GALLERY_CODE = 1000;
     private static final int IMAGE_PICK_CAMERA_CODE = 2000;
+    private static final int FILE_PICK_CODE = 3000;
 
     private String[] cameraPermission;
     private String[] storagePermission;
 
     private Uri image_uri = null;
+    private Uri file_uri = null;
+
+    private View rootView;
+    private EmojIconActions emojIconActions;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         SharedPreferences locationpref = getApplicationContext()
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
-        themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
+        themeIdcurrent = locationpref.getInt("themeid", R.style.AppTheme);
         setTheme(themeIdcurrent);
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
@@ -96,6 +104,7 @@ public class GroupChatActivity extends AppCompatActivity {
         imgMore = findViewById(R.id.imgMore);
         bottom_linear = findViewById(R.id.bottom_linear);
         sendImage = findViewById(R.id.sendImage);
+        sendFile = findViewById(R.id.sendFile);
         img_smile = findViewById(R.id.img_smile);
         messageEt = findViewById(R.id.messageEt);
         groupchatRv = findViewById(R.id.groupchatRv);
@@ -111,11 +120,6 @@ public class GroupChatActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-//        linearLayoutManager.setStackFromEnd(true);
-//        groupchatRv.setHasFixedSize(true);
-//        groupchatRv.setLayoutManager(linearLayoutManager);
 
         ibInformationGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,21 +138,6 @@ public class GroupChatActivity extends AppCompatActivity {
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
 
-        final Animation animation = AnimationUtils.loadAnimation(this, R.anim.anim_rotation);
-        final Animation animation2 = AnimationUtils.loadAnimation(this, R.anim.anim_rotation2);
-        imgMore.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (bottom_linear.getVisibility() == View.GONE) {
-                    bottom_linear.setVisibility(View.VISIBLE);
-                    imgMore.startAnimation(animation);
-                } else if (bottom_linear.getVisibility() == View.VISIBLE) {
-                    bottom_linear.setVisibility(View.GONE);
-                    imgMore.startAnimation(animation2);
-                }
-            }
-        });
-
         sendImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -156,9 +145,34 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
+        sendFile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (!checkStoragePermission()) {
+                    requestStoragePermission();
+                } else {
+                    pickFile();
+                }
+            }
+        });
+
         loadGroupInfo();
         loadGroupMessages();
         loadMyGroupRole();
+
+        rootView = findViewById(R.id.root_view);
+        emojIconActions = new EmojIconActions(this, rootView, messageEt, img_smile, "#00bdb5","#e8e8e8","#f4f4f4");
+        emojIconActions.ShowEmojIcon();
+        emojIconActions.setIconsIds(R.drawable.ic_keyboad, R.drawable.smile);
+        emojIconActions.setKeyboardListener(new EmojIconActions.KeyboardListener() {
+            @Override
+            public void onKeyboardOpen() {
+            }
+
+            @Override
+            public void onKeyboardClose() {
+            }
+        });
 
         messageEt.addTextChangedListener(new TextWatcher() {
             @Override
@@ -170,10 +184,24 @@ public class GroupChatActivity extends AppCompatActivity {
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 String message = messageEt.getText().toString().trim();
                 if (messageEt.getText().toString().equals("")) {
-                    img_smile.setImageResource(R.drawable.smile);
+                    imgMore.setImageResource(R.drawable.add);
+                    final Animation animation = AnimationUtils.loadAnimation(GroupChatActivity.this, R.anim.anim_rotation);
+                    final Animation animation2 = AnimationUtils.loadAnimation(GroupChatActivity.this, R.anim.anim_rotation2);
+                    imgMore.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (bottom_linear.getVisibility() == View.GONE) {
+                                bottom_linear.setVisibility(View.VISIBLE);
+                                imgMore.startAnimation(animation);
+                            } else if (bottom_linear.getVisibility() == View.VISIBLE) {
+                                bottom_linear.setVisibility(View.GONE);
+                                imgMore.startAnimation(animation2);
+                            }
+                        }
+                    });
                 } else {
-                    img_smile.setImageResource(R.drawable.send);
-                    img_smile.setOnClickListener(new View.OnClickListener() {
+                    imgMore.setImageResource(R.drawable.send);
+                    imgMore.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             sendMessage(message);
@@ -189,6 +217,13 @@ public class GroupChatActivity extends AppCompatActivity {
         });
     }
 
+    private void pickFile() {
+        Intent intentFile = new Intent();
+        intentFile.setType("application/*");
+        intentFile.setAction(Intent.ACTION_GET_CONTENT);
+        startActivityForResult(Intent.createChooser(intentFile, "Select File"), FILE_PICK_CODE);
+    }
+
     private void showImageImportDialog() {
         String[] options = {"Camera", "Gallery"};
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -196,8 +231,8 @@ public class GroupChatActivity extends AppCompatActivity {
                 .setItems(options, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0){
-                            if (!checkCameraPermission()){
+                        if (which == 0) {
+                            if (!checkCameraPermission()) {
                                 requestCameraPermission();
                             } else {
                                 pickCamera();
@@ -219,7 +254,7 @@ public class GroupChatActivity extends AppCompatActivity {
         startActivityForResult(intent, IMAGE_PICK_GALLERY_CODE);
     }
 
-    private void pickCamera(){
+    private void pickCamera() {
         ContentValues contentValues = new ContentValues();
         contentValues.put(MediaStore.Images.Media.TITLE, "GroupImageTitle");
         contentValues.put(MediaStore.Images.Media.DESCRIPTION, "GroupImageDescription");
@@ -231,20 +266,20 @@ public class GroupChatActivity extends AppCompatActivity {
         startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
     }
 
-    private void requestStoragePermission(){
+    private void requestStoragePermission() {
         ActivityCompat.requestPermissions(this, storagePermission, STORAGE_REQUEST_CODE);
     }
 
-    private boolean checkStoragePermission(){
+    private boolean checkStoragePermission() {
         boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
         return result;
     }
 
-    private void requestCameraPermission(){
+    private void requestCameraPermission() {
         ActivityCompat.requestPermissions(this, cameraPermission, CAMERA_REQUEST_CODE);
     }
 
-    private boolean checkCameraPermission(){
+    private boolean checkCameraPermission() {
         boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
         boolean result1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
         return result && result1;
@@ -257,8 +292,8 @@ public class GroupChatActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds: snapshot.getChildren()) {
-                            myGroupRole = ""+ds.child("role").getValue();
+                        for (DataSnapshot ds : snapshot.getChildren()) {
+                            myGroupRole = "" + ds.child("role").getValue();
 
                             if (myGroupRole.equals("Creator") || myGroupRole.equals("Admin")) {
                                 ibAddParticipant.setVisibility(View.VISIBLE);
@@ -291,7 +326,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         groupChatList.clear();
-                        for (DataSnapshot ds: snapshot.getChildren()) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
                             GroupChat model = ds.getValue(GroupChat.class);
                             groupChatList.add(model);
                         }
@@ -327,7 +362,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(GroupChatActivity.this, "" + e.getMessage(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -338,7 +373,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds: snapshot.getChildren()) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
                             String groupTitle = "" + ds.child("groupTitle").getValue();
                             String groupDescription = "" + ds.child("groupDescription").getValue();
                             String groupIcon = "" + ds.child("groupIcon").getValue();
@@ -372,33 +407,37 @@ public class GroupChatActivity extends AppCompatActivity {
             if (requestCode == IMAGE_PICK_CAMERA_CODE) {
                 sendImageMessage();
             }
+            if (requestCode == FILE_PICK_CODE) {
+                file_uri = data.getData();
+                sendFileMessage(file_uri);
+            }
         }
     }
 
-    private void sendImageMessage() {
-        ProgressDialog pd = new ProgressDialog(this);
-        pd.setTitle("Please wait");
-        pd.setMessage("Sending Image...");
-        pd.setCanceledOnTouchOutside(false);
-        pd.show();
+    private void sendFileMessage(Uri file_uri) {
+        SweetAlertDialog pDialog = new SweetAlertDialog(GroupChatActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#2cb9b0"));
+        pDialog.setTitleText("Sending File...");
+        pDialog.setCancelable(false);
+        pDialog.show();
 
-        String filenamePath = "ChatImages/" + ""+System.currentTimeMillis();
+        String filenamePath = "ChatFiles/" + "" + System.currentTimeMillis();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference(filenamePath);
         //upload image
-        storageReference.putFile(image_uri)
+        storageReference.putFile(file_uri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                         Task<Uri> p_uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!p_uriTask.isSuccessful());
+                        while (!p_uriTask.isSuccessful()) ;
                         Uri p_downloadUri = p_uriTask.getResult();
-                        if (p_uriTask.isSuccessful()){
-                            String timestamp = ""+System.currentTimeMillis();
+                        if (p_uriTask.isSuccessful()) {
+                            String timestamp = "" + System.currentTimeMillis();
                             HashMap<String, Object> hashMap = new HashMap<>();
-                            hashMap.put("sender", ""+firebaseAuth.getUid());
-                            hashMap.put("message", ""+p_downloadUri);
-                            hashMap.put("timestamp", ""+timestamp);
-                            hashMap.put("type", ""+"image");
+                            hashMap.put("sender", "" + firebaseAuth.getUid());
+                            hashMap.put("message", "" + p_downloadUri);
+                            hashMap.put("timestamp", "" + timestamp);
+                            hashMap.put("type", "" + "file");
                             // add in db
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
                             ref.child(groupId).child("Messages").child(timestamp)
@@ -407,14 +446,14 @@ public class GroupChatActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             messageEt.setText("");
-                                            pd.dismiss();
+                                            pDialog.dismiss();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(GroupChatActivity.this, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
-                                            pd.dismiss();
+                                            Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            pDialog.dismiss();
                                         }
                                     });
                         }
@@ -423,8 +462,69 @@ public class GroupChatActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(GroupChatActivity.this, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
-                        pd.dismiss();
+                        Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        pDialog.dismiss();
+                    }
+                })
+                .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                        double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
+                        pDialog.setTitleText("Uploaded: " + (int) progress + "%");
+                    }
+                });
+    }
+
+    private void sendImageMessage() {
+        SweetAlertDialog pDialog = new SweetAlertDialog(GroupChatActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#2cb9b0"));
+        pDialog.setTitleText("Sending Image...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        String filenamePath = "ChatImages/" + "" + System.currentTimeMillis();
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(filenamePath);
+        //upload image
+        storageReference.putFile(image_uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Task<Uri> p_uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!p_uriTask.isSuccessful()) ;
+                        Uri p_downloadUri = p_uriTask.getResult();
+                        if (p_uriTask.isSuccessful()) {
+                            String timestamp = "" + System.currentTimeMillis();
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("sender", "" + firebaseAuth.getUid());
+                            hashMap.put("message", "" + p_downloadUri);
+                            hashMap.put("timestamp", "" + timestamp);
+                            hashMap.put("type", "" + "image");
+                            // add in db
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+                            ref.child(groupId).child("Messages").child(timestamp)
+                                    .setValue(hashMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            messageEt.setText("");
+                                            pDialog.dismiss();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            pDialog.dismiss();
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        pDialog.dismiss();
                     }
                 });
     }
@@ -434,13 +534,13 @@ public class GroupChatActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case CAMERA_REQUEST_CODE:
-                if (grantResults.length > 0){
+                if (grantResults.length > 0) {
                     boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
                     boolean writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
                     if (cameraAccepted && writeStorageAccepted) {
                         pickCamera();
                     } else {
-                        Toast.makeText(this, "Camera & Storage permissions are required...",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Camera & Storage permissions are required...", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -450,7 +550,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     if (writeStorageAccepted) {
                         pickGallery();
                     } else {
-                        Toast.makeText(this, "Storage permissions are required...",Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Storage permissions are required...", Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;

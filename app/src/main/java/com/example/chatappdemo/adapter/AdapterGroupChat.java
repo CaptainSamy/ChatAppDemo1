@@ -5,7 +5,6 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -27,6 +26,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.HolderGroupChat> {
     private static final int MSG_TYPE_LEFT = 0;
@@ -50,7 +50,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
         if (viewType == MSG_TYPE_RIGHT) {
             View view = LayoutInflater.from(context).inflate(R.layout.row_groupchat_right, parent, false);
             return new HolderGroupChat(view);
-        }else {
+        } else {
             View view = LayoutInflater.from(context).inflate(R.layout.row_groupchat_left, parent, false);
             return new HolderGroupChat(view);
         }
@@ -72,7 +72,11 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             holder.messageIv.setVisibility(View.GONE);
             holder.messageTv.setVisibility(View.VISIBLE);
             holder.messageTv.setText(message);
-        }else {
+        } else if (messageType.equals("file")) {
+            holder.messageTv.setVisibility(View.GONE);
+            holder.messageIv.setVisibility(View.VISIBLE);
+            holder.messageIv.setImageResource(R.drawable.file);
+        } else {
             holder.messageIv.setVisibility(View.VISIBLE);
             holder.messageTv.setVisibility(View.GONE);
             try {
@@ -96,7 +100,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
         holder.messageTv.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (holder.timeTv.getVisibility() == View.GONE){
+                if (holder.timeTv.getVisibility() == View.GONE) {
                     holder.timeTv.setVisibility(View.VISIBLE);
                 } else {
                     holder.timeTv.setVisibility(View.GONE);
@@ -111,7 +115,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
                 .addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
-                        for (DataSnapshot ds: snapshot.getChildren()) {
+                        for (DataSnapshot ds : snapshot.getChildren()) {
                             String name = "" + ds.child("name").getValue();
                             String imgDD = "" + ds.child("imgAnhDD").getValue();
 
@@ -143,7 +147,8 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
 
     class HolderGroupChat extends RecyclerView.ViewHolder {
         private CircleImageView message_profile_image;
-        private TextView nameTv, messageTv, timeTv;
+        private TextView nameTv, timeTv;
+        private EmojiconTextView messageTv;
         private RoundedImageView messageIv;
 
         public HolderGroupChat(@NonNull View itemView) {

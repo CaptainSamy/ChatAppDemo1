@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
+    android:id="@+id/root_view"
     android:background="?attr/backgroundcolor"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -94,17 +95,17 @@
             android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/imgMore"
                 android:layout_marginLeft="5dp"
-                android:src="@drawable/add"
-                android:layout_width="40dp"
-                android:layout_height="40dp"/>
+                android:id="@+id/img_smile"
+                android:src="@drawable/smile"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
             <FrameLayout
                 android:layout_weight="1"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content">
 
-                <EditText
+                <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
                     android:id="@+id/messageEt"
                     android:hint="Enter message"
                     android:background="@drawable/bg_input_message"
@@ -115,14 +116,14 @@
                     android:maxHeight="70dp"
                     android:paddingRight="32dp"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="45dp"/>
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/img_smile"
+                    android:id="@+id/imgMore"
                     android:layout_gravity="center|right"
                     android:paddingRight="16dp"
-                    android:src="@drawable/smile"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"/>
+                    android:src="@drawable/add"
+                    android:layout_width="45dp"
+                    android:layout_height="45dp"/>
 
             </FrameLayout>
 
@@ -159,6 +160,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/sendFile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -167,7 +169,6 @@
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/sendFile"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
@@ -178,7 +179,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="File"
+                    android:text="Word File"
                     android:textSize="10sp" />
 
             </LinearLayout>
@@ -243,39 +244,15 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/picture" />
+                    android:src="@drawable/pdf" />
 
                 <TextView
                     android:textColor="?attr/tintcolor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Gallery"
+                    android:text="Pdf File"
                     android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:layout_marginRight="8dp"
-                android:layout_marginBottom="8dp"
-                android:orientation="vertical">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/note" />
-
-                <TextView
-                    android:textColor="?attr/tintcolor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="File"
-                    android:textSize="10sp" />
 
             </LinearLayout>
 

@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHolder> {
     Context context;
@@ -105,7 +106,8 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
 
     class MyHolder extends RecyclerView.ViewHolder {
         CircleImageView profileIv, onlineStatusIv, seenCv;
-        TextView nameTv, lastMessageTv;
+        TextView nameTv;
+        EmojiconTextView lastMessageTv;
 
         public MyHolder(@NonNull View itemView) {
             super(itemView);

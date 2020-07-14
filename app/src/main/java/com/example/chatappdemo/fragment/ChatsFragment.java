@@ -186,13 +186,17 @@ public class ChatsFragment extends Fragment {
                     if (messages.getTo().equals(mUID) && messages.getFrom().equals(userId)){
                         if (messages.getType().equals("image")) {
                             theLastMessage = "Sent a photo";
-                        } else {
+                        }else if (messages.getType().equals("file")) {
+                            theLastMessage = "Sent a file";
+                        }else {
                             theLastMessage = messages.getMessage();
                         }
                         seen = ""+messages.isSeen();
                     } else if (messages.getTo().equals(userId) && messages.getFrom().equals(mUID)){
                         if (messages.getType().equals("image")) {
                             theLastMessage = "You sent a photo";
+                        }else if (messages.getType().equals("file")) {
+                            theLastMessage = "You sent a file";
                         }else {
                             theLastMessage = "You: " + messages.getMessage();
                         }

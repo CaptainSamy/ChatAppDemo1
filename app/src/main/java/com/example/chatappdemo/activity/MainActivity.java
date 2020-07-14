@@ -37,6 +37,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.iid.FirebaseInstanceId;
 import com.squareup.picasso.Picasso;
 
+import java.util.HashMap;
+
 import de.hdodenhof.circleimageview.CircleImageView;
 
 import static android.view.View.GONE;
@@ -69,6 +71,8 @@ public class MainActivity extends AppCompatActivity {
         bottomNavigationView.setOnNavigationItemSelectedListener(itemSelectedListener);
         Fragment fragment = new ChatsFragment();
         loadFragment(fragment);
+
+        checkOnlineStatus("online");
 
         //Anh dai dien
         profile_image = findViewById(R.id.profile_image);
@@ -121,31 +125,12 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        checkUserStatus();
-    }
-
-    @Override
-    protected void onResume() {
-        checkUserStatus();
-        super.onResume();
-    }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        finish();
-    }
-
     private void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.frame_container, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
-
 
     private BottomNavigationView.OnNavigationItemSelectedListener itemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -191,8 +176,6 @@ public class MainActivity extends AppCompatActivity {
             return false;
         }
     };
-
-
 
     private void checkUserStatus() {
         SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
@@ -255,4 +238,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     // end notification
+    private void checkOnlineStatus(String status) {
+        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.getCurrentUser().getUid());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("onlineStatus", status);
+        dbRef.updateChildren(hashMap);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        checkUserStatus();
+        checkOnlineStatus("online");
+    }
+
+    @Override
+    protected void onResume() {
+        checkOnlineStatus("online");
+        super.onResume();
+    }
+    
+    @Override
+    protected void onDestroy() {
+        checkOnlineStatus("offline");
+        super.onDestroy();
+    }
 }
