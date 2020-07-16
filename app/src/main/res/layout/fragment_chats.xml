@@ -12,14 +12,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
+        <com.cooltechworks.views.shimmer.ShimmerRecyclerView
             android:layout_margin="8dp"
             android:background="?attr/cardbackground"
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            tools:listitem="@layout/row_chatlist"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"/>
+            app:shimmer_demo_child_count="12"
+            app:shimmer_demo_layout="@layout/row_chatlist_demo"
+            app:shimmer_demo_layout_manager_type="linear_vertical"
+            app:shimmer_demo_angle="15"/>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

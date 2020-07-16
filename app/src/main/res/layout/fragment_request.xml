@@ -12,9 +12,11 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            tools:listitem="@layout/user_item"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        <com.cooltechworks.views.shimmer.ShimmerRecyclerView
+            app:shimmer_demo_child_count="12"
+            app:shimmer_demo_layout="@layout/row_chatlist_demo"
+            app:shimmer_demo_layout_manager_type="linear_vertical"
+            app:shimmer_demo_angle="15"
             android:layout_width="match_parent"
             android:id="@+id/request_list"
             android:layout_alignParentStart="true"

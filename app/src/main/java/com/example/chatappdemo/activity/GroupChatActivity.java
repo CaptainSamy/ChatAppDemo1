@@ -52,6 +52,7 @@ import java.util.HashMap;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
@@ -362,7 +363,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception e) {
-                Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
             }
         });
     }
@@ -452,7 +453,7 @@ public class GroupChatActivity extends AppCompatActivity {
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
                                             pDialog.dismiss();
                                         }
                                     });
@@ -462,7 +463,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
                         pDialog.dismiss();
                     }
                 })
@@ -513,7 +514,7 @@ public class GroupChatActivity extends AppCompatActivity {
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
-                                            Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                            Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
                                             pDialog.dismiss();
                                         }
                                     });
@@ -523,7 +524,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
                         pDialog.dismiss();
                     }
                 });
@@ -540,7 +541,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     if (cameraAccepted && writeStorageAccepted) {
                         pickCamera();
                     } else {
-                        Toast.makeText(this, "Camera & Storage permissions are required...", Toast.LENGTH_SHORT).show();
+                        Toasty.info(this, "Camera & Storage permissions are required.", Toast.LENGTH_SHORT, true).show();
                     }
                 }
                 break;
@@ -550,7 +551,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     if (writeStorageAccepted) {
                         pickGallery();
                     } else {
-                        Toast.makeText(this, "Storage permissions are required...", Toast.LENGTH_SHORT).show();
+                        Toasty.info(this, "Storage permissions are required.", Toast.LENGTH_SHORT, true).show();
                     }
                 }
                 break;

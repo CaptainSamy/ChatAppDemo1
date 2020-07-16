@@ -76,6 +76,7 @@ import java.util.Map;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
@@ -247,7 +248,7 @@ public class ChatActivity extends AppCompatActivity {
                             notify = true;
                             String messageText = messageInput.getText().toString().trim();
                             if (TextUtils.isEmpty(messageText)) {
-                                Toast.makeText(ChatActivity.this, "Cannot send the empty message", Toast.LENGTH_SHORT).show();
+                                Toasty.error(ChatActivity.this, "Cannot send the empty message", Toast.LENGTH_SHORT, true).show();
                             } else {
                                 sendMessage(messageText);
                             }
@@ -386,7 +387,7 @@ public class ChatActivity extends AppCompatActivity {
                     if (cameraAccepted && writeStorageAccepted) {
                         pickCamera();
                     } else {
-                        Toast.makeText(this, "Camera & Storage permissions are required...", Toast.LENGTH_SHORT).show();
+                        Toasty.info(this, "Camera & Storage permissions are required.", Toast.LENGTH_SHORT, true).show();
                     }
                 }
                 break;
@@ -396,7 +397,7 @@ public class ChatActivity extends AppCompatActivity {
                     if (writeStorageAccepted) {
                         pickGallery();
                     } else {
-                        Toast.makeText(this, "Storage permissions are required...", Toast.LENGTH_SHORT).show();
+                        Toasty.info(this, "Storage permissions are required.", Toast.LENGTH_SHORT, true).show();
                     }
                 }
                 break;
@@ -510,7 +511,7 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         pDialog.dismiss();
-                        Toast.makeText(ChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toasty.error(ChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
                     }
                 })
                 .addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
@@ -622,7 +623,7 @@ public class ChatActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         pDialog.dismiss();
-                        Toast.makeText(ChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toasty.error(ChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
                     }
                 });
     }

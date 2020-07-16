@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.ChatActivity;
 import com.example.chatappdemo.activity.ProfileActivity;
@@ -44,7 +45,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class ContactsFragment extends Fragment {
     private View contactsView;
-    private RecyclerView recyclerViewContacts;
+    private ShimmerRecyclerView recyclerViewContacts;
     private DatabaseReference contactsRef, userRef;
     private FirebaseAuth firebaseAuth;
     private String currentUserId;

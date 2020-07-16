@@ -14,6 +14,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
         <de.hdodenhof.circleimageview.CircleImageView
+            android:background="#DDDDDD"
             android:layout_margin="8dp"
             android:id="@+id/profileIv"
             android:layout_gravity="center"
@@ -34,11 +35,11 @@
         android:id="@+id/nameTv"
         android:textStyle="bold"
         android:textColor="?attr/tintcolor"
-        android:textSize="18sp"
         android:layout_toRightOf="@id/framelayout"
         android:layout_toEndOf="@id/framelayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#DDDDDD"/>
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/seenCv"
@@ -54,13 +55,13 @@
         android:layout_marginLeft="8dp"
         android:id="@+id/lastMessageTv"
         android:maxLines="1"
-        android:text="Last Message"
+        android:layout_marginTop="8dp"
         android:maxWidth="200dp"
-        android:textSize="15sp"
+        android:background="#DDDDDD"
         android:layout_toRightOf="@id/framelayout"
         android:layout_toEndOf="@id/framelayout"
         android:layout_below="@id/nameTv"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
     <TextView

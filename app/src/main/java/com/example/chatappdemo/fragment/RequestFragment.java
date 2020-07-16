@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
@@ -43,7 +44,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  */
 public class RequestFragment extends Fragment {
     private View RequestFragmentView;
-    private RecyclerView recyclerView;
+    private ShimmerRecyclerView recyclerView;
     private DatabaseReference requestReference, userReference, contactReference;
     private FirebaseAuth firebaseAuth;
     private String currentUserID, requestUserName, requestUserStatus, requestUserAnhDD;

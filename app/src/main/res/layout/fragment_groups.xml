@@ -12,8 +12,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <androidx.recyclerview.widget.RecyclerView
-            tools:listitem="@layout/row_groupchats_list"
+        <com.cooltechworks.views.shimmer.ShimmerRecyclerView
+            app:shimmer_demo_child_count="10"
+            app:shimmer_demo_grid_child_count="2"
+            app:shimmer_demo_layout="@layout/row_groupchats_list_demo"
+            app:shimmer_demo_layout_manager_type="grid"
+            app:shimmer_demo_angle="20"
             android:background="?attr/backgroundcolor"
             android:id="@+id/recyclerGroup"
             android:layout_width="match_parent"

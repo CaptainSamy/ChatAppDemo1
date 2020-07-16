@@ -178,11 +178,10 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void checkUserStatus() {
-        SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-        pDialog.setTitleText("Loading...");
-        pDialog.setCancelable(false);
-        pDialog.show();
+//        SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+//        pDialog.setCancelable(false);
+//        pDialog.show();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
         if (user == null) {
@@ -199,15 +198,15 @@ public class MainActivity extends AppCompatActivity {
                         txtTitle.setText(userName);
                         try {
                             Picasso.get().load(userImage).placeholder(R.drawable.user_profile).into(profile_image);
-                            pDialog.dismiss();
+                            //pDialog.dismiss();
                             user_on_off_chat.setVisibility(View.VISIBLE);
                         }catch (Exception e) {
                             profile_image.setImageResource(R.drawable.user_profile);
-                            pDialog.dismiss();
+                            //pDialog.dismiss();
                             user_on_off_chat.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        pDialog.dismiss();
+                        //pDialog.dismiss();
                         Intent intent = new Intent(MainActivity.this, UpdateProfileUserActivity.class);
                         startActivity(intent);
                     }
@@ -215,7 +214,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
-                    pDialog.dismiss();
+                    //pDialog.dismiss();
                     Toast.makeText(MainActivity.this,""+databaseError.getMessage(),Toast.LENGTH_LONG).show();
                 }
             });

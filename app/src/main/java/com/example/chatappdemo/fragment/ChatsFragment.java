@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.MainActivity;
 import com.example.chatappdemo.adapter.AdapterChatlist;
@@ -42,7 +43,7 @@ import java.util.List;
  */
 public class ChatsFragment extends Fragment {
     FirebaseAuth firebaseAuth;
-    RecyclerView recyclerView;
+    ShimmerRecyclerView recyclerView;
     List<Chatlist> chatlistList;
     List<User> userList;
     AdapterChatlist adapterChatlist;

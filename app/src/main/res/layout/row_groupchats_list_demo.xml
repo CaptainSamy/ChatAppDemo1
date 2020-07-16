@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    android:background="?attr/cardbackground"
+    android:layout_margin="8dp"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <RelativeLayout
+        android:background="?attr/cardbackground"
+        android:padding="8dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_centerHorizontal="true"
+            android:id="@+id/groupIconIv"
+            android:background="#DDDDDD"
+            android:layout_width="60dp"
+            android:layout_height="60dp"/>
+
+        <ImageButton
+            android:id="@+id/moreG"
+            android:src="@drawable/moreiv"
+            android:background="?attr/cardbackground"
+            android:layout_alignParentRight="true"
+            android:layout_margin="5dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <TextView
+            android:layout_marginTop="5dp"
+            android:id="@+id/groupTitleTv"
+            android:background="#DDDDDD"
+            android:layout_centerHorizontal="true"
+            android:textColor="?attr/tintcolor"
+            android:layout_below="@id/groupIconIv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/nameSenderTv"
+            android:text="Name Sender"
+            android:layout_centerHorizontal="true"
+            android:textSize="15sp"
+            android:textColor="?attr/tintcolor"
+            android:layout_below="@id/groupTitleTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/messageTv"
+            android:text="message"
+            android:layout_centerHorizontal="true"
+            android:singleLine="true"
+            android:layout_below="@id/nameSenderTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <TextView
+            android:visibility="gone"
+            android:id="@+id/timeGTv"
+            android:singleLine="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/moreG"
+            android:layout_marginTop="40dp"
+            android:layout_marginRight="8dp"
+            android:text="11:25PM"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+        <FrameLayout
+            android:layout_below="@id/groupTitleTv"
+            android:layout_centerHorizontal="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <FrameLayout
+                android:layout_marginTop="3dp"
+                android:layout_marginLeft="28dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_gravity="center"
+                    android:background="#DDDDDD"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"/>
+                <TextView
+                    android:text="N"
+                    android:id="@+id/memberTv"
+                    android:textStyle="bold"
+                    android:textColor="?attr/tintcolor"
+                    android:layout_gravity="center"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </FrameLayout>
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_marginTop="3dp"
+                android:background="#DDDDDD"
+                android:id="@+id/imgDDuser1"
+                android:layout_width="40dp"
+                android:layout_height="40dp"/>
+
+        </FrameLayout>
+
+    </RelativeLayout>
+
+</androidx.cardview.widget.CardView>

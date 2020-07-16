@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.adapter.AdapterGroupList;
 import com.example.chatappdemo.model.GroupsList;
@@ -32,7 +33,7 @@ import java.util.ArrayList;
  */
 public class GroupsFragment extends Fragment {
 
-    private RecyclerView recyclerViewGroup;
+    private ShimmerRecyclerView recyclerViewGroup;
     private static final int NUM_COLUMNS = 2;
     private FirebaseAuth firebaseAuth;
     private ArrayList<GroupsList> groupsLists;
