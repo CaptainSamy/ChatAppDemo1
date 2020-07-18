@@ -79,10 +79,9 @@
 
     </LinearLayout>
 
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:layout_below="@id/liner"
-        android:layout_above="@id/chatlayout"
+        android:layout_above="@id/bottom_container"
         android:layout_width="match_parent"
         android:id="@+id/swiperefreshlayout"
         android:layout_height="wrap_content">
@@ -97,55 +96,12 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
-        android:id="@+id/chatlayout"
+        android:id="@+id/bottom_container"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_margin="8dp"
-            android:gravity="center"
-            android:background="?attr/backgroundcolor"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:layout_marginLeft="5dp"
-                android:id="@+id/img_smile"
-                android:src="@drawable/smile"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"/>
-
-            <FrameLayout
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content">
-                <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
-                    android:id="@+id/input_message"
-                    android:hint="Enter message"
-                    android:background="@drawable/bg_input_message"
-                    android:inputType="textCapSentences|textMultiLine"
-                    android:layout_marginLeft="8dp"
-                    android:layout_marginRight="8dp"
-                    android:textColor="#000000"
-                    android:textSize="20dp"
-                    android:maxHeight="70dp"
-                    android:paddingRight="32dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"/>
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/imgMore"
-                    android:layout_gravity="center|right"
-                    android:paddingRight="16dp"
-                    android:src="@drawable/add"
-                    android:layout_width="45dp"
-                    android:layout_height="45dp"/>
-
-            </FrameLayout>
-
-        </LinearLayout>
         <LinearLayout
             android:id="@+id/bottom_linear"
             android:visibility="gone"
@@ -274,6 +230,63 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_margin="8dp"
+            android:gravity="center"
+            android:background="?attr/backgroundcolor"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_marginLeft="5dp"
+                android:id="@+id/img_smile"
+                android:src="@drawable/smile"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+            <FrameLayout
+                android:layout_weight="1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
+                    android:id="@+id/input_message"
+                    android:hint="Enter message"
+                    android:background="@drawable/bg_input_message"
+                    android:inputType="textCapSentences|textMultiLine"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginRight="8dp"
+                    android:textColor="#000000"
+                    android:textSize="20dp"
+                    android:maxHeight="70dp"
+                    android:paddingRight="32dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="40dp"/>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:layout_marginRight="12dp"
+                    android:id="@+id/imgGif"
+                    android:layout_gravity="center|right"
+                    android:src="@drawable/ic_gif"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"/>
+            </FrameLayout>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/imgMore"
+                android:layout_gravity="center"
+                android:src="@drawable/add"
+                android:layout_width="35dp"
+                android:layout_height="35dp"/>
+
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/keyboard_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

@@ -5,6 +5,7 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -12,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.model.Messages;
 import com.google.firebase.auth.FirebaseAuth;
@@ -106,6 +108,14 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             messageViewHolder.MessageText.setVisibility(View.GONE);
             messageViewHolder.message_image.setVisibility(View.VISIBLE);
             messageViewHolder.message_image.setImageResource(R.drawable.file);
+        } else if (type.equals("image_gif")){
+            messageViewHolder.MessageText.setVisibility(View.GONE);
+            messageViewHolder.message_image.setVisibility(View.VISIBLE);
+            try {
+                Glide.with(context).load(message).asGif().placeholder(R.drawable.image_iv).into(messageViewHolder.message_image);
+            }catch (Exception e){
+                messageViewHolder.message_image.setImageResource(R.drawable.image_iv);
+            }
         }
 
         messageViewHolder.timeTv.setText(dateTime);

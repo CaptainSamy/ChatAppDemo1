@@ -79,7 +79,7 @@
             android:layout_toRightOf="@id/up_arrow"
             android:layout_toStartOf="@id/search_btn"
             android:background="@android:color/transparent"
-            android:hint="Search"
+            android:hint="Search gif"
             android:imeOptions="actionSearch"
             android:maxLines="1"
             android:padding="6dp"

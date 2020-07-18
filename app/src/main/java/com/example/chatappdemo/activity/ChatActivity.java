@@ -2,6 +2,7 @@ package com.example.chatappdemo.activity;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -19,6 +20,8 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,8 +41,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.adapter.AdapterMessage;
+import com.example.chatappdemo.fragment.EmoticonGIFKeyboardFragment;
+import com.example.chatappdemo.gifs.Gif;
+import com.example.chatappdemo.gifs.GifSelectListener;
+import com.example.chatappdemo.giphy.GiphyGifProvider;
 import com.example.chatappdemo.model.Messages;
 import com.example.chatappdemo.model.User;
 import com.example.chatappdemo.notifications.Data;
@@ -84,7 +92,7 @@ public class ChatActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
     private String messReceiverId, messReceiverImage, messReceiverName, messSenderId;
-    private CircleImageView imgMore, imgProfileFriend, back_user_chat, imgSmile, onlineStatusIv;
+    private CircleImageView imgMore, imgGif, imgProfileFriend, back_user_chat, imgSmile, onlineStatusIv;
     private LinearLayout bottom_linear, sendImage, sendFile, sendGif, sendLocation;
     private TextView name_user_chat, userLastSeen;
     private EmojiconEditText messageInput;
@@ -120,11 +128,18 @@ public class ChatActivity extends AppCompatActivity {
     private String[] cameraPermission;
     private String[] storagePermission;
 
-    private Uri image_uri = null;
-    private Uri file_uri = null;
+    private Uri myUri = null;
 
     private View rootView;
     private EmojIconActions emojIconActions;
+    private EmoticonGIFKeyboardFragment mEmoticonGIFKeyboardFragment;
+    private FrameLayout keyboard_container;
+
+    public static void toggleKeyboardVisibility(Context context) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null)
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -214,6 +229,20 @@ public class ChatActivity extends AppCompatActivity {
         imgSmile = findViewById(R.id.img_smile);
         bottom_linear = findViewById(R.id.bottom_linear);
         messageInput = findViewById(R.id.input_message);
+        final Animation animation = AnimationUtils.loadAnimation(ChatActivity.this, R.anim.anim_rotation);
+        final Animation animation2 = AnimationUtils.loadAnimation(ChatActivity.this, R.anim.anim_rotation2);
+        imgMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bottom_linear.getVisibility() == View.GONE) {
+                    bottom_linear.setVisibility(View.VISIBLE);
+                    imgMore.startAnimation(animation);
+                } else if (bottom_linear.getVisibility() == View.VISIBLE) {
+                    bottom_linear.setVisibility(View.GONE);
+                    imgMore.startAnimation(animation2);
+                }
+            }
+        });
         messageInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -278,6 +307,44 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        imgGif = findViewById(R.id.imgGif);
+        EmoticonGIFKeyboardFragment.GIFConfig gifConfig = new EmoticonGIFKeyboardFragment
+                .GIFConfig(GiphyGifProvider.create(this, "564ce7370bf347f2b7c0e4746593c179"))
+
+                .setGifSelectListener(new GifSelectListener() {
+                    @Override
+                    public void onGifSelected(@NonNull Gif gif) {
+                        //Do something with the selected GIF.
+                        String urlGif = gif.getGifUrl();
+                        sendImageGifMessage(urlGif);
+                    }
+
+                    @Override
+                    public void onBackSpace() {
+                    }
+                });
+
+        keyboard_container = findViewById(R.id.keyboard_container);
+        imgGif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (keyboard_container.getVisibility() == View.GONE) {
+                    keyboard_container.setVisibility(View.VISIBLE);
+                    mEmoticonGIFKeyboardFragment = EmoticonGIFKeyboardFragment
+                            .getNewInstance(findViewById(R.id.keyboard_container), gifConfig);
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.keyboard_container, mEmoticonGIFKeyboardFragment)
+                            .commit();
+                    mEmoticonGIFKeyboardFragment.open();
+                }else if (keyboard_container.getVisibility() == View.VISIBLE) {
+                    keyboard_container.setVisibility(View.GONE);
+                    mEmoticonGIFKeyboardFragment.toggle();
+                    toggleKeyboardVisibility(ChatActivity.this);
+                }
+            }
+        });
+
         cameraPermission = new String[]{
                 Manifest.permission.CAMERA,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -306,6 +373,80 @@ public class ChatActivity extends AppCompatActivity {
 
         readMessages();
         seenMessage();
+    }
+
+    private void sendImageGifMessage(String urlGif) {
+        notify = true;
+
+        String timestamp = "" + System.currentTimeMillis();
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("from", messSenderId);
+        hashMap.put("message", urlGif);
+        hashMap.put("type", "image_gif");
+        hashMap.put("to", messReceiverId);
+        hashMap.put("timeStamp", timestamp);
+        hashMap.put("isSeen", false);
+        databaseReference.child("Chats").push().setValue(hashMap);
+
+        //create chatlist
+        DatabaseReference chatRef1 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(messSenderId)
+                .child(messReceiverId);
+        chatRef1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    chatRef1.child("id").setValue(messReceiverId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference chatRef2 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(messReceiverId)
+                .child(messSenderId);
+        chatRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    chatRef2.child("id").setValue(messSenderId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        //notification
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users").child(messSenderId);
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if (notify) {
+                    senNotification(messReceiverId, user.getName(), "Sent you a gif");
+                }
+                notify = false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (mEmoticonGIFKeyboardFragment == null || !mEmoticonGIFKeyboardFragment.handleBackPressed())
+            super.onBackPressed();
     }
 
     private void pickFile() {
@@ -347,13 +488,12 @@ public class ChatActivity extends AppCompatActivity {
 
     private void pickCamera() {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, "GroupImageTitle");
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "GroupImageDescription");
+        contentValues.put(MediaStore.Images.Media.TITLE, "ImageTitle");
 
-        image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
+        myUri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, myUri);
         startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
     }
 
@@ -409,15 +549,15 @@ public class ChatActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
             if (requestCode == IMAGE_PICK_GALLERY_CODE) {
-                image_uri = data.getData();
-                sendImageMessage(image_uri);
+                myUri = data.getData();
+                sendImageMessage(myUri);
             }
             if (requestCode == IMAGE_PICK_CAMERA_CODE) {
-                sendImageMessage(image_uri);
+                sendImageMessage(myUri);
             }
             if (requestCode == FILE_PICK_CODE) {
-                file_uri = data.getData();
-                sendFileMessage(file_uri);
+                myUri = data.getData();
+                sendFileMessage(myUri);
             }
         }
     }
