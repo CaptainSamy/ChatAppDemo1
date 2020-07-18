@@ -52,6 +52,7 @@ import java.util.regex.Pattern;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class UpdateProfileUserActivity extends AppCompatActivity {
     int themeIdcurrent;
@@ -256,7 +257,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                     .addOnSuccessListener(new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            Toast.makeText(UpdateProfileUserActivity.this, "Updated...",Toast.LENGTH_SHORT).show();
+                            Toasty.success(UpdateProfileUserActivity.this, "Updated!", Toast.LENGTH_SHORT, true).show();
                             startActivity(new Intent(UpdateProfileUserActivity.this, ViewProfileUserActivity.class));
                             finish();
                         }
@@ -264,7 +265,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(UpdateProfileUserActivity.this, "" + e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Toasty.error(UpdateProfileUserActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
                         }
                     });
         }
@@ -352,26 +353,26 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                                         @Override
                                         public void onSuccess(Void aVoid) {
                                             pDialog.dismiss();
-                                            Toast.makeText(UpdateProfileUserActivity.this, "Image Updated...",Toast.LENGTH_SHORT).show();
+                                            Toasty.success(UpdateProfileUserActivity.this, "Image Updated!", Toast.LENGTH_SHORT, true).show();
                                         }
                                     })
                                     .addOnFailureListener(new OnFailureListener() {
                                         @Override
                                         public void onFailure(@NonNull Exception e) {
                                             pDialog.dismiss();
-                                            Toast.makeText(UpdateProfileUserActivity.this, "Error Updating Image...",Toast.LENGTH_SHORT).show();
+                                            Toasty.error(UpdateProfileUserActivity.this, "Error Updating Image!", Toast.LENGTH_SHORT, true).show();
                                         }
                                     });
                         } else {
                             pDialog.dismiss();
-                            Toast.makeText(UpdateProfileUserActivity.this, "Some error occured",Toast.LENGTH_SHORT).show();
+                            Toasty.error(UpdateProfileUserActivity.this, "Some error occured!", Toast.LENGTH_SHORT, true).show();
                         }
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(UpdateProfileUserActivity.this, e.getMessage(),Toast.LENGTH_SHORT).show();
+                        Toasty.error(UpdateProfileUserActivity.this, ""+ e.getMessage(), Toast.LENGTH_SHORT, true).show();
                     }
                 });
 
@@ -387,7 +388,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                     if (cameraAccepted && writeStorageAccepted) {
                         pickFromCamera();
                     } else {
-                        Toast.makeText(this, "Please enable permission",Toast.LENGTH_SHORT).show();
+                        Toasty.info(this, "Please enable permission!", Toast.LENGTH_SHORT, true).show();
                     }
                 }
             }
@@ -398,7 +399,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                     if (writeStorageAccepted) {
                         pickFromGallery();
                     } else {
-                        Toast.makeText(this, "Please enable permission",Toast.LENGTH_SHORT).show();
+                        Toasty.info(this, "Please enable permission!", Toast.LENGTH_SHORT, true).show();
                     }
                 }
             }
@@ -459,7 +460,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
     private boolean validateSex() {
         int isSelecter = radioGroup.getCheckedRadioButtonId();
         if (isSelecter == -1) {
-            Toast.makeText(this, "Please select a gender!", Toast.LENGTH_LONG).show();
+            Toasty.error(this, "Please select a gender!", Toast.LENGTH_SHORT, true).show();
             return false;
         }
         return true;

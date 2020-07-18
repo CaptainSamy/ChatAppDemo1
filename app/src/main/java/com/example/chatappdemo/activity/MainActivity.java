@@ -40,6 +40,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 import static android.view.View.GONE;
 
@@ -215,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
                     //pDialog.dismiss();
-                    Toast.makeText(MainActivity.this,""+databaseError.getMessage(),Toast.LENGTH_LONG).show();
+                    Toasty.error(MainActivity.this, ""+databaseError.getMessage(), Toast.LENGTH_SHORT, true).show();
                 }
             });
             BadgeChats();

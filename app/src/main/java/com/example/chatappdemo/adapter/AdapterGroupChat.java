@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.model.GroupChat;
 import com.google.firebase.auth.FirebaseAuth;
@@ -76,12 +77,20 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             holder.messageTv.setVisibility(View.GONE);
             holder.messageIv.setVisibility(View.VISIBLE);
             holder.messageIv.setImageResource(R.drawable.file);
-        } else {
+        } else if (messageType.equals("image")){
             holder.messageIv.setVisibility(View.VISIBLE);
             holder.messageTv.setVisibility(View.GONE);
             try {
                 Picasso.get().load(message).placeholder(R.drawable.image_iv).into(holder.messageIv);
             } catch (Exception e) {
+                holder.messageIv.setImageResource(R.drawable.image_iv);
+            }
+        } else if (messageType.equals("image_gif")) {
+            holder.messageTv.setVisibility(View.GONE);
+            holder.messageIv.setVisibility(View.VISIBLE);
+            try {
+                Glide.with(context).load(message).asGif().placeholder(R.drawable.image_iv).into(holder.messageIv);
+            }catch (Exception e){
                 holder.messageIv.setImageResource(R.drawable.image_iv);
             }
         }

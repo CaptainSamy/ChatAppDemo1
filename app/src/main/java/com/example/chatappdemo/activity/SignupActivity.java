@@ -28,6 +28,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class SignupActivity extends AppCompatActivity {
     int themeIdcurrent;
@@ -94,7 +95,7 @@ public class SignupActivity extends AppCompatActivity {
                                 SendEmailVerificationMessage();
                             } else {
                                 String message = task.getException().toString();
-                                Toast.makeText(SignupActivity.this, "Lỗi: " + message, Toast.LENGTH_SHORT).show();
+                                Toasty.error(SignupActivity.this, "Error: " + message, Toast.LENGTH_SHORT, true).show();
                                 loadingBar.dismiss();
                             }
                         }
@@ -121,7 +122,7 @@ public class SignupActivity extends AppCompatActivity {
                         firebaseAuth.signOut();
                     } else {
                         String error = task.getException().getMessage();
-                        Toast.makeText(SignupActivity.this, "Error: " + error,Toast.LENGTH_SHORT).show();
+                        Toasty.error(SignupActivity.this, "Error: " + error, Toast.LENGTH_SHORT, true).show();
                         firebaseAuth.signOut();
                     }
                 }
@@ -146,10 +147,10 @@ public class SignupActivity extends AppCompatActivity {
     private boolean validatePassword() {
         password_signup = register_Password.getEditText().getText().toString().trim();
         if (password_signup.isEmpty()) {
-            register_Password.setError("Bạn không được để trống!");
+            register_Password.setError("You must not leave blank!");
             return false;
         } else if (!PASSWORD_PATTERN.matcher(password_signup).matches()) {
-            register_Password.setError("Mật khẩu cần có 1 chữ viết hoa và dài hơn 6 kí tự gồm chữ và số!");
+            register_Password.setError("Password needs to have 1 uppercase letter and is longer than 6 characters including letters and numbers!");
             return false;
         } else {
             register_Password.setError(null);
@@ -161,10 +162,10 @@ public class SignupActivity extends AppCompatActivity {
         rePassword_signup = register_ConfirmPassword.getEditText().getText().toString().trim();
         password_signup = register_Password.getEditText().getText().toString().trim();
         if (rePassword_signup.isEmpty()) {
-            register_ConfirmPassword.setError("Bạn không được để trống!");
+            register_ConfirmPassword.setError("You must not leave blank!");
             return false;
         } else if (!rePassword_signup.equals(password_signup)) {
-            register_ConfirmPassword.setError("Mật khẩu nhập lại khác mật khẩu ở trên!");
+            register_ConfirmPassword.setError("The password is different from the password above!");
             return false;
         } else {
             register_ConfirmPassword.setError(null);

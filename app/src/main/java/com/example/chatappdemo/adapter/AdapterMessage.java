@@ -33,6 +33,7 @@ import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageViewHolder> {
@@ -192,9 +193,9 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
                     if (ds.child("from").getValue().equals(myUID)) {
                         //remove from chats
                         ds.getRef().removeValue();
-                        Toast.makeText(context, "Message deleted!", Toast.LENGTH_SHORT).show();
+                        Toasty.success(context, "Message deleted!", Toast.LENGTH_SHORT, true).show();
                     } else {
-                        Toast.makeText(context, "You can delete only your messages!", Toast.LENGTH_SHORT).show();
+                        Toasty.error(context, "You can delete only your messages!", Toast.LENGTH_SHORT, true).show();
                     }
                 }
             }

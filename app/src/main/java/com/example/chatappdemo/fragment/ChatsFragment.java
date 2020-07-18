@@ -36,6 +36,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
 
 
 /**
@@ -90,7 +91,7 @@ public class ChatsFragment extends Fragment {
                         new MyButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
-                                Toast.makeText(getActivity(), "Delete click", Toast.LENGTH_LONG).show();
+                                Toasty.success(getActivity(), "Delete click!", Toast.LENGTH_SHORT, true).show();
                             }
                         }));
             }
@@ -159,7 +160,7 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 swipeRefreshLayout.setRefreshing(false);
-                Toast.makeText(getActivity(),""+error.getMessage(),Toast.LENGTH_SHORT).show();
+                Toasty.error(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT, true).show();
             }
         });
     }

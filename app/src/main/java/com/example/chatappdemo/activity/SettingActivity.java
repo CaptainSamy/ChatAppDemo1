@@ -26,6 +26,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class SettingActivity extends AppCompatActivity {
     int themeIdcurrent;
@@ -147,12 +148,12 @@ public class SettingActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(SettingActivity.this, "Your profile is deleted:( Create a account now!", Toast.LENGTH_SHORT).show();
+                                        Toasty.info(SettingActivity.this, "Your profile is deleted:( Create a account now!", Toast.LENGTH_SHORT, true).show();
                                         progressDialog.dismiss();
                                         startActivity(new Intent(SettingActivity.this, Dangnhap_Dangky_Activity.class));
                                         finish();
                                     } else {
-                                        Toast.makeText(SettingActivity.this, "Failed to delete your account!", Toast.LENGTH_SHORT).show();
+                                        Toasty.error(SettingActivity.this, "Failed to delete your account!", Toast.LENGTH_SHORT, true).show();
                                         progressDialog.dismiss();
                                     }
                                 }

@@ -45,6 +45,7 @@ import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class GroupEditActivity extends AppCompatActivity {
     private String groupId;
@@ -119,7 +120,7 @@ public class GroupEditActivity extends AppCompatActivity {
         String groupDescription = groupDescriptionEt.getText().toString().trim();
 
         if (TextUtils.isEmpty(groupTitle)) {
-            Toast.makeText(GroupEditActivity.this, "Group title is required",Toast.LENGTH_SHORT).show();
+            Toasty.error(GroupEditActivity.this, "Group title is required.", Toast.LENGTH_SHORT, true).show();
             return;
         }
         pDialog.setTitleText("Updating Group Info");
@@ -135,14 +136,14 @@ public class GroupEditActivity extends AppCompatActivity {
                         @Override
                         public void onSuccess(Void aVoid) {
                             pDialog.dismiss();
-                            Toast.makeText(GroupEditActivity.this, "Group info updated",Toast.LENGTH_SHORT).show();
+                            Toasty.success(GroupEditActivity.this, "Group info updated!", Toast.LENGTH_SHORT, true).show();
                         }
                     })
                     .addOnFailureListener(new OnFailureListener() {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             pDialog.dismiss();
-                            Toast.makeText(GroupEditActivity.this, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Toasty.error(GroupEditActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
                         }
                     });
         }else {
@@ -169,14 +170,14 @@ public class GroupEditActivity extends AppCompatActivity {
                                             @Override
                                             public void onSuccess(Void aVoid) {
                                                 pDialog.dismiss();
-                                                Toast.makeText(GroupEditActivity.this, "Group info updated",Toast.LENGTH_SHORT).show();
+                                                Toasty.success(GroupEditActivity.this, "Group info updated!", Toast.LENGTH_SHORT, true).show();
                                             }
                                         })
                                         .addOnFailureListener(new OnFailureListener() {
                                             @Override
                                             public void onFailure(@NonNull Exception e) {
                                                 pDialog.dismiss();
-                                                Toast.makeText(GroupEditActivity.this, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                                                Toasty.error(GroupEditActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
                                             }
                                         });
                             }
@@ -186,7 +187,7 @@ public class GroupEditActivity extends AppCompatActivity {
                         @Override
                         public void onFailure(@NonNull Exception e) {
                             pDialog.dismiss();
-                            Toast.makeText(GroupEditActivity.this, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                            Toasty.error(GroupEditActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
                         }
                     });
         }
@@ -303,7 +304,7 @@ public class GroupEditActivity extends AppCompatActivity {
                     if (cameraAccepted && storageAccepted) {
                         pickFromCamera();
                     } else {
-                        Toast.makeText(this, "Camera & Storage permissions are required",Toast.LENGTH_SHORT).show();
+                        Toasty.error(this, "Camera & Storage permissions are required.", Toast.LENGTH_SHORT, true).show();
                     }
                 }
             }
@@ -314,7 +315,7 @@ public class GroupEditActivity extends AppCompatActivity {
                     if (storageAccepted) {
                         pickFromGallery();
                     } else {
-                        Toast.makeText(this, "Storage permissions required",Toast.LENGTH_SHORT).show();
+                        Toasty.error(this, "Storage permissions required.", Toast.LENGTH_SHORT, true).show();
                     }
                 }
             }

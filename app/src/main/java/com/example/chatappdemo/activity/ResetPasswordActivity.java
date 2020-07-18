@@ -21,6 +21,8 @@ import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.regex.Pattern;
 
+import es.dmoral.toasty.Toasty;
+
 public class ResetPasswordActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
@@ -64,9 +66,9 @@ public class ResetPasswordActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(ResetPasswordActivity.this, "Chúng tôi đã gửi cho bạn hướng dẫn để đặt lại mật khẩu của bạn!", Toast.LENGTH_SHORT).show();
+                                        Toasty.info(ResetPasswordActivity.this, "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT, true).show();
                                     } else {
-                                        Toast.makeText(ResetPasswordActivity.this, "Không thể gửi yêu cầu!", Toast.LENGTH_SHORT).show();
+                                        Toasty.error(ResetPasswordActivity.this, "Could not send request!", Toast.LENGTH_SHORT, true).show();
                                     }
 
                                     progressBar.setVisibility(View.GONE);

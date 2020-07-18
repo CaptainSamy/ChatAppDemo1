@@ -37,6 +37,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class SigninActivity extends AppCompatActivity {
     int themeIdcurrent;
@@ -116,7 +117,7 @@ public class SigninActivity extends AppCompatActivity {
                                             public void onComplete(@NonNull Task<Void> task) {
 
                                                 if (task.isSuccessful()){
-                                                    Toast.makeText(SigninActivity.this, "Đăng nhập thành công...", Toast.LENGTH_LONG).show();
+                                                    Toasty.success(SigninActivity.this, "Logged in successfully!", Toast.LENGTH_SHORT, true).show();
                                                     loadingBar.dismiss();
                                                     VerifyEmailAddress();
                                                 }
@@ -126,7 +127,7 @@ public class SigninActivity extends AppCompatActivity {
 
                                     } else {
                                         String message = task.getException().toString();
-                                        Toast.makeText(SigninActivity.this, "Lỗi: " + message, Toast.LENGTH_LONG).show();
+                                        Toasty.error(SigninActivity.this, "Error: " + message, Toast.LENGTH_SHORT, true).show();
                                         loadingBar.dismiss();
                                     }
                                 }
@@ -144,7 +145,7 @@ public class SigninActivity extends AppCompatActivity {
                 .enableAutoManage(this, new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
                     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
-                        Toast.makeText(SigninActivity.this, "Connection to Google Sign In false",Toast.LENGTH_SHORT).show();
+                        Toasty.error(SigninActivity.this, "Connection to Google Sign In false.", Toast.LENGTH_SHORT, true).show();
                     }
                 })
                 .addApi(Auth.GOOGLE_SIGN_IN_API, gso)
@@ -176,9 +177,9 @@ public class SigninActivity extends AppCompatActivity {
             if (result.isSuccess()) {
                 GoogleSignInAccount account = result.getSignInAccount();
                 firebaseAuthWithGoogle(account);
-                Toast.makeText(SigninActivity.this,"Please wait, while we are getting your auth result",Toast.LENGTH_LONG).show();
+                Toasty.info(SigninActivity.this, "Please wait, while we are getting your auth result.", Toast.LENGTH_SHORT, true).show();
             } else {
-                Toast.makeText(SigninActivity.this,"Can't get auth result",Toast.LENGTH_LONG).show();
+                Toasty.error(SigninActivity.this, "Can't get auth result!", Toast.LENGTH_SHORT, true).show();
                 loadingBar.dismiss();
             }
         }
@@ -204,7 +205,7 @@ public class SigninActivity extends AppCompatActivity {
                                     } else {
                                         loadingBar.dismiss();
                                         String message = task.getException().toString();
-                                        Toast.makeText(SigninActivity.this, "Not authenticated: " + message,Toast.LENGTH_SHORT).show();
+                                        Toasty.error(SigninActivity.this, "Not authenticated: " + message, Toast.LENGTH_SHORT, true).show();
                                     }
                                 }
                             });
@@ -221,7 +222,7 @@ public class SigninActivity extends AppCompatActivity {
             Intent intent1 = new Intent(SigninActivity.this, MainActivity.class);
             startActivity(intent1);
         } else {
-            Toast.makeText(SigninActivity.this,"Please verify your accout first!",Toast.LENGTH_LONG).show();
+            Toasty.info(SigninActivity.this, "Please verify your accout first!", Toast.LENGTH_SHORT, true).show();
             firebaseAuth.signOut();
         }
     }
@@ -229,10 +230,10 @@ public class SigninActivity extends AppCompatActivity {
     private boolean validateEmail() {
         email_signin = login_Email.getEditText().getText().toString().trim();
         if (email_signin.isEmpty()) {
-            login_Email.setError("Bạn không được để trống!");
+            login_Email.setError("You must not leave blank!");
             return false;
         } else if (!EMAIL_PATTERN.matcher(email_signin).matches()) {
-            login_Email.setError("Vui lòng nhập đúng định dạng email!");
+            login_Email.setError("Please enter the correct email format!");
             return false;
         } else {
             login_Email.setError(null);
@@ -243,10 +244,10 @@ public class SigninActivity extends AppCompatActivity {
     private boolean validatePassword() {
         password_signin = login_Password.getEditText().getText().toString().trim();
         if (password_signin.isEmpty()) {
-            login_Password.setError("Bạn không được để trống!");
+            login_Password.setError("You must not leave blank!");
             return false;
         } else if (!PASSWORD_PATTERN.matcher(password_signin).matches()) {
-            login_Password.setError("Mật khẩu cần có 1 chữ viết hoa và dài hơn 6 kí tự gồm chữ và số!");
+            login_Password.setError("Password needs to have 1 uppercase letter and is longer than 6 characters including letters and numbers!");
             return false;
         } else {
             login_Password.setError(null);

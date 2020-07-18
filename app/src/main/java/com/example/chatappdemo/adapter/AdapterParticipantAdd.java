@@ -29,6 +29,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipantAdd.HolderParticipantAdd> {
     private Context context;
@@ -111,7 +112,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                                         } else if (myGroupRole.equals("Admin")) {
                                             if (hisPreviosRole.equals("Creator")) {
                                                 // im admin, he is creator
-                                                Toast.makeText(context, "Creator of Group...",Toast.LENGTH_SHORT).show();
+                                                Toasty.success(context, "Creator of Group!", Toast.LENGTH_SHORT, true).show();
                                             } else if (hisPreviosRole.equals("Admin")) {
                                                 // im admin, he is admin too
                                                 options = new String[]{"Remove Admin", "Remove User"};
@@ -186,14 +187,13 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "Added successfully",Toast.LENGTH_SHORT).show();
-
+                        Toasty.success(context, "Added successfully!", Toast.LENGTH_SHORT, true).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                        Toasty.error(context, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
                     }
                 });
     }
@@ -207,13 +207,13 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "The user is now admin",Toast.LENGTH_SHORT).show();
+                        Toasty.success(context, "The user is now admin!", Toast.LENGTH_SHORT, true).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                        Toasty.error(context, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
                     }
                 });
     }
@@ -224,13 +224,13 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "The user has been removed from the group",Toast.LENGTH_SHORT).show();
+                        Toasty.success(context, "The user has been removed from the group!", Toast.LENGTH_SHORT, true).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                        Toasty.error(context, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
                     }
                 });
     }
@@ -243,13 +243,13 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(context, "The user is no longer admin",Toast.LENGTH_SHORT).show();
+                        Toasty.success(context, "The user is no longer admin!", Toast.LENGTH_SHORT, true).show();
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(context, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                        Toasty.error(context, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
                     }
                 });
     }

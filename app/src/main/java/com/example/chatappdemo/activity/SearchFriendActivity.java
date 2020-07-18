@@ -28,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class SearchFriendActivity extends AppCompatActivity {
     int themeIdcurrent;
@@ -83,7 +84,7 @@ public class SearchFriendActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 if (txtSearch.getText().toString().equals("")) {
-                    Toast.makeText(SearchFriendActivity.this,"Please write name to search",Toast.LENGTH_LONG).show();
+                    Toasty.info(SearchFriendActivity.this, "Please write name to search!", Toast.LENGTH_SHORT, true).show();
                 } else {
                     stringSearch = s.toString();
                     SearchFriend(stringSearch);

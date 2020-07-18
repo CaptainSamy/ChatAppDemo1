@@ -38,6 +38,7 @@ import com.squareup.picasso.Picasso;
 import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 
 /**
@@ -140,13 +141,12 @@ public class ContactsFragment extends Fragment {
                                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                                 @Override
                                                 public void onSuccess(Void aVoid) {
-                                                    //Toast.makeText(getActivity(), "Updated...",Toast.LENGTH_SHORT).show();
                                                 }
                                             })
                                             .addOnFailureListener(new OnFailureListener() {
                                                 @Override
                                                 public void onFailure(@NonNull Exception e) {
-                                                    Toast.makeText(getActivity(), ""+ e.getMessage(),Toast.LENGTH_SHORT).show();
+                                                    Toasty.error(getActivity(), ""+ e.getMessage(), Toast.LENGTH_SHORT, true).show();
                                                 }
                                             });
 

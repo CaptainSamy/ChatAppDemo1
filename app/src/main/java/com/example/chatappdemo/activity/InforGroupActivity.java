@@ -32,6 +32,7 @@ import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class InforGroupActivity extends AppCompatActivity {
     private String groupId;
@@ -138,7 +139,7 @@ public class InforGroupActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(InforGroupActivity.this, "Group left successfully",Toast.LENGTH_SHORT).show();
+                        Toasty.success(InforGroupActivity.this, "Group left successfully!", Toast.LENGTH_SHORT, true).show();
                         startActivity(new Intent(InforGroupActivity.this, MainActivity.class));
                         finish();
                     }
@@ -146,7 +147,7 @@ public class InforGroupActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(InforGroupActivity.this, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                        Toasty.error(InforGroupActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
                     }
                 });
     }
@@ -158,7 +159,7 @@ public class InforGroupActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toast.makeText(InforGroupActivity.this, "Group successfully deleted",Toast.LENGTH_SHORT).show();
+                        Toasty.success(InforGroupActivity.this, "Group successfully deleted!", Toast.LENGTH_SHORT, true).show();
                         startActivity(new Intent(InforGroupActivity.this, MainActivity.class));
                         finish();
                     }
@@ -166,7 +167,7 @@ public class InforGroupActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Toast.makeText(InforGroupActivity.this, ""+e.getMessage(),Toast.LENGTH_SHORT).show();
+                        Toasty.error(InforGroupActivity.this, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
                     }
                 });
     }

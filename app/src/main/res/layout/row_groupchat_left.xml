@@ -45,13 +45,13 @@
             android:layout_marginTop="5dp"
             android:layout_below="@id/liner_gr"
             android:id="@+id/messageIv"
-            android:scaleType="centerCrop"
+            android:scaleType="fitXY"
             app:riv_corner_radius_bottom_right="20dip"
             app:riv_corner_radius="10dip"
             app:riv_mutate_background="true"
             android:src="@drawable/image_iv"
             android:layout_height="200dp"
-            android:layout_width="200dp" />
+            android:layout_width="220dp" />
 
     </LinearLayout>
 

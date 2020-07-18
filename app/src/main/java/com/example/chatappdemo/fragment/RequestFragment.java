@@ -37,6 +37,7 @@ import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 
 /**
@@ -157,7 +158,7 @@ public class RequestFragment extends Fragment {
                                                                                                                             @Override
                                                                                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                                                                                 if (task.isSuccessful()) {
-                                                                                                                                    Toast.makeText(getContext(),"New contact saved", Toast.LENGTH_SHORT).show();
+                                                                                                                                    Toasty.success(getContext(), "New contact saved!", Toast.LENGTH_SHORT, true).show();
                                                                                                                                     FragmentManager fragmentManager = getFragmentManager();
                                                                                                                                     FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
                                                                                                                                     ContactsFragment contactsFragment = new ContactsFragment();
@@ -199,7 +200,7 @@ public class RequestFragment extends Fragment {
                                                                                                                             @Override
                                                                                                                             public void onComplete(@NonNull Task<Void> task) {
                                                                                                                                 if (task.isSuccessful()) {
-                                                                                                                                    Toast.makeText(getContext(),"Contact deleted", Toast.LENGTH_SHORT).show();
+                                                                                                                                    Toasty.success(getContext(), "Contact deleted!", Toast.LENGTH_SHORT, true).show();
                                                                                                                                 }
                                                                                                                             }
                                                                                                                         });

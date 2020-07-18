@@ -7,9 +7,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import android.Manifest;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,7 +25,9 @@ import android.text.TextWatcher;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -31,7 +35,12 @@ import android.widget.Toast;
 
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.adapter.AdapterGroupChat;
+import com.example.chatappdemo.fragment.EmoticonGIFKeyboardFragment;
+import com.example.chatappdemo.gifs.Gif;
+import com.example.chatappdemo.gifs.GifSelectListener;
+import com.example.chatappdemo.giphy.GiphyGifProvider;
 import com.example.chatappdemo.model.GroupChat;
+import com.example.chatappdemo.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -59,12 +68,13 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 public class GroupChatActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
-    private CircleImageView backGroupChat, groupIconIv, imgMore, img_smile;
+    private CircleImageView backGroupChat, imgGif, groupIconIv, imgMore, img_smile;
     private LinearLayout bottom_linear, sendImage, sendFile, sendGif, sendLocation;
     private ImageButton ibAddParticipant, ibInformationGroup;
     private TextView groupTitleTv;
     private EmojiconEditText messageEt;
     private RecyclerView groupchatRv;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     private FirebaseAuth firebaseAuth;
     private String groupId, myGroupRole;
@@ -87,6 +97,14 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private View rootView;
     private EmojIconActions emojIconActions;
+    private EmoticonGIFKeyboardFragment mEmoticonGIFKeyboardFragment;
+    private FrameLayout keyboard_container;
+
+    public static void toggleKeyboardVisibility(Context context) {
+        InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null)
+            inputMethodManager.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -119,6 +137,18 @@ public class GroupChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+
+        swipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+//                itemPos = 0;
+//                mCurrentPage++;
+//                loadMoreMessages();
+
             }
         });
 
@@ -175,6 +205,21 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
+        final Animation animation = AnimationUtils.loadAnimation(GroupChatActivity.this, R.anim.anim_rotation);
+        final Animation animation2 = AnimationUtils.loadAnimation(GroupChatActivity.this, R.anim.anim_rotation2);
+        imgMore.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (bottom_linear.getVisibility() == View.GONE) {
+                    bottom_linear.setVisibility(View.VISIBLE);
+                    imgMore.startAnimation(animation);
+                } else if (bottom_linear.getVisibility() == View.VISIBLE) {
+                    bottom_linear.setVisibility(View.GONE);
+                    imgMore.startAnimation(animation2);
+                }
+            }
+        });
+
         messageEt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -216,6 +261,69 @@ public class GroupChatActivity extends AppCompatActivity {
 
             }
         });
+
+        imgGif = findViewById(R.id.imgGif);
+        EmoticonGIFKeyboardFragment.GIFConfig gifConfig = new EmoticonGIFKeyboardFragment
+                .GIFConfig(GiphyGifProvider.create(this, "564ce7370bf347f2b7c0e4746593c179"))
+
+                .setGifSelectListener(new GifSelectListener() {
+                    @Override
+                    public void onGifSelected(@NonNull Gif gif) {
+                        //Do something with the selected GIF.
+                        String urlGif = gif.getGifUrl();
+                        sendImageGifMessage(urlGif);
+                    }
+
+                    @Override
+                    public void onBackSpace() {
+                    }
+                });
+
+        keyboard_container = findViewById(R.id.keyboard_container);
+        imgGif.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (keyboard_container.getVisibility() == View.GONE) {
+                    keyboard_container.setVisibility(View.VISIBLE);
+                    mEmoticonGIFKeyboardFragment = EmoticonGIFKeyboardFragment
+                            .getNewInstance(findViewById(R.id.keyboard_container), gifConfig);
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.keyboard_container, mEmoticonGIFKeyboardFragment)
+                            .commit();
+                    mEmoticonGIFKeyboardFragment.open();
+                }else if (keyboard_container.getVisibility() == View.VISIBLE) {
+                    keyboard_container.setVisibility(View.GONE);
+                    mEmoticonGIFKeyboardFragment.toggle();
+                    toggleKeyboardVisibility(GroupChatActivity.this);
+                }
+            }
+        });
+    }
+
+    private void sendImageGifMessage(String urlGif) {
+        String timestamp = "" + System.currentTimeMillis();
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("sender", "" + firebaseAuth.getUid());
+        hashMap.put("message", "" + urlGif);
+        hashMap.put("timestamp", "" + timestamp);
+        hashMap.put("type", "" + "image_gif");
+        // add in db
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+        ref.child(groupId).child("Messages").child(timestamp)
+                .setValue(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        messageEt.setText("");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                    }
+                });
     }
 
     private void pickFile() {

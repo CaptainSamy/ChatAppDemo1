@@ -21,6 +21,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 
 public class UpdateAccoutActivity extends AppCompatActivity {
     int themeIdcurrent;
@@ -97,11 +98,11 @@ public class UpdateAccoutActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toast.makeText(UpdateAccoutActivity.this, "Email address is updated. Please sign in with new email id!", Toast.LENGTH_LONG).show();
+                                        Toasty.info(UpdateAccoutActivity.this, "Email address is updated. Please sign in with new email id!", Toast.LENGTH_SHORT, true).show();
                                         signOut();
                                         progressBar.setVisibility(View.GONE);
                                     } else {
-                                        Toast.makeText(UpdateAccoutActivity.this, "Failed to update email!", Toast.LENGTH_LONG).show();
+                                        Toasty.error(UpdateAccoutActivity.this, "Failed to update email!", Toast.LENGTH_SHORT, true).show();
                                         progressBar.setVisibility(View.GONE);
                                     }
                                 }
@@ -139,11 +140,11 @@ public class UpdateAccoutActivity extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<Void> task) {
                                         if (task.isSuccessful()) {
-                                            Toast.makeText(UpdateAccoutActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT).show();
+                                            Toasty.info(UpdateAccoutActivity.this, "Password is updated, sign in with new password!", Toast.LENGTH_SHORT, true).show();
                                             signOut();
                                             progressBar.setVisibility(View.GONE);
                                         } else {
-                                            Toast.makeText(UpdateAccoutActivity.this, "Failed to update password!", Toast.LENGTH_SHORT).show();
+                                            Toasty.error(UpdateAccoutActivity.this, "Failed to update password!", Toast.LENGTH_SHORT, true).show();
                                             progressBar.setVisibility(View.GONE);
                                         }
                                     }
