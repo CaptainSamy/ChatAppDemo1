@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,12 +14,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.ChatActivity;
+import com.example.chatappdemo.activity.InforGroupActivity;
+import com.example.chatappdemo.activity.MainActivity;
 import com.example.chatappdemo.model.User;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.HashMap;
 import java.util.List;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHolder> {
@@ -87,6 +96,30 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
                 Intent intent = new Intent(context, ChatActivity.class);
                 intent.putExtra("visit_user_id", hisUid);
                 context.startActivity(intent);
+            }
+        });
+
+        //delete
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View view) {
+                String myUID = FirebaseAuth.getInstance().getUid();
+                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chatlist");
+                ref.child(myUID).child(hisUid)
+                        .removeValue()
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Toasty.success(context, "Chat successfully deleted!", Toast.LENGTH_SHORT, true).show();
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Toasty.error(context, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                            }
+                        });
+                return false;
             }
         });
     }

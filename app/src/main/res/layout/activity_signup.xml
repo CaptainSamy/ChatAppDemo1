@@ -8,15 +8,15 @@
     android:layout_height="match_parent"
     tools:context=".activity.SignupActivity">
 
-    <LinearLayout
+    <RelativeLayout
         android:background="?attr/tabcolor"
         android:id="@+id/liner"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize">
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/back_signup"
-            android:layout_gravity="center"
+            android:layout_centerVertical="true"
+            android:layout_alignParentLeft="true"
             android:layout_marginLeft="12dp"
             android:background="?attr/tabcolor"
             android:layout_marginRight="8dp"
@@ -26,12 +26,24 @@
 
         <TextView
             android:text="Sign up"
+            android:layout_toRightOf="@id/back_signup"
             android:textSize="20sp"
-            android:layout_gravity="center"
+            android:layout_centerVertical="true"
             android:textColor="?attr/textcolor"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
-    </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_login"
+            android:text="Login"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:textSize="20sp"
+            android:layout_centerVertical="true"
+            android:textColor="?attr/textcolor"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
 
     <ScrollView
         android:layout_below="@+id/liner"

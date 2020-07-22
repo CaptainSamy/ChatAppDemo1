@@ -45,7 +45,7 @@ public class SigninActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private MaterialButton login_Button;
     private TextInputLayout login_Email, login_Password;
-    private TextView login_forgetPassword;
+    private TextView login_forgetPassword, tv_register;
     private ProgressDialog loadingBar;
     public String email_signin, password_signin;
     private CircleImageView btn_Back, imgGoogle;
@@ -80,6 +80,13 @@ public class SigninActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
+            }
+        });
+        tv_register = findViewById(R.id.tv_register);
+        tv_register.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SigninActivity.this, SignupActivity.class));
             }
         });
         imgGoogle = findViewById(R.id.img_google);

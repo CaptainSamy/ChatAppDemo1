@@ -66,7 +66,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
                                 @Override
                                 public void onComplete(@NonNull Task<Void> task) {
                                     if (task.isSuccessful()) {
-                                        Toasty.info(ResetPasswordActivity.this, "We have sent you instructions to reset your password!", Toast.LENGTH_SHORT, true).show();
+                                        Toasty.info(ResetPasswordActivity.this, "We have sent you instructions to reset your password. Please check your email!", Toast.LENGTH_SHORT, true).show();
                                     } else {
                                         Toasty.error(ResetPasswordActivity.this, "Could not send request!", Toast.LENGTH_SHORT, true).show();
                                     }

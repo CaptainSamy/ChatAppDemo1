@@ -94,9 +94,7 @@ public class GroupChatActivity extends AppCompatActivity {
     private AdapterGroupChat adapterGroupChat;
 
     private static final int STORAGE_REQUEST_CODE = 400;
-
     private static final int FILE_PICK_CODE = 3000;
-
     private String[] storagePermission;
 
     private Uri myUri = null;

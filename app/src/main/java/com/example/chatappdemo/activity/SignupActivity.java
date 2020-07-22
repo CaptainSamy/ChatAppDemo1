@@ -3,11 +3,13 @@ package com.example.chatappdemo.activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -35,6 +37,7 @@ public class SignupActivity extends AppCompatActivity {
     String SHARED_PREFS = "codeTheme";
     private CircleImageView btn_Back;
     private FirebaseAuth firebaseAuth;
+    private TextView tv_login;
     private DatabaseReference databaseReference;
     private MaterialButton register_button;
     private TextInputLayout register_Email, register_Password, register_ConfirmPassword;
@@ -58,7 +61,13 @@ public class SignupActivity extends AppCompatActivity {
                 finish();
             }
         });
-
+        tv_login = findViewById(R.id.tv_login);
+        tv_login.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SignupActivity.this, SigninActivity.class));
+            }
+        });
         firebaseAuth = FirebaseAuth.getInstance();
         databaseReference = FirebaseDatabase.getInstance().getReference();
         loadingBar = new ProgressDialog(SignupActivity.this);

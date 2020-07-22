@@ -88,7 +88,7 @@ public class ChatsFragment extends Fragment {
                         new MyButtonClickListener() {
                             @Override
                             public void onClick(int pos) {
-                                Toasty.success(getActivity(), "Delete click!", Toast.LENGTH_SHORT, true).show();
+
                             }
                         }));
             }
@@ -152,6 +152,7 @@ public class ChatsFragment extends Fragment {
                         lastMessage(userList.get(i).getUid());
                     }
                 }
+                swipeRefreshLayout.setRefreshing(false);
             }
 
             @Override

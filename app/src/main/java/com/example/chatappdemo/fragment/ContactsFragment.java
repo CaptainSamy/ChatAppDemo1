@@ -41,9 +41,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ContactsFragment extends Fragment {
     private View contactsView;
     private ShimmerRecyclerView recyclerViewContacts;

@@ -40,9 +40,6 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class RequestFragment extends Fragment {
     private View RequestFragmentView;
     private ShimmerRecyclerView recyclerView;
@@ -124,99 +121,92 @@ public class RequestFragment extends Fragment {
                                                 requestsViewHolder.tv_username.setText(requestUserName);
                                                 requestsViewHolder.tv_status_item.setText("Want to connect with you!");
 
-                                                requestsViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                                                //accept
+                                                requestsViewHolder.itemView.findViewById(R.id.request_accept_btn).setOnClickListener(new View.OnClickListener() {
                                                     @Override
-                                                    public void onClick(View v) {
-                                                        CharSequence options[] = new CharSequence[] {
-                                                                "Accept", "Cancel"
-                                                        };
-                                                        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-                                                        builder.setTitle(requestUserName + " request");
-                                                        builder.setItems(options, new DialogInterface.OnClickListener() {
+                                                    public void onClick(View view) {
+                                                        contactReference.child(currentUserID).child(list_user_id).child("Contact")
+                                                                .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                             @Override
-                                                            public void onClick(DialogInterface dialog, int which) {
-                                                                if (which == 0) {
-                                                                    contactReference.child(currentUserID).child(list_user_id).child("Contact")
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    contactReference.child(list_user_id).child(currentUserID).child("Contact")
                                                                             .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
                                                                         @Override
                                                                         public void onComplete(@NonNull Task<Void> task) {
                                                                             if (task.isSuccessful()) {
-                                                                                contactReference.child(list_user_id).child(currentUserID).child("Contact")
-                                                                                        .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                    @Override
-                                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                                        if (task.isSuccessful()) {
-                                                                                            requestReference.child(currentUserID).child(list_user_id)
-                                                                                                    .removeValue()
-                                                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                                        @Override
-                                                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                                                            if (task.isSuccessful()) {
-                                                                                                                requestReference.child(list_user_id).child(currentUserID)
-                                                                                                                        .removeValue()
-                                                                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                                                            @Override
-                                                                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                                                                if (task.isSuccessful()) {
-                                                                                                                                    Toasty.success(getContext(), "New contact saved!", Toast.LENGTH_SHORT, true).show();
-                                                                                                                                    FragmentManager fragmentManager = getFragmentManager();
-                                                                                                                                    FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                                                                                                                                    ContactsFragment contactsFragment = new ContactsFragment();
-                                                                                                                                    fragmentTransaction.add(R.id.frame_container, contactsFragment);
-                                                                                                                                    fragmentTransaction.commit();
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        });
-                                                                                                            }
-                                                                                                        }
-                                                                                                    });
-                                                                                        }
-                                                                                    }
-                                                                                });
-                                                                            }
-                                                                        }
-                                                                    });
-                                                                }
-                                                                if (which == 1) {
-                                                                    contactReference.child(currentUserID).child(list_user_id).child("Contact")
-                                                                            .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                        @Override
-                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                            if (task.isSuccessful()) {
-                                                                                contactReference.child(list_user_id).child(currentUserID).child("Contact")
-                                                                                        .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                    @Override
-                                                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                                                        if (task.isSuccessful()) {
-                                                                                            requestReference.child(currentUserID).child(list_user_id)
-                                                                                                    .removeValue()
-                                                                                                    .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                                        @Override
-                                                                                                        public void onComplete(@NonNull Task<Void> task) {
-                                                                                                            if (task.isSuccessful()) {
-                                                                                                                requestReference.child(list_user_id).child(currentUserID)
-                                                                                                                        .removeValue()
-                                                                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                                                                                            @Override
-                                                                                                                            public void onComplete(@NonNull Task<Void> task) {
-                                                                                                                                if (task.isSuccessful()) {
-                                                                                                                                    Toasty.success(getContext(), "Contact deleted!", Toast.LENGTH_SHORT, true).show();
-                                                                                                                                }
-                                                                                                                            }
-                                                                                                                        });
-                                                                                                            }
-                                                                                                        }
-                                                                                                    });
-                                                                                        }
-                                                                                    }
-                                                                                });
+                                                                                requestReference.child(currentUserID).child(list_user_id)
+                                                                                        .removeValue()
+                                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                            @Override
+                                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                                if (task.isSuccessful()) {
+                                                                                                    requestReference.child(list_user_id).child(currentUserID)
+                                                                                                            .removeValue()
+                                                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                                @Override
+                                                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                                                    if (task.isSuccessful()) {
+                                                                                                                        Toasty.success(getContext(), "New contact saved!", Toast.LENGTH_SHORT, true).show();
+                                                                                                                        FragmentManager fragmentManager = getFragmentManager();
+                                                                                                                        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+                                                                                                                        ContactsFragment contactsFragment = new ContactsFragment();
+                                                                                                                        fragmentTransaction.add(R.id.frame_container, contactsFragment);
+                                                                                                                        fragmentTransaction.commit();
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            });
+                                                                                                }
+                                                                                            }
+                                                                                        });
                                                                             }
                                                                         }
                                                                     });
                                                                 }
                                                             }
                                                         });
-                                                        builder.show();
+                                                    }
+                                                });
+
+                                                //cancel
+                                                requestsViewHolder.itemView.findViewById(R.id.request_cancel_btn).setOnClickListener(new View.OnClickListener() {
+                                                    @Override
+                                                    public void onClick(View view) {
+                                                        contactReference.child(currentUserID).child(list_user_id).child("Contact")
+                                                                .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                            @Override
+                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                if (task.isSuccessful()) {
+                                                                    contactReference.child(list_user_id).child(currentUserID).child("Contact")
+                                                                            .setValue("Saved").addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                        @Override
+                                                                        public void onComplete(@NonNull Task<Void> task) {
+                                                                            if (task.isSuccessful()) {
+                                                                                requestReference.child(currentUserID).child(list_user_id)
+                                                                                        .removeValue()
+                                                                                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                            @Override
+                                                                                            public void onComplete(@NonNull Task<Void> task) {
+                                                                                                if (task.isSuccessful()) {
+                                                                                                    requestReference.child(list_user_id).child(currentUserID)
+                                                                                                            .removeValue()
+                                                                                                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                                                                                @Override
+                                                                                                                public void onComplete(@NonNull Task<Void> task) {
+                                                                                                                    if (task.isSuccessful()) {
+                                                                                                                        Toasty.success(getContext(), "Contact deleted!", Toast.LENGTH_SHORT, true).show();
+                                                                                                                    }
+                                                                                                                }
+                                                                                                            });
+                                                                                                }
+                                                                                            }
+                                                                                        });
+                                                                            }
+                                                                        }
+                                                                    });
+                                                                }
+                                                            }
+                                                        });
                                                     }
                                                 });
                                             }
