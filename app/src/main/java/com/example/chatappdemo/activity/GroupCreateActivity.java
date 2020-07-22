@@ -79,7 +79,6 @@ public class GroupCreateActivity extends AppCompatActivity {
         storagePermissions = new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE};
 
         firebaseAuth = FirebaseAuth.getInstance();
-        checkUser();
 
         back_createGroup.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -117,7 +116,6 @@ public class GroupCreateActivity extends AppCompatActivity {
             Toast.makeText(this, "Please enter group title...",Toast.LENGTH_SHORT).show();
             return;
         }
-        //progressDialog.show();
 
         //time
         String g_timestamp = "" + System.currentTimeMillis();
@@ -140,7 +138,6 @@ public class GroupCreateActivity extends AppCompatActivity {
                     }).addOnFailureListener(new OnFailureListener() {
                 @Override
                 public void onFailure(@NonNull Exception e) {
-                    //progressDialog.dismiss();
                     Toast.makeText(GroupCreateActivity.this, "" + e.getMessage(),Toast.LENGTH_SHORT).show();
                 }
             });
@@ -254,13 +251,6 @@ public class GroupCreateActivity extends AppCompatActivity {
 
     private void requestCameraPermissions() {
         ActivityCompat.requestPermissions(this, cameraPermissions, CAMERA_REQUEST_CODE);
-    }
-
-    private void checkUser() {
-        FirebaseUser user = firebaseAuth.getCurrentUser();
-        if (user != null) {
-
-        }
     }
 
     @Override
