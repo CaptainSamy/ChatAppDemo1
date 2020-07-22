@@ -73,8 +73,6 @@ public class MainActivity extends AppCompatActivity {
         Fragment fragment = new ChatsFragment();
         loadFragment(fragment);
 
-        checkOnlineStatus("online");
-
         //Anh dai dien
         profile_image = findViewById(R.id.profile_image);
         profile_image.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
         //Create
         btnCreate = findViewById(R.id.btnCreate);
 
-        // up token
+        checkUserStatus();
         updateToken(FirebaseInstanceId.getInstance().getToken());
     }
 
@@ -238,29 +236,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
     // end notification
-    private void checkOnlineStatus(String status) {
-        DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(firebaseAuth.getCurrentUser().getUid());
-        HashMap<String, Object> hashMap = new HashMap<>();
-        hashMap.put("onlineStatus", status);
-        dbRef.updateChildren(hashMap);
-    }
 
     @Override
     protected void onStart() {
         super.onStart();
         checkUserStatus();
-        checkOnlineStatus("online");
     }
 
-    @Override
-    protected void onResume() {
-        checkOnlineStatus("online");
-        super.onResume();
-    }
-    
-    @Override
-    protected void onDestroy() {
-        checkOnlineStatus("offline");
-        super.onDestroy();
-    }
 }

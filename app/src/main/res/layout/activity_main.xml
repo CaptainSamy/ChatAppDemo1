@@ -15,9 +15,11 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize">
             <FrameLayout
+                android:background="?attr/tabcolor"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:background="?attr/tabcolor"
                     app:civ_border_width="2dp"
                     app:civ_border_color="#ffffff"
                     android:layout_margin="8dp"
@@ -27,6 +29,7 @@
                     android:layout_width="50dp"
                     android:layout_height="?attr/actionBarSize"/>
                 <de.hdodenhof.circleimageview.CircleImageView
+                    android:background="?attr/tabcolor"
                     android:id="@+id/user_on_off_chat"
                     android:layout_gravity="right"
                     android:layout_marginRight="8dp"
