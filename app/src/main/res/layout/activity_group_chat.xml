@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
+            android:background="?attr/tabcolor"
             android:id="@+id/groupIconIv"
             android:layout_gravity="center_vertical"
             android:src="@drawable/group_icon_bottom"
@@ -168,6 +169,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/sendAudio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -176,40 +178,17 @@
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/sendGif"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/gif" />
+                    android:src="@drawable/radio" />
 
                 <TextView
                     android:textColor="?attr/tintcolor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Gif"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="vertical">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/pdf" />
-
-                <TextView
-                    android:textColor="?attr/tintcolor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Gallery"
+                    android:text="Audio"
                     android:textSize="12sp" />
 
             </LinearLayout>

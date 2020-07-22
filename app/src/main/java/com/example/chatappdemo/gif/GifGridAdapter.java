@@ -60,9 +60,8 @@ final class GifGridAdapter extends ArrayAdapter<Gif> {
         final Gif gif = getItem(position);
         if (gif != null) {
             Glide.with(mContext)
-                    .load(gif.getPreviewGifUrl())
                     .asGif()
-                    .crossFade()
+                    .load(gif.getPreviewGifUrl())
                     .centerCrop()
                     .into(holder.gifIv);
 

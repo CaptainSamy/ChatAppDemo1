@@ -22,6 +22,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -37,7 +38,6 @@ import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.HashMap;
@@ -213,7 +213,7 @@ public class GroupEditActivity extends AppCompatActivity {
                     groupTitleEt.setText(groupTitle);
                     groupDescriptionEt.setText(groupDescription);
                     try {
-                        Picasso.get().load(groupIcon).placeholder(R.drawable.group_icon_bottom).into(groupIconIv);
+                        Glide.with(GroupEditActivity.this).load(groupIcon).placeholder(R.drawable.group_icon_bottom).into(groupIconIv);
                     }catch (Exception e){
                         groupIconIv.setImageResource(R.drawable.group_icon_bottom);
                     }

@@ -10,10 +10,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.ChatActivity;
 import com.example.chatappdemo.model.User;
-import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 import java.util.List;
@@ -70,9 +70,9 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
         }
 
         try {
-            Picasso.get().load(userImage).placeholder(R.drawable.user_profile).into(holder.profileIv);
+            Glide.with(context).load(userImage).placeholder(R.drawable.user_profile).into(holder.profileIv);
         } catch (Exception e) {
-            Picasso.get().load(R.drawable.user_profile).into(holder.profileIv);
+            holder.profileIv.setImageResource(R.drawable.user_profile);
         }
 
         if (userList.get(position).getOnlineStatus().equals("online")) {

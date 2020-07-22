@@ -5,12 +5,16 @@ import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.model.GroupChat;
 import com.google.firebase.auth.FirebaseAuth;
@@ -19,8 +23,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -64,6 +66,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
         String message = model.getMessage();
         String senderUid = model.getSender();
         String messageType = model.getType();
+        String nameFile = model.getNameFile();
 
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(Long.parseLong(timestamp));
@@ -74,14 +77,20 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             holder.messageTv.setVisibility(View.VISIBLE);
             holder.messageTv.setText(message);
         } else if (messageType.equals("file")) {
-            holder.messageTv.setVisibility(View.GONE);
-            holder.messageIv.setVisibility(View.VISIBLE);
-            holder.messageIv.setImageResource(R.drawable.file);
+            holder.messageTv.setVisibility(View.VISIBLE);
+            holder.messageTv.setText(nameFile);
+            holder.iV_file.setVisibility(View.VISIBLE);
+            holder.messageIv.setVisibility(View.GONE);
         } else if (messageType.equals("image")){
             holder.messageIv.setVisibility(View.VISIBLE);
             holder.messageTv.setVisibility(View.GONE);
             try {
-                Picasso.get().load(message).placeholder(R.drawable.image_iv).into(holder.messageIv);
+                Glide.with(context)
+                        .load(message)
+                        .placeholder(R.drawable.image_iv)
+                        .apply(new RequestOptions()
+                                .transform(new RoundedCorners(50)))
+                        .into(holder.messageIv);
             } catch (Exception e) {
                 holder.messageIv.setImageResource(R.drawable.image_iv);
             }
@@ -89,7 +98,12 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             holder.messageTv.setVisibility(View.GONE);
             holder.messageIv.setVisibility(View.VISIBLE);
             try {
-                Glide.with(context).load(message).asGif().placeholder(R.drawable.image_iv).into(holder.messageIv);
+                Glide.with(context)
+                        .asGif()
+                        .load(message)
+                        .apply(new RequestOptions()
+                                .transform(new RoundedCorners(50)))
+                        .into(holder.messageIv);
             }catch (Exception e){
                 holder.messageIv.setImageResource(R.drawable.image_iv);
             }
@@ -129,7 +143,15 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
                             String imgDD = "" + ds.child("imgAnhDD").getValue();
 
                             holder.nameTv.setText(name);
-                            Picasso.get().load(imgDD).placeholder(R.drawable.user_profile).into(holder.message_profile_image);
+                            Glide.with(context)
+                                    .load(imgDD)
+                                    .placeholder(R.drawable.user_profile)
+                                    .apply(new RequestOptions()
+                                            .transform(new RoundedCorners(50))
+                                            .error(R.drawable.image_iv)
+                                            .skipMemoryCache(true)
+                                            .diskCacheStrategy(DiskCacheStrategy.NONE))
+                                    .into(holder.message_profile_image);
                         }
                     }
 
@@ -158,7 +180,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
         private CircleImageView message_profile_image;
         private TextView nameTv, timeTv;
         private EmojiconTextView messageTv;
-        private RoundedImageView messageIv;
+        private ImageView messageIv, iV_file;
 
         public HolderGroupChat(@NonNull View itemView) {
             super(itemView);
@@ -167,6 +189,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             messageTv = itemView.findViewById(R.id.messageTv);
             timeTv = itemView.findViewById(R.id.timeTv);
             messageIv = itemView.findViewById(R.id.messageIv);
+            iV_file = itemView.findViewById(R.id.iV_file);
         }
     }
 }

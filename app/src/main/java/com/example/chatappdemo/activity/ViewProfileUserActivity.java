@@ -12,6 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -21,7 +22,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -116,8 +116,8 @@ public class ViewProfileUserActivity extends AppCompatActivity {
                                 tv_Gioitinh.setText("Nữ");
                             }
 
-                            Picasso.get().load(ImageDD).placeholder(R.drawable.user_profile).into(imgBtnDD);
-                            Picasso.get().load(ImageBG).placeholder(R.drawable.teabackground).into(imgBtnBG);
+                            Glide.with(ViewProfileUserActivity.this).load(ImageDD).placeholder(R.drawable.user_profile).into(imgBtnDD);
+                            Glide.with(ViewProfileUserActivity.this).load(ImageBG).placeholder(R.drawable.teabackground).into(imgBtnBG);
                         } else if ((dataSnapshot.exists()) && ((dataSnapshot.hasChild("name"))
                                 && (dataSnapshot.hasChild("status"))
                                 && (dataSnapshot.hasChild("gioiTinh"))

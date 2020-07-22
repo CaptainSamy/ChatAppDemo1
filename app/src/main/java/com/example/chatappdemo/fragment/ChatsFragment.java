@@ -39,9 +39,6 @@ import java.util.List;
 import es.dmoral.toasty.Toasty;
 
 
-/**
- * A simple {@link Fragment} subclass.
- */
 public class ChatsFragment extends Fragment {
     FirebaseAuth firebaseAuth;
     ShimmerRecyclerView recyclerView;

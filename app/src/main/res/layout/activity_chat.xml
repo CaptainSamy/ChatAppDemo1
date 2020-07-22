@@ -33,11 +33,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content">
             <de.hdodenhof.circleimageview.CircleImageView
+                android:background="?attr/tabcolor"
                 android:src="@drawable/user_profile"
                 android:id="@+id/image_user_chat"
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>
             <de.hdodenhof.circleimageview.CircleImageView
+                android:background="?attr/tabcolor"
                 android:src="@drawable/online"
                 android:id="@+id/onlineStatusIv"
                 android:layout_gravity="right|bottom"
@@ -183,6 +185,7 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/sendAudio"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
@@ -191,40 +194,17 @@
                 android:orientation="vertical">
 
                 <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/sendGif"
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:layout_gravity="center"
-                    android:src="@drawable/gif" />
+                    android:src="@drawable/radio" />
 
                 <TextView
                     android:textColor="?attr/tintcolor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:text="Gif"
-                    android:textSize="12sp" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="8dp"
-                android:orientation="vertical">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_gravity="center"
-                    android:src="@drawable/pdf" />
-
-                <TextView
-                    android:textColor="?attr/tintcolor"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="Gallery"
+                    android:text="Audio"
                     android:textSize="12sp" />
 
             </LinearLayout>

@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.model.Contact;
 import com.example.chatappdemo.model.User;
@@ -23,7 +24,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -59,7 +59,7 @@ public class AdapterParticipantAdd extends RecyclerView.Adapter<AdapterParticipa
 
             holder.nameTv.setText(name);
             try {
-                Picasso.get().load(image).placeholder(R.drawable.user_profile).into(holder.avatarIv);
+                Glide.with(context).load(image).placeholder(R.drawable.user_profile).into(holder.avatarIv);
             }catch (Exception e) {
                 holder.avatarIv.setImageResource(R.drawable.user_profile);
             }

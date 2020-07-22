@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:emojicon="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <de.hdodenhof.circleimageview.CircleImageView
         android:visibility="gone"
         android:id="@+id/message_profile_image"
@@ -22,33 +21,43 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
-        android:textSize="20dp"
-        android:padding="5dp"
-        android:maxWidth="200dp"
-        android:background="@drawable/sender_message_layout"
+    <LinearLayout
+        android:id="@+id/lN_GroupChat"
         android:layout_alignParentRight="true"
-        android:id="@+id/messageTv"
-        android:layout_marginLeft="8dp"
-        android:text="Message"
+        android:orientation="horizontal"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content">
 
-    <com.makeramen.roundedimageview.RoundedImageView
-        android:layout_below="@id/messageTv"
+        <ImageView
+            android:visibility="gone"
+            android:id="@+id/iV_file"
+            android:src="@drawable/ic_file"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+            android:textSize="15sp"
+            android:padding="5dp"
+            android:maxWidth="200dp"
+            android:background="@drawable/sender_message_layout"
+            android:id="@+id/messageTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:layout_below="@id/lN_GroupChat"
         android:layout_alignParentRight="true"
         android:id="@+id/messageIv"
         android:scaleType="fitXY"
-        app:riv_corner_radius_top_left="20dip"
-        app:riv_corner_radius="10dip"
-        app:riv_mutate_background="true"
         android:src="@drawable/image_iv"
         android:layout_height="200dp"
         android:layout_width="220dp" />
 
     <TextView
         android:visibility="gone"
-        android:layout_toLeftOf="@id/messageTv"
+        android:layout_toLeftOf="@id/lN_GroupChat"
         android:id="@+id/timeTv"
         android:text="Time"
         android:layout_width="wrap_content"

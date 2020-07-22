@@ -19,13 +19,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.model.FindFriend;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -120,7 +120,7 @@ public class SearchFriendActivity extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull FindFriendViewHolder findFriendViewHolder, final int i, @NonNull FindFriend findFriend) {
                         findFriendViewHolder.tv_username.setText(findFriend.getName());
-                        Picasso.get().load(findFriend.getImgAnhDD()).placeholder(R.drawable.user_profile).into(findFriendViewHolder.profileImage);
+                        Glide.with(SearchFriendActivity.this).load(findFriend.getImgAnhDD()).placeholder(R.drawable.user_profile).into(findFriendViewHolder.profileImage);
 
                         findFriendViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override

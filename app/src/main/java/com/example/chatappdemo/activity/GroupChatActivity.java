@@ -26,13 +26,13 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.adapter.AdapterGroupChat;
 import com.example.chatappdemo.fragment.EmoticonGIFKeyboardFragment;
@@ -49,19 +49,23 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.OnProgressListener;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
-import com.squareup.picasso.Picasso;
+import com.gun0912.tedpermission.PermissionListener;
+import com.gun0912.tedpermission.TedPermission;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
+import gun0912.tedbottompicker.TedBottomPicker;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
@@ -76,24 +80,28 @@ public class GroupChatActivity extends AppCompatActivity {
     private RecyclerView groupchatRv;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    public static final int TOTAL_ITEM_TO_LOAD = 12;
+    private int mCurrentPage = 1;
+
+    private int itemPos = 0;
+    private String mLastKey = "";
+    private String mPrevKey = "";
+
     private FirebaseAuth firebaseAuth;
     private String groupId, myGroupRole;
 
     private ArrayList<GroupChat> groupChatList;
     private AdapterGroupChat adapterGroupChat;
 
-    private static final int CAMERA_REQUEST_CODE = 200;
     private static final int STORAGE_REQUEST_CODE = 400;
 
-    private static final int IMAGE_PICK_GALLERY_CODE = 1000;
-    private static final int IMAGE_PICK_CAMERA_CODE = 2000;
     private static final int FILE_PICK_CODE = 3000;
 
-    private String[] cameraPermission;
     private String[] storagePermission;
 
-    private Uri image_uri = null;
-    private Uri file_uri = null;
+    private Uri myUri = null;
+    private List<Uri> selectedUriList;
+    private int upload_count = 0;
 
     private View rootView;
     private EmojIconActions emojIconActions;
@@ -145,9 +153,9 @@ public class GroupChatActivity extends AppCompatActivity {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-//                itemPos = 0;
-//                mCurrentPage++;
-//                loadMoreMessages();
+                itemPos = 0;
+                mCurrentPage++;
+                loadGroupMessages();
 
             }
         });
@@ -161,10 +169,6 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
-        cameraPermission = new String[]{
-                Manifest.permission.CAMERA,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
         storagePermission = new String[]{
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
@@ -172,7 +176,29 @@ public class GroupChatActivity extends AppCompatActivity {
         sendImage.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showImageImportDialog();
+                PermissionListener permissionlistener = new PermissionListener() {
+                    @Override
+                    public void onPermissionGranted() {
+
+                        TedBottomPicker.with(GroupChatActivity.this)
+                                .setPeekHeight(1600)
+                                .showTitle(false)
+                                .setCompleteButtonText("Done")
+                                .setEmptySelectionText("No Select")
+                                .setSelectedUriList(selectedUriList)
+                                .showMultiImage(uriList -> {
+                                    selectedUriList = uriList;
+                                    sendSingle_MultiImageMessage(uriList);
+                                });
+                    }
+
+                    @Override
+                    public void onPermissionDenied(List<String> deniedPermissions) {
+                        Toast.makeText(GroupChatActivity.this, "Permission Denied\n" + deniedPermissions.toString(), Toast.LENGTH_SHORT).show();
+                    }
+                };
+
+                checkPermission(permissionlistener);
             }
         });
 
@@ -188,7 +214,7 @@ public class GroupChatActivity extends AppCompatActivity {
         });
 
         loadGroupInfo();
-        loadGroupMessages();
+        readMessage();
         loadMyGroupRole();
 
         rootView = findViewById(R.id.root_view);
@@ -265,7 +291,6 @@ public class GroupChatActivity extends AppCompatActivity {
         imgGif = findViewById(R.id.imgGif);
         EmoticonGIFKeyboardFragment.GIFConfig gifConfig = new EmoticonGIFKeyboardFragment
                 .GIFConfig(GiphyGifProvider.create(this, "564ce7370bf347f2b7c0e4746593c179"))
-
                 .setGifSelectListener(new GifSelectListener() {
                     @Override
                     public void onGifSelected(@NonNull Gif gif) {
@@ -301,6 +326,102 @@ public class GroupChatActivity extends AppCompatActivity {
         });
     }
 
+    private void readMessage() {
+        groupChatList = new ArrayList<>();
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups").child(groupId).child("Messages");
+        Query messageQuery = ref.limitToLast(mCurrentPage * TOTAL_ITEM_TO_LOAD);
+        messageQuery.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                groupChatList.clear();
+                for (DataSnapshot ds : snapshot.getChildren()) {
+                    GroupChat model = ds.getValue(GroupChat.class);
+                    itemPos++;
+                    if (itemPos == 1){
+                        String mMessageKey = snapshot.getKey();
+                        mLastKey = mMessageKey;
+                        mPrevKey = mMessageKey;
+                    }
+                    groupChatList.add(model);
+                }
+                adapterGroupChat = new AdapterGroupChat(GroupChatActivity.this, groupChatList);
+                adapterGroupChat.notifyDataSetChanged();
+                groupchatRv.setAdapter(adapterGroupChat);
+                groupchatRv.smoothScrollToPosition(groupchatRv.getAdapter().getItemCount());
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void sendSingle_MultiImageMessage(List<Uri> uriList) {
+        SweetAlertDialog pDialog = new SweetAlertDialog(GroupChatActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#2cb9b0"));
+        pDialog.setTitleText("Sending " + uriList.size() + " Image...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        String filenamePath = "ChatImages/" + "" + System.currentTimeMillis();
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(filenamePath);
+        for (upload_count = 0; upload_count < uriList.size(); upload_count++){
+            myUri = uriList.get(upload_count);
+            StorageReference childImg = storageReference.child(myUri.getLastPathSegment());
+            childImg.putFile(myUri)
+                    .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            Task<Uri> p_uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                            while (!p_uriTask.isSuccessful()) ;
+                            Uri p_downloadUri = p_uriTask.getResult();
+                            if (p_uriTask.isSuccessful()) {
+                                String timestamp = "" + System.currentTimeMillis();
+                                HashMap<String, Object> hashMap = new HashMap<>();
+                                hashMap.put("sender", "" + firebaseAuth.getUid());
+                                hashMap.put("message", "" + p_downloadUri);
+                                hashMap.put("timestamp", "" + timestamp);
+                                hashMap.put("type", "" + "image");
+                                // add in db
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+                                ref.child(groupId).child("Messages").child(timestamp)
+                                        .setValue(hashMap)
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                messageEt.setText("");
+                                                pDialog.dismiss();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                                                pDialog.dismiss();
+                                            }
+                                        });
+                            }
+                        }
+                    })
+                    .addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            pDialog.dismiss();
+                            Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                        }
+                    });
+        }
+    }
+
+    private void checkPermission(PermissionListener permissionlistener) {
+        TedPermission.with(GroupChatActivity.this)
+                .setPermissionListener(permissionlistener)
+                .setDeniedMessage("If you reject permission,you can not use this service\n\nPlease turn on permissions at [Setting] > [Permission]")
+                .setPermissions(Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                .check();
+    }
+
     private void sendImageGifMessage(String urlGif) {
         String timestamp = "" + System.currentTimeMillis();
         HashMap<String, Object> hashMap = new HashMap<>();
@@ -333,48 +454,6 @@ public class GroupChatActivity extends AppCompatActivity {
         startActivityForResult(Intent.createChooser(intentFile, "Select File"), FILE_PICK_CODE);
     }
 
-    private void showImageImportDialog() {
-        String[] options = {"Camera", "Gallery"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Pick Image")
-                .setItems(options, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        if (which == 0) {
-                            if (!checkCameraPermission()) {
-                                requestCameraPermission();
-                            } else {
-                                pickCamera();
-                            }
-                        } else {
-                            if (!checkStoragePermission()) {
-                                requestStoragePermission();
-                            } else {
-                                pickGallery();
-                            }
-                        }
-                    }
-                }).show();
-    }
-
-    private void pickGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType("image/*");
-        startActivityForResult(intent, IMAGE_PICK_GALLERY_CODE);
-    }
-
-    private void pickCamera() {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(MediaStore.Images.Media.TITLE, "GroupImageTitle");
-        contentValues.put(MediaStore.Images.Media.DESCRIPTION, "GroupImageDescription");
-
-        image_uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues);
-
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, image_uri);
-        startActivityForResult(intent, IMAGE_PICK_CAMERA_CODE);
-    }
-
     private void requestStoragePermission() {
         ActivityCompat.requestPermissions(this, storagePermission, STORAGE_REQUEST_CODE);
     }
@@ -382,16 +461,6 @@ public class GroupChatActivity extends AppCompatActivity {
     private boolean checkStoragePermission() {
         boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
         return result;
-    }
-
-    private void requestCameraPermission() {
-        ActivityCompat.requestPermissions(this, cameraPermission, CAMERA_REQUEST_CODE);
-    }
-
-    private boolean checkCameraPermission() {
-        boolean result = ContextCompat.checkSelfPermission(this, Manifest.permission.CAMERA) == (PackageManager.PERMISSION_GRANTED);
-        boolean result1 = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == (PackageManager.PERMISSION_GRANTED);
-        return result && result1;
     }
 
     private void loadMyGroupRole() {
@@ -429,18 +498,32 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private void loadGroupMessages() {
         groupChatList = new ArrayList<>();
-        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
-        ref.child(groupId).child("Messages")
-                .addValueEventListener(new ValueEventListener() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups").child(groupId).child("Messages");
+        Query messageQuery = ref.limitToLast(mCurrentPage * TOTAL_ITEM_TO_LOAD);
+        messageQuery.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot snapshot) {
                         groupChatList.clear();
                         for (DataSnapshot ds : snapshot.getChildren()) {
                             GroupChat model = ds.getValue(GroupChat.class);
+                            String messageKey = snapshot.getKey();
+                            if (!mPrevKey.equals(messageKey)) {
+                                groupChatList.add(itemPos++, model);
+                            }else {
+                                mPrevKey = mLastKey;
+                            }
+
+                            if (itemPos == 1){
+                                String mMessageKey = snapshot.getKey();
+                                mLastKey = mMessageKey;
+                            }
                             groupChatList.add(model);
                         }
                         adapterGroupChat = new AdapterGroupChat(GroupChatActivity.this, groupChatList);
+                        adapterGroupChat.notifyDataSetChanged();
                         groupchatRv.setAdapter(adapterGroupChat);
+                        groupchatRv.smoothScrollToPosition(groupchatRv.getAdapter().getItemCount());
+                        swipeRefreshLayout.setRefreshing(false);
                     }
 
                     @Override
@@ -474,6 +557,7 @@ public class GroupChatActivity extends AppCompatActivity {
                 Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
             }
         });
+
     }
 
     private void loadGroupInfo() {
@@ -491,7 +575,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
                             groupTitleTv.setText(groupTitle);
                             try {
-                                Picasso.get().load(groupIcon).placeholder(R.drawable.group_icon_bottom).into(groupIconIv);
+                                Glide.with(GroupChatActivity.this).load(groupIcon).placeholder(R.drawable.group_icon_bottom).into(groupIconIv);
                             } catch (Exception e) {
                                 groupIconIv.setImageResource(R.drawable.group_icon_bottom);
                             }
@@ -509,31 +593,24 @@ public class GroupChatActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_OK) {
-            if (requestCode == IMAGE_PICK_GALLERY_CODE) {
-                image_uri = data.getData();
-                sendImageMessage();
-            }
-            if (requestCode == IMAGE_PICK_CAMERA_CODE) {
-                sendImageMessage();
-            }
             if (requestCode == FILE_PICK_CODE) {
-                file_uri = data.getData();
-                sendFileMessage(file_uri);
+                myUri = data.getData();
+                sendFileMessage(myUri);
             }
         }
     }
 
-    private void sendFileMessage(Uri file_uri) {
+    private void sendFileMessage(Uri fileUri) {
         SweetAlertDialog pDialog = new SweetAlertDialog(GroupChatActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#2cb9b0"));
-        pDialog.setTitleText("Sending File...");
+        pDialog.setTitleText("Sending File");
         pDialog.setCancelable(false);
         pDialog.show();
 
-        String filenamePath = "ChatFiles/" + "" + System.currentTimeMillis();
+        String filenamePath = "ChatFiles/" + "" + fileUri.getLastPathSegment();
         StorageReference storageReference = FirebaseStorage.getInstance().getReference(filenamePath);
         //upload image
-        storageReference.putFile(file_uri)
+        storageReference.putFile(fileUri)
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -547,6 +624,7 @@ public class GroupChatActivity extends AppCompatActivity {
                             hashMap.put("message", "" + p_downloadUri);
                             hashMap.put("timestamp", "" + timestamp);
                             hashMap.put("type", "" + "file");
+                            hashMap.put("nameFile", ""+fileUri.getLastPathSegment());
                             // add in db
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
                             ref.child(groupId).child("Messages").child(timestamp)
@@ -582,87 +660,5 @@ public class GroupChatActivity extends AppCompatActivity {
                         pDialog.setTitleText("Uploaded: " + (int) progress + "%");
                     }
                 });
-    }
-
-    private void sendImageMessage() {
-        SweetAlertDialog pDialog = new SweetAlertDialog(GroupChatActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-        pDialog.getProgressHelper().setBarColor(Color.parseColor("#2cb9b0"));
-        pDialog.setTitleText("Sending Image...");
-        pDialog.setCancelable(false);
-        pDialog.show();
-
-        String filenamePath = "ChatImages/" + "" + System.currentTimeMillis();
-        StorageReference storageReference = FirebaseStorage.getInstance().getReference(filenamePath);
-        //upload image
-        storageReference.putFile(image_uri)
-                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                    @Override
-                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                        Task<Uri> p_uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                        while (!p_uriTask.isSuccessful()) ;
-                        Uri p_downloadUri = p_uriTask.getResult();
-                        if (p_uriTask.isSuccessful()) {
-                            String timestamp = "" + System.currentTimeMillis();
-                            HashMap<String, Object> hashMap = new HashMap<>();
-                            hashMap.put("sender", "" + firebaseAuth.getUid());
-                            hashMap.put("message", "" + p_downloadUri);
-                            hashMap.put("timestamp", "" + timestamp);
-                            hashMap.put("type", "" + "image");
-                            // add in db
-                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
-                            ref.child(groupId).child("Messages").child(timestamp)
-                                    .setValue(hashMap)
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            messageEt.setText("");
-                                            pDialog.dismiss();
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
-                                            pDialog.dismiss();
-                                        }
-                                    });
-                        }
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
-                        pDialog.dismiss();
-                    }
-                });
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        switch (requestCode) {
-            case CAMERA_REQUEST_CODE:
-                if (grantResults.length > 0) {
-                    boolean cameraAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    boolean writeStorageAccepted = grantResults[1] == PackageManager.PERMISSION_GRANTED;
-                    if (cameraAccepted && writeStorageAccepted) {
-                        pickCamera();
-                    } else {
-                        Toasty.info(this, "Camera & Storage permissions are required.", Toast.LENGTH_SHORT, true).show();
-                    }
-                }
-                break;
-            case STORAGE_REQUEST_CODE:
-                if (grantResults.length > 0) {
-                    boolean writeStorageAccepted = grantResults[0] == PackageManager.PERMISSION_GRANTED;
-                    if (writeStorageAccepted) {
-                        pickGallery();
-                    } else {
-                        Toasty.info(this, "Storage permissions are required.", Toast.LENGTH_SHORT, true).show();
-                    }
-                }
-                break;
-        }
     }
 }

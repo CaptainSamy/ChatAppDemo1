@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.adapter.AdapterParticipantAdd;
 import com.example.chatappdemo.model.Contact;
@@ -24,7 +25,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -192,7 +192,7 @@ public class InforGroupActivity extends AppCompatActivity {
                     groupTitleTv.setText(groupTitle);
                     descriptionTv.setText(groupDescription);
                     try {
-                        Picasso.get().load(groupIcon).placeholder(R.drawable.group_icon_bottom).into(groupIconIv);
+                        Glide.with(InforGroupActivity.this).load(groupIcon).placeholder(R.drawable.group_icon_bottom).into(groupIconIv);
                     }catch (Exception e){
                         groupIconIv.setImageResource(R.drawable.group_icon_bottom);
                     }

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.GroupChatActivity;
 import com.example.chatappdemo.model.GroupsList;
@@ -20,7 +21,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -60,7 +60,7 @@ public class AdapterGroupList extends RecyclerView.Adapter<AdapterGroupList.Hold
 
         holder.groupTitleTv.setText(groupTitle);
         try {
-            Picasso.get().load(groupIcon).placeholder(R.drawable.groupiv).into(holder.groupIconIv);
+            Glide.with(context).load(groupIcon).placeholder(R.drawable.groupiv).into(holder.groupIconIv);
         } catch (Exception e) {
             holder.groupIconIv.setImageResource(R.drawable.groupiv);
         }
@@ -139,7 +139,7 @@ public class AdapterGroupList extends RecyclerView.Adapter<AdapterGroupList.Hold
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             for (DataSnapshot ds: snapshot.getChildren()) {
                                                 String imgDD = ""+ds.child("imgAnhDD").getValue();
-                                                Picasso.get().load(imgDD).placeholder(R.drawable.user_profile).into(holder.imgDDuser1);
+                                                Glide.with(context).load(imgDD).placeholder(R.drawable.user_profile).into(holder.imgDDuser1);
                                             }
                                         }
 

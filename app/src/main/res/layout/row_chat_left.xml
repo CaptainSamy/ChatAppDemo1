@@ -22,28 +22,38 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
-            android:maxWidth="200dp"
-            android:id="@+id/message_text"
+        <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:text="receiver messages here"
-            android:padding="8dp"
-            android:textSize="15sp"
-            android:textColor="?attr/tintcolor"/>
+            android:layout_height="wrap_content">
 
-        <com.makeramen.roundedimageview.RoundedImageView
+            <ImageView
+                android:visibility="gone"
+                android:id="@+id/iV_file"
+                android:src="@drawable/ic_file"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+                android:maxWidth="200dp"
+                android:id="@+id/message_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:padding="8dp"
+                android:textSize="15sp"
+                android:textColor="?attr/tintcolor"/>
+
+        </LinearLayout>
+
+        <ImageView
+            android:layout_gravity="right"
             android:layout_marginTop="5dp"
             android:id="@+id/message_image"
             android:scaleType="fitXY"
-            app:riv_corner_radius_bottom_right="20dip"
-            app:riv_corner_radius="10dip"
-            android:layout_alignParentRight="true"
-            app:riv_mutate_background="true"
             android:src="@drawable/image_iv"
             android:layout_height="200dp"
-            android:layout_width="220dp" />
+            android:layout_width="200dp" />
 
     </LinearLayout>
     <TextView

@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.ChatActivity;
@@ -33,7 +34,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
 
@@ -112,8 +112,7 @@ public class ContactsFragment extends Fragment {
                                 if (dataSnapshot.exists()) {
                                     if (dataSnapshot.hasChild("imgAnhDD")) {
                                         userImage = dataSnapshot.child("imgAnhDD").getValue().toString();
-                                        Picasso.get().load(userImage)
-                                                .placeholder(R.drawable.user_profile).into(contactsViewHolder.profileImage);
+                                        Glide.with(getActivity()).load(userImage).placeholder(R.drawable.user_profile).into(contactsViewHolder.profileImage);
                                     }
 
                                     final String userName = dataSnapshot.child("name").getValue().toString();

@@ -1,16 +1,17 @@
 package com.example.chatappdemo.model;
 
 public class GroupChat {
-    String message, sender, timestamp, type;
+    String message, sender, timestamp, type, nameFile;
 
     public GroupChat() {
     }
 
-    public GroupChat(String message, String sender, String timestamp, String type) {
+    public GroupChat(String message, String sender, String timestamp, String type, String nameFile) {
         this.message = message;
         this.sender = sender;
         this.timestamp = timestamp;
         this.type = type;
+        this.nameFile = nameFile;
     }
 
     public String getMessage() {
@@ -43,5 +44,13 @@ public class GroupChat {
 
     public void setType(String type) {
         this.type = type;
+    }
+
+    public String getNameFile() {
+        return nameFile;
+    }
+
+    public void setNameFile(String nameFile) {
+        this.nameFile = nameFile;
     }
 }

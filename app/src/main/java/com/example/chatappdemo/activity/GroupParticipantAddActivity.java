@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.adapter.AdapterParticipantAdd;
 import com.example.chatappdemo.model.Contact;
@@ -19,7 +20,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -114,7 +114,7 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
                                         myGroupRole = ""+snapshot.child("role").getValue();
                                         groupTitleTv.setText(groupTitle + "-" + myGroupRole);
                                         try {
-                                            Picasso.get().load(groupIcon).placeholder(R.drawable.group_icon_bottom).into(groupIconIv);
+                                            Glide.with(GroupParticipantAddActivity.this).load(groupIcon).placeholder(R.drawable.group_icon_bottom).into(groupIconIv);
                                         }catch (Exception e){
                                             groupIconIv.setImageResource(R.drawable.group_icon_bottom);
                                         }

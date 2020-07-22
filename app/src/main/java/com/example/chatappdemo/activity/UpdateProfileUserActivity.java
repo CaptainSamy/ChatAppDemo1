@@ -26,6 +26,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -45,10 +46,8 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.hbb20.CountryCodePicker;
-import com.squareup.picasso.Picasso;
 
 import java.util.HashMap;
-import java.util.regex.Pattern;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -217,14 +216,14 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                     //tv_Gioitinh.setText(gioiTinh);
                     set_profile_phone.setText(phone);
                     try {
-                        Picasso.get().load(imgAnhDD).into(imgBtnDD);
+                        Glide.with(UpdateProfileUserActivity.this).load(imgAnhDD).into(imgBtnDD);
                     } catch (Exception e) {
-                        Picasso.get().load(R.drawable.user_profile).into(imgBtnDD);
+                        imgBtnDD.setImageResource(R.drawable.user_profile);
                     }
                     try {
-                        Picasso.get().load(imgAnhBia).into(imgBtnBG);
+                        Glide.with(UpdateProfileUserActivity.this).load(imgAnhBia).into(imgBtnBG);
                     } catch (Exception e) {
-                        Picasso.get().load(R.drawable.teabackground).into(imgBtnBG);
+                        imgBtnBG.setImageResource(R.drawable.teabackground);
                     }
                 }
             }

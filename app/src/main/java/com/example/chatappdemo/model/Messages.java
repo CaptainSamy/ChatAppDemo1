@@ -4,17 +4,18 @@ package com.example.chatappdemo.model;
 import com.google.firebase.database.PropertyName;
 
 public class Messages {
-    private String from, message, type, to, timeStamp;
+    private String from, message, type, to, timeStamp, nameFile;
     private boolean isSeen;
     public Messages() {
     }
 
-    public Messages(String from, String message, String type, String to, String timeStamp, boolean isSeen) {
+    public Messages(String from, String message, String type, String to, String timeStamp, String nameFile, boolean isSeen) {
         this.from = from;
         this.message = message;
         this.type = type;
         this.to = to;
         this.timeStamp = timeStamp;
+        this.nameFile = nameFile;
         this.isSeen = isSeen;
     }
 
@@ -56,6 +57,14 @@ public class Messages {
 
     public void setTimeStamp(String timeStamp) {
         this.timeStamp = timeStamp;
+    }
+
+    public String getNameFile() {
+        return nameFile;
+    }
+
+    public void setNameFile(String nameFile) {
+        this.nameFile = nameFile;
     }
 
     @PropertyName("isSeen")

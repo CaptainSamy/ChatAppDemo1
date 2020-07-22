@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.bumptech.glide.Glide;
 import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.model.User;
@@ -34,7 +35,6 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
-import com.squareup.picasso.Picasso;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -116,7 +116,7 @@ public class RequestFragment extends Fragment {
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 if (dataSnapshot.hasChild("imgAnhDD")) {
                                                     requestUserAnhDD = dataSnapshot.child("imgAnhDD").getValue().toString();
-                                                    Picasso.get().load(requestUserAnhDD).placeholder(R.drawable.user_profile).into(requestsViewHolder.profileImage);
+                                                    Glide.with(getActivity()).load(requestUserAnhDD).placeholder(R.drawable.user_profile).into(requestsViewHolder.profileImage);
                                                 }
                                                 requestUserName = dataSnapshot.child("name").getValue().toString();
                                                 requestUserStatus = dataSnapshot.child("status").getValue().toString();

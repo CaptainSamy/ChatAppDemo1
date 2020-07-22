@@ -1,19 +1,29 @@
 package com.example.chatappdemo.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.text.format.DateFormat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.DataSource;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.engine.GlideException;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.RequestOptions;
+import com.bumptech.glide.request.target.Target;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.model.Messages;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,8 +34,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import com.makeramen.roundedimageview.RoundedImageView;
-import com.squareup.picasso.Picasso;
 
 import java.util.Calendar;
 import java.util.List;
@@ -51,11 +59,11 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
     }
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
-        public TextView timeTv, isSeenTv;
-        public EmojiconTextView MessageText;
-        public CircleImageView ProfileImage;
-        public RelativeLayout messageLayout;
-        public RoundedImageView message_image;
+        private TextView timeTv, isSeenTv;
+        private EmojiconTextView MessageText;
+        private CircleImageView ProfileImage;
+        private RelativeLayout messageLayout;
+        private ImageView message_image, iV_file;
 
         public MessageViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -65,6 +73,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             isSeenTv = itemView.findViewById(R.id.isSeenTv);
             messageLayout = itemView.findViewById(R.id.messageLayout);
             message_image = itemView.findViewById(R.id.message_image);
+            iV_file = itemView.findViewById(R.id.iV_file);
         }
     }
 
@@ -88,6 +97,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
         String message = userMessagesList.get(i).getMessage();
         String timeStamp = userMessagesList.get(i).getTimeStamp();
         String type = userMessagesList.get(i).getType();
+        String nameFile = userMessagesList.get(i).getNameFile();
 
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(Long.parseLong(timeStamp));
@@ -96,8 +106,14 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
         if (type.equals("image")) {
             messageViewHolder.MessageText.setVisibility(View.GONE);
             messageViewHolder.message_image.setVisibility(View.VISIBLE);
+
             try {
-                Picasso.get().load(message).placeholder(R.drawable.image_iv).into(messageViewHolder.message_image);
+                Glide.with(context)
+                        .load(message)
+                        .placeholder(R.drawable.image_iv)
+                        .apply(new RequestOptions()
+                                .transform(new RoundedCorners(50)))
+                        .into(messageViewHolder.message_image);
             } catch (Exception e) {
                 messageViewHolder.message_image.setImageResource(R.drawable.image_iv);
             }
@@ -106,14 +122,20 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             messageViewHolder.message_image.setVisibility(View.GONE);
             messageViewHolder.MessageText.setText(message);
         } else if (type.equals("file")) {
-            messageViewHolder.MessageText.setVisibility(View.GONE);
-            messageViewHolder.message_image.setVisibility(View.VISIBLE);
-            messageViewHolder.message_image.setImageResource(R.drawable.file);
+            messageViewHolder.MessageText.setVisibility(View.VISIBLE);
+            messageViewHolder.MessageText.setText(nameFile);
+            messageViewHolder.iV_file.setVisibility(View.VISIBLE);
+            messageViewHolder.message_image.setVisibility(View.GONE);
         } else if (type.equals("image_gif")){
             messageViewHolder.MessageText.setVisibility(View.GONE);
             messageViewHolder.message_image.setVisibility(View.VISIBLE);
             try {
-                Glide.with(context).load(message).asGif().placeholder(R.drawable.image_iv).into(messageViewHolder.message_image);
+                Glide.with(context)
+                        .asGif()
+                        .load(message)
+                        .apply(new RequestOptions()
+                                .transform(new RoundedCorners(50)))
+                        .into(messageViewHolder.message_image);
             }catch (Exception e){
                 messageViewHolder.message_image.setImageResource(R.drawable.image_iv);
             }
@@ -121,7 +143,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
 
         messageViewHolder.timeTv.setText(dateTime);
         try {
-            Picasso.get().load(imageUrl).placeholder(R.drawable.user_profile).into(messageViewHolder.ProfileImage);
+            Glide.with(context).load(imageUrl).placeholder(R.drawable.user_profile).into(messageViewHolder.ProfileImage);
         } catch (Exception e) {
 
         }

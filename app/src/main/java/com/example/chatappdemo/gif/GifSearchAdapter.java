@@ -46,9 +46,8 @@ final class GifSearchAdapter extends RecyclerView.Adapter<GifSearchAdapter.GifVi
         final Gif gif = mData.get(position);
         if (gif != null) {
             Glide.with(mContext)
-                    .load(gif.getPreviewGifUrl())
                     .asGif()
-                    .crossFade()
+                    .load(gif.getPreviewGifUrl())
                     .centerCrop()
                     .into(holder.gifIv);
 
