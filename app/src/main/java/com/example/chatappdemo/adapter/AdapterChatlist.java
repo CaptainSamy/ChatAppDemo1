@@ -26,6 +26,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.HashMap;
 import java.util.List;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
@@ -103,22 +104,39 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
             public boolean onLongClick(View view) {
-                String myUID = FirebaseAuth.getInstance().getUid();
-                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chatlist");
-                ref.child(myUID).child(hisUid)
-                        .removeValue()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                new SweetAlertDialog(context, SweetAlertDialog.WARNING_TYPE)
+                        .setTitleText("Are you sure?")
+                        .setContentText("You won't be able to recover this chats!")
+                        .setConfirmText("Delete!")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
                             @Override
-                            public void onSuccess(Void aVoid) {
-                                Toasty.success(context, "Chat successfully deleted!", Toast.LENGTH_SHORT, true).show();
+                            public void onClick(SweetAlertDialog sDialog) {
+                                String myUID = FirebaseAuth.getInstance().getUid();
+                                DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Chatlist");
+                                ref.child(myUID).child(hisUid)
+                                        .removeValue()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Toasty.success(context, "Chat successfully deleted!", Toast.LENGTH_SHORT, true).show();
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Toasty.error(context, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                                            }
+                                        });
+                                sDialog.dismissWithAnimation();
                             }
                         })
-                        .addOnFailureListener(new OnFailureListener() {
+                        .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
                             @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toasty.error(context, ""+e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
                             }
-                        });
+                        })
+                        .show();
                 return false;
             }
         });

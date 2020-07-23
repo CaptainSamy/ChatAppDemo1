@@ -50,12 +50,12 @@
             android:layout_height="match_parent">
 
             <FrameLayout
+                android:background="?attr/backgroundcolor"
                 android:id="@+id/frame_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
                 <ImageButton
                     android:scaleType="fitXY"
-                    android:fitsSystemWindows="true"
                     android:id="@+id/imgBtnBG"
                     android:src="@drawable/teabackground"
                     android:layout_width="match_parent"
@@ -105,7 +105,7 @@
                 <RadioButton
                     android:textColor="?attr/tintcolor"
                     android:textSize="20sp"
-                    android:text="Nam"
+                    android:text="Male"
                     android:layout_margin="8dp"
                     android:padding="8dp"
                     android:id="@+id/male_checkbox"
@@ -117,7 +117,7 @@
                     android:layout_marginLeft="25dp"
                     android:layout_marginTop="8dp"
                     android:padding="8dp"
-                    android:text="Nữ"
+                    android:text="Female"
                     android:id="@+id/female_checkbox"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
@@ -163,7 +163,7 @@
                 <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="Thêm lời giới thiệu"
+                    android:hint="Add status"
                     android:inputType="textMultiLine"
                     android:maxLines="1"
                     android:textColorHint="?attr/tintcolor"
@@ -224,7 +224,7 @@
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
-                android:text="Xong"
+                android:text="Update"
                 android:layout_marginTop="10dp"
                 android:layout_centerHorizontal="true"
                 android:id="@+id/update_button"

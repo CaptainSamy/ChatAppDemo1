@@ -213,15 +213,15 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                     //set data
                     set_user_name.getEditText().setText(name);
                     set_profile_status.getEditText().setText(status);
-                    //tv_Gioitinh.setText(gioiTinh);
                     set_profile_phone.setText(phone);
                     try {
-                        Glide.with(UpdateProfileUserActivity.this).load(imgAnhDD).into(imgBtnDD);
+                        Glide.with(UpdateProfileUserActivity.this).load(imgAnhDD).placeholder(R.drawable.user_profile).into(imgBtnDD);
                     } catch (Exception e) {
                         imgBtnDD.setImageResource(R.drawable.user_profile);
                     }
+
                     try {
-                        Glide.with(UpdateProfileUserActivity.this).load(imgAnhBia).into(imgBtnBG);
+                        Glide.with(UpdateProfileUserActivity.this).load(imgAnhBia).placeholder(R.drawable.teabackground).into(imgBtnBG);
                     } catch (Exception e) {
                         imgBtnBG.setImageResource(R.drawable.teabackground);
                     }
@@ -236,70 +236,31 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
     }
 
     private void UpdateProfileUser() {
+        SweetAlertDialog pDialog = new SweetAlertDialog(UpdateProfileUserActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Updating...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
         String edtUserName = set_user_name.getEditText().getText().toString().trim();
         String edtStatus = set_profile_status.getEditText().getText().toString().trim();
         String edtPhone = ccp.getFullNumberWithPlus().trim();
         if (!validateName() | !validateStatus() | !validatePhone() | !validateSex()) {
+            pDialog.dismissWithAnimation();
             return;
-        }
-        if (image_uri == null){
-            updateProfile(""+edtUserName, ""+edtStatus, ""+edtPhone, ""+gioiTinh, "", "");
         }else {
-            if (profileOrCoverPhoto.equals("imgAnhBia")) {
-                String filePathAndName = storagePath + "" + profileOrCoverPhoto + "_" + user.getUid();
-                StorageReference storageReference2nd = storageReference.child(filePathAndName);
-                storageReference2nd.putFile(image_uri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                                while (!uriTask.isSuccessful());
-                                Uri downloadUri = uriTask.getResult();
-                                if (uriTask.isSuccessful()) {
-                                    updateProfile(""+edtUserName, ""+edtStatus, ""+edtPhone, ""+gioiTinh, ""+downloadUri, "");
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toasty.error(UpdateProfileUserActivity.this, ""+ e.getMessage(), Toast.LENGTH_SHORT, true).show();
-                            }
-                        });
-            } else if (profileOrCoverPhoto.equals("imgAnhDD")){
-                String filePathAndName = storagePath + "" + profileOrCoverPhoto + "_" + user.getUid();
-                StorageReference storageReference2nd = storageReference.child(filePathAndName);
-                storageReference2nd.putFile(image_uri)
-                        .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                            @Override
-                            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                                Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
-                                while (!uriTask.isSuccessful());
-                                Uri downloadUri = uriTask.getResult();
-                                if (uriTask.isSuccessful()) {
-                                    updateProfile(""+edtUserName, ""+edtStatus, ""+edtPhone, ""+gioiTinh, "", ""+downloadUri);
-                                }
-                            }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
-                            @Override
-                            public void onFailure(@NonNull Exception e) {
-                                Toasty.error(UpdateProfileUserActivity.this, ""+ e.getMessage(), Toast.LENGTH_SHORT, true).show();
-                            }
-                        });
-            }
+            updateProfile(""+edtUserName, ""+edtStatus, ""+edtPhone, ""+gioiTinh);
+            pDialog.dismissWithAnimation();
         }
     }
 
-    private void updateProfile(String edtUserName, String edtStatus, String edtPhone, String gioiTinh, String anhBia, String anhDD) {
+    private void updateProfile(String edtUserName, String edtStatus, String edtPhone, String gioiTinh) {
         HashMap<String, Object> profileMap = new HashMap<>();
         profileMap.put("uid", user.getUid());
         profileMap.put("name", edtUserName);
         profileMap.put("status", edtStatus);
         profileMap.put("phone", edtPhone);
         profileMap.put("gioiTinh", gioiTinh);
-        profileMap.put("imgAnhBia", anhBia);
-        profileMap.put("imgAnhDD", anhDD);
         profileMap.put("onlineStatus", "online");
         profileMap.put("typingTo", "noOne");
 
@@ -372,21 +333,61 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
         if (resultCode == RESULT_OK){
             if (requestCode == IMAGE_PICK_GALLERY_CODE) {
                 image_uri = data.getData();
-                if (profileOrCoverPhoto.equals("imgAnhBia")){
-                    imgBtnBG.setImageURI(image_uri);
-                }else if (profileOrCoverPhoto.equals("imgAnhDD")){
-                    imgBtnDD.setImageURI(image_uri);
-                }
+                uploadProfileCoverPhoto(image_uri);
             }
             if (requestCode == IMAGE_PICK_CAMERA_CODE) {
-                if (profileOrCoverPhoto.equals("imgAnhBia")){
-                    imgBtnBG.setImageURI(image_uri);
-                }else if (profileOrCoverPhoto.equals("imgAnhDD")){
-                    imgBtnDD.setImageURI(image_uri);
-                }
+                uploadProfileCoverPhoto(image_uri);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private void uploadProfileCoverPhoto(Uri image_uri) {
+        SweetAlertDialog pDialog = new SweetAlertDialog(UpdateProfileUserActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
+        pDialog.setTitleText("Uploading...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        String filePathAndName = storagePath + "" + profileOrCoverPhoto + "_" + user.getUid();
+        StorageReference storageReference2nd = storageReference.child(filePathAndName);
+        storageReference2nd.putFile(image_uri)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Task<Uri> uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!uriTask.isSuccessful());
+                        Uri downloadUri = uriTask.getResult();
+                        if (uriTask.isSuccessful()) {
+                            HashMap<String, Object> results = new HashMap<>();
+                            results.put(profileOrCoverPhoto, downloadUri.toString());
+                            databaseReference.child(user.getUid()).updateChildren(results)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            pDialog.dismiss();
+                                            Toasty.success(UpdateProfileUserActivity.this, "Image Updated!", Toast.LENGTH_SHORT, true).show();
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            pDialog.dismiss();
+                                            Toasty.error(UpdateProfileUserActivity.this, "Error Updating Image!", Toast.LENGTH_SHORT, true).show();
+                                        }
+                                    });
+                        } else {
+                            pDialog.dismiss();
+                            Toasty.error(UpdateProfileUserActivity.this, "Some error occured!", Toast.LENGTH_SHORT, true).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toasty.error(UpdateProfileUserActivity.this, ""+ e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                    }
+                });
     }
 
     @Override

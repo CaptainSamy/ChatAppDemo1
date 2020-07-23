@@ -35,7 +35,7 @@
     </LinearLayout>
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:background="?attr/tabcolor"
+        android:background="?attr/backgroundcolor"
         android:id="@+id/profile_image"
         android:layout_width="100dp"
         android:layout_height="100dp"

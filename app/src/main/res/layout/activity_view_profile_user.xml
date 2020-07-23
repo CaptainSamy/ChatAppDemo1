@@ -53,11 +53,12 @@
                 android:layout_height="match_parent">
 
                 <FrameLayout
+                    android:backgroundTint="?attr/cardbackground"
                     android:id="@+id/frame_layout_view_profile"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <ImageButton
-                        android:fitsSystemWindows="true"
+                        android:scaleType="fitXY"
                         android:id="@+id/imgBtnBG"
                         android:src="@drawable/teabackground"
                         android:layout_width="match_parent"

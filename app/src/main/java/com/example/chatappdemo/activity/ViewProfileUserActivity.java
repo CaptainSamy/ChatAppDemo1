@@ -1,6 +1,5 @@
 package com.example.chatappdemo.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -31,7 +30,6 @@ public class ViewProfileUserActivity extends AppCompatActivity {
     private ImageButton imgBtnBG;
     private CircleImageView imgBtnDD;
     private TextView tv_userName, tv_Phone, tv_Status, tv_Gioitinh, tv_Done;
-    private ProgressDialog progressDialog;
     private String currentUserId;
     private StorageReference storageReference;
     private FirebaseAuth firebaseAuth;
@@ -68,7 +66,6 @@ public class ViewProfileUserActivity extends AppCompatActivity {
         tv_Phone = findViewById(R.id.tv_Phone);
         tv_Status = findViewById(R.id.tv_Status);
         tv_Gioitinh = findViewById(R.id.tv_Gioitinh);
-        progressDialog = new ProgressDialog(this);
         tv_Done = findViewById(R.id.tv_Done);
         tv_Done.setOnClickListener(new View.OnClickListener() {
             @Override
