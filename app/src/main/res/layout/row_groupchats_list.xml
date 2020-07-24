@@ -18,15 +18,6 @@
             android:src="@drawable/groupiv"
             android:layout_width="60dp"
             android:layout_height="60dp"/>
-
-        <ImageButton
-            android:id="@+id/moreG"
-            android:src="@drawable/moreiv"
-            android:background="?attr/cardbackground"
-            android:layout_alignParentRight="true"
-            android:layout_margin="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
         <TextView
             android:id="@+id/groupTitleTv"
             android:text="Group Title"
@@ -58,18 +49,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <TextView
-            android:visibility="gone"
-            android:id="@+id/timeGTv"
-            android:singleLine="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/moreG"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="8dp"
-            android:text="11:25PM"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
         <FrameLayout
             android:layout_below="@id/groupTitleTv"
             android:layout_centerHorizontal="true"

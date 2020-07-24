@@ -52,7 +52,7 @@ public class AdapterGroupList extends RecyclerView.Adapter<AdapterGroupList.Hold
         String groupTitle = groupsListmodel.getGroupTitle();
 
         holder.nameSenderTv.setText("");
-        holder.timeGTv.setText("");
+        //holder.timeGTv.setText("");
         holder.messageTv.setText("");
 
         //loadLast message and time
@@ -97,7 +97,7 @@ public class AdapterGroupList extends RecyclerView.Adapter<AdapterGroupList.Hold
                                 holder.messageTv.setText(message);
                             }
 
-                            holder.timeGTv.setText(dateTime);
+                            //holder.timeGTv.setText(dateTime);
                             //get infor sender
                             DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Users");
                             ref.orderByChild("uid").equalTo(sender)
@@ -167,17 +167,14 @@ public class AdapterGroupList extends RecyclerView.Adapter<AdapterGroupList.Hold
 
     class HolderGroupList extends RecyclerView.ViewHolder{
         private CircleImageView groupIconIv, imgDDuser1;
-        private ImageButton moreGIv;
-        private TextView groupTitleTv, nameSenderTv, messageTv, timeGTv, memberTv;
+        private TextView groupTitleTv, nameSenderTv, messageTv, memberTv;
 
         public HolderGroupList(@NonNull View itemView) {
             super(itemView);
             groupIconIv = itemView.findViewById(R.id.groupIconIv);
-            moreGIv = itemView.findViewById(R.id.moreG);
             groupTitleTv = itemView.findViewById(R.id.groupTitleTv);
             nameSenderTv = itemView.findViewById(R.id.nameSenderTv);
             messageTv = itemView.findViewById(R.id.messageTv);
-            timeGTv = itemView.findViewById(R.id.timeGTv);
             imgDDuser1 = itemView.findViewById(R.id.imgDDuser1);
             memberTv = itemView.findViewById(R.id.memberTv);
         }

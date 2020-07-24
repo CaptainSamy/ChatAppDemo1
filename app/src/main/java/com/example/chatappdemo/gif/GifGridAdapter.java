@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.gifs.Gif;
 
@@ -62,6 +63,7 @@ final class GifGridAdapter extends ArrayAdapter<Gif> {
             Glide.with(mContext)
                     .asGif()
                     .load(gif.getPreviewGifUrl())
+                    .transition(new DrawableTransitionOptions().crossFade())
                     .centerCrop()
                     .into(holder.gifIv);
 

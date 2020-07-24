@@ -15,18 +15,10 @@
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_centerHorizontal="true"
             android:id="@+id/groupIconIv"
-            android:background="#DDDDDD"
+            android:src="@drawable/ic_user_demo"
             android:layout_width="60dp"
             android:layout_height="60dp"/>
 
-        <ImageButton
-            android:id="@+id/moreG"
-            android:src="@drawable/moreiv"
-            android:background="?attr/cardbackground"
-            android:layout_alignParentRight="true"
-            android:layout_margin="5dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
         <TextView
             android:layout_marginTop="5dp"
             android:id="@+id/groupTitleTv"
@@ -34,7 +26,7 @@
             android:layout_centerHorizontal="true"
             android:textColor="?attr/tintcolor"
             android:layout_below="@id/groupIconIv"
-            android:layout_width="match_parent"
+            android:layout_width="100dp"
             android:layout_height="wrap_content"/>
 
         <TextView
@@ -58,18 +50,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <TextView
-            android:visibility="gone"
-            android:id="@+id/timeGTv"
-            android:singleLine="true"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/moreG"
-            android:layout_marginTop="40dp"
-            android:layout_marginRight="8dp"
-            android:text="11:25PM"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
         <FrameLayout
             android:layout_below="@id/groupTitleTv"
             android:layout_centerHorizontal="true"
@@ -83,7 +63,7 @@
                 android:layout_height="wrap_content">
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_gravity="center"
-                    android:background="#DDDDDD"
+                    android:src="@drawable/ic_user_demo"
                     android:layout_width="40dp"
                     android:layout_height="40dp"/>
                 <TextView
@@ -97,7 +77,7 @@
             </FrameLayout>
             <de.hdodenhof.circleimageview.CircleImageView
                 android:layout_marginTop="3dp"
-                android:background="#DDDDDD"
+                android:src="@drawable/ic_user_demo"
                 android:id="@+id/imgDDuser1"
                 android:layout_width="40dp"
                 android:layout_height="40dp"/>

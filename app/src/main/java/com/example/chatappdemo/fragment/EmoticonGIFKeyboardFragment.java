@@ -1,6 +1,7 @@
 package com.example.chatappdemo.fragment;
 
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -100,6 +101,7 @@ public final class EmoticonGIFKeyboardFragment extends Fragment implements Fragm
         //Set backspace button
         mBackSpaceBtn = view.findViewById(R.id.emojis_backspace);
         mBackSpaceBtn.setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("RestrictedApi")
             @Override
             public void onClick(View view1) {
                 if (gifSelectListener != null) gifSelectListener.onBackSpace();

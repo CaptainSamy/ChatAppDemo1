@@ -142,6 +142,7 @@ public class GroupChatActivity extends AppCompatActivity {
         backGroupChat.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                startActivity(new Intent(GroupChatActivity.this, MainActivity.class));
                 finish();
             }
         });
