@@ -65,8 +65,16 @@
             android:layout_height="35dp"/>
     </LinearLayout>
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+    <TextView
+        android:visibility="gone"
         android:layout_below="@id/liner"
+        android:id="@+id/internet_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:layout_below="@id/internet_status"
         android:layout_above="@id/bottom_container"
         android:id="@+id/swiperefreshlayout"
         android:layout_width="match_parent"
@@ -222,7 +230,7 @@
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
                     android:textColor="#000000"
-                    android:textSize="20dp"
+                    android:textSize="16sp"
                     android:maxHeight="70dp"
                     android:paddingRight="32dp"
                     android:layout_width="match_parent"
@@ -244,6 +252,62 @@
                 android:layout_width="35dp"
                 android:layout_height="35dp"/>
 
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/liner_record"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Chronometer
+                android:id="@+id/chronometerTimer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="#42c3cf"
+                android:layout_gravity="center_horizontal"
+                />
+
+            <LinearLayout
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="#42c3cf"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/btnRecord"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/microphone"
+                    android:layout_marginBottom="10dp"
+                    android:background="?android:attr/selectableItemBackground"/>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="#42c3cf"
+                    android:visibility="gone"
+                    android:layout_gravity="center_horizontal"
+                    android:id="@+id/btnStop"
+                    android:layout_width="70dp"
+                    android:layout_height="70dp"
+                    android:src="@drawable/stop"
+                    android:layout_marginBottom="10dp"
+                    android:background="?android:attr/selectableItemBackground"/>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/mRecordLabel"
+                android:layout_gravity="center_horizontal"
+                android:text="Touch to start recording"
+                android:textColor="#A4A0A0"
+                android:textSize="18sp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
         </LinearLayout>
 
         <FrameLayout

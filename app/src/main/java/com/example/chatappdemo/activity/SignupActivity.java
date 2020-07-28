@@ -52,6 +52,7 @@ public class SignupActivity extends AppCompatActivity {
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
         setTheme(themeIdcurrent);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signup);
         btn_Back = findViewById(R.id.back_signup);

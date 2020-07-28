@@ -1,11 +1,16 @@
 package com.example.chatappdemo.adapter;
 
 import android.content.Context;
+import android.media.MediaPlayer;
+import android.os.Handler;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,6 +29,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -39,6 +45,11 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
     private ArrayList<GroupChat> modelGroupChatList;
 
     private FirebaseAuth firebaseAuth;
+
+    private MediaPlayer mPlayer;
+    private int lastProgress = 0;
+    private Handler mHandler = new Handler();
+    private boolean isPlaying = false;
 
     public AdapterGroupChat(Context context, ArrayList<GroupChat> modelGroupChatList) {
         this.context = context;
@@ -107,6 +118,100 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             }catch (Exception e){
                 holder.messageIv.setImageResource(R.drawable.image_iv);
             }
+        } else if (messageType.equals("audio")) {
+            holder.messageTv.setVisibility(View.GONE);
+            holder.messageIv.setVisibility(View.GONE);
+            holder.linearLayoutPlay.setVisibility(View.VISIBLE);
+
+            holder.imageViewPlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (!isPlaying && message != null) {
+                        isPlaying = true;
+                        startPlaying();
+                    } else {
+                        isPlaying = false;
+                        stopPlaying();
+                    }
+                }
+
+                private void stopPlaying() {
+                    try {
+                        mPlayer.release();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    mPlayer = null;
+                    //showing the play button
+                    holder.imageViewPlay.setImageResource(R.drawable.play_circle);
+                }
+
+                private void startPlaying() {
+                    mPlayer = null;
+                    mPlayer = new MediaPlayer();
+                    try {
+                        mPlayer.setDataSource(message);
+                        mPlayer.prepare();
+                        mPlayer.start();
+                    } catch (IOException e) {
+                        Log.e("LOG_TAG", "prepare() failed");
+                    }
+                    //making the imageview pause button
+                    holder.imageViewPlay.setImageResource(R.drawable.pause_circle);
+
+                    holder.seekBar.setProgress(lastProgress);
+                    mPlayer.seekTo(lastProgress);
+                    holder.seekBar.setMax(mPlayer.getDuration());
+                    seekUpdation();
+
+
+                    mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                        @Override
+                        public void onCompletion(MediaPlayer mp) {
+                            holder.imageViewPlay.setImageResource(R.drawable.play_circle);
+                            mPlayer.reset();
+                            isPlaying = false;
+                        }
+                    });
+
+
+                    holder.seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+                        @Override
+                        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                            if (mPlayer != null && fromUser) {
+                                mPlayer.seekTo(progress);
+                                holder.seekBar.setProgress(progress);
+                            }
+                        }
+
+                        @Override
+                        public void onStartTrackingTouch(SeekBar seekBar) {
+
+                        }
+
+                        @Override
+                        public void onStopTrackingTouch(SeekBar seekBar) {
+
+                        }
+                    });
+                }
+
+                Runnable runnable = new Runnable() {
+                    @Override
+                    public void run() {
+                        seekUpdation();
+                    }
+                };
+
+                private void seekUpdation() {
+                    if (mPlayer != null) {
+                        int mCurrentPosition = mPlayer.getCurrentPosition();
+                        holder.seekBar.setProgress(mCurrentPosition);
+                        lastProgress = mCurrentPosition;
+                    }
+                    mHandler.postDelayed(runnable, 1000);
+                }
+            });
         }
 
 
@@ -181,6 +286,9 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
         private TextView nameTv, timeTv;
         private EmojiconTextView messageTv;
         private ImageView messageIv, iV_file;
+        private CircleImageView imageViewPlay;
+        private LinearLayout linearLayoutPlay;
+        private SeekBar seekBar;
 
         public HolderGroupChat(@NonNull View itemView) {
             super(itemView);
@@ -190,6 +298,9 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             timeTv = itemView.findViewById(R.id.timeTv);
             messageIv = itemView.findViewById(R.id.messageIv);
             iV_file = itemView.findViewById(R.id.iV_file);
+            imageViewPlay = itemView.findViewById(R.id.imageViewPlay);
+            linearLayoutPlay = itemView.findViewById(R.id.linearLayoutPlay);
+            seekBar = itemView.findViewById(R.id.seekBar);
         }
     }
 }

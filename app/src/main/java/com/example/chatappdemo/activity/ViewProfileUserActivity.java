@@ -42,6 +42,7 @@ public class ViewProfileUserActivity extends AppCompatActivity {
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
         setTheme(themeIdcurrent);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_profile_user);
         firebaseAuth = FirebaseAuth.getInstance();
@@ -129,8 +130,6 @@ public class ViewProfileUserActivity extends AppCompatActivity {
                             tv_Status.setText(Status);
                             tv_Phone.setText(Phone);
                             tv_Gioitinh.setText(GioiTinh);
-
-                        } else {
 
                         }
                     }

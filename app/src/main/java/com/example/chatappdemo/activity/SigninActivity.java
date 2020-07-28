@@ -22,6 +22,8 @@ import com.google.android.gms.auth.api.signin.GoogleSignInResult;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.textfield.TextInputLayout;
@@ -34,6 +36,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.iid.FirebaseInstanceId;
 
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -43,12 +46,12 @@ public class SigninActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
     private FirebaseAuth firebaseAuth;
-    private MaterialButton login_Button;
+    private MaterialButton login_Button, imgGoogle;
     private TextInputLayout login_Email, login_Password;
     private TextView login_forgetPassword, tv_register;
     private ProgressDialog loadingBar;
     public String email_signin, password_signin;
-    private CircleImageView btn_Back, imgGoogle;
+    private CircleImageView btn_Back;
     private DatabaseReference UserRef;
     private Boolean emailChecker;
     private static final int RC_SIGN_IN = 1;
@@ -63,6 +66,7 @@ public class SigninActivity extends AppCompatActivity {
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
         setTheme(themeIdcurrent);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_signin);
 
@@ -117,7 +121,6 @@ public class SigninActivity extends AppCompatActivity {
                                     if (task.isSuccessful()) {
                                         final String currentUserID = firebaseAuth.getCurrentUser().getUid();
                                         final String deviceToken = FirebaseInstanceId.getInstance().getToken();
-
                                         UserRef.child(currentUserID).child("device_token")
                                                 .setValue(deviceToken).addOnCompleteListener(new OnCompleteListener<Void>() {
                                             @Override

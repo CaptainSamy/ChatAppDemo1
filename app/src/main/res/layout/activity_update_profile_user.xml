@@ -65,8 +65,8 @@
                     android:id="@+id/imgBtnCamBG"
                     android:src="@drawable/camera"
                     android:layout_margin="12dp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"/>
 
                 <FrameLayout
                     android:layout_gravity="center"
@@ -89,8 +89,8 @@
                         android:layout_gravity="bottom|right"
                         android:src="@drawable/camera"
                         android:layout_margin="8dp"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"/>
                 </FrameLayout>
 
             </FrameLayout>

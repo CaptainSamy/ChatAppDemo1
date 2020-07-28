@@ -62,6 +62,15 @@
 
         </LinearLayout>
 
+    <TextView
+        android:background="?attr/backgroundcolor"
+        android:visibility="gone"
+        android:textSize="15sp"
+        android:layout_gravity="center_horizontal"
+        android:id="@+id/internet_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
     <FrameLayout
         android:layout_weight="1"
         android:id="@+id/frame_container"

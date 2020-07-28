@@ -3,8 +3,7 @@
     android:id="@+id/messageLayout"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="wrap_content">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/message_profile_image"
         android:layout_width="47dp"
@@ -16,7 +15,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginTop="8dp"
         android:orientation="vertical"
-        android:id="@+id/liner_gr"
+        android:id="@+id/liner_chat"
         android:background="@drawable/receiver_messages_layout"
         android:layout_toRightOf="@id/message_profile_image"
         android:layout_width="wrap_content"
@@ -39,10 +38,35 @@
                 android:id="@+id/message_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:padding="8dp"
                 android:textSize="15sp"
                 android:textColor="?attr/tintcolor"/>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutPlay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
+                android:visibility="visible">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:padding="3dp"
+                    android:id="@+id/imageViewPlay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/play_circle"
+                    android:layout_gravity="center_vertical"
+                    android:clickable="true"
+                    android:focusable="true" />
+                <SeekBar
+                    android:id="@+id/seekBar"
+                    android:layout_width="100dp"
+                    android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
 
         </LinearLayout>
 
@@ -52,13 +76,15 @@
             android:id="@+id/message_image"
             android:scaleType="fitXY"
             android:src="@drawable/image_iv"
-            android:layout_height="200dp"
-            android:layout_width="200dp" />
+            android:maxHeight="400dp"
+            android:minHeight="150dp"
+            android:layout_height="wrap_content"
+            android:layout_width="220dp" />
 
     </LinearLayout>
     <TextView
         android:visibility="gone"
-        android:layout_toRightOf="@id/liner_gr"
+        android:layout_toRightOf="@id/liner_chat"
         android:layout_centerVertical="true"
         android:id="@+id/timeTv"
         android:textColor="?attr/tintcolor"

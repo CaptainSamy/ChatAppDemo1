@@ -1,6 +1,7 @@
 package com.example.chatappdemo.activity;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -91,6 +92,7 @@ public class UpdateProfileUserActivity extends AppCompatActivity {
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
         setTheme(themeIdcurrent);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_profile_user);
         pDialog = new SweetAlertDialog(UpdateProfileUserActivity.this, SweetAlertDialog.PROGRESS_TYPE);

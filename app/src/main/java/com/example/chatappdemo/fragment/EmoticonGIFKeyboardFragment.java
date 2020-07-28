@@ -114,16 +114,6 @@ public final class EmoticonGIFKeyboardFragment extends Fragment implements Fragm
             }
         });
 
-        //Set GIF button
-//        mGifTabBtn = view.findViewById(R.id.btn_gif_tab);
-//        mGifTabBtn.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view13) {
-//                EmoticonGIFKeyboardFragment.this.replaceFragment(mGifFragment, TAG_GIF_FRAGMENT);
-//            }
-//        });
-//        mGifTabBtn.setVisibility(isGIFsEnable() ? View.VISIBLE : View.GONE);
-
         //Setup the search button.
         View searchBtn = view.findViewById(R.id.search_btn);
         searchBtn.setOnClickListener(new View.OnClickListener() {

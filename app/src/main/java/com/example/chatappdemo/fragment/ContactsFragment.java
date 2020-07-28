@@ -20,9 +20,6 @@ import com.cooltechworks.views.shimmer.ShimmerRecyclerView;
 import com.example.chatappdemo.R;
 import com.example.chatappdemo.activity.ChatActivity;
 import com.example.chatappdemo.activity.ProfileActivity;
-import com.example.chatappdemo.activity.SearchFriendActivity;
-import com.example.chatappdemo.activity.UpdateProfileUserActivity;
-import com.example.chatappdemo.activity.ViewProfileUserActivity;
 import com.example.chatappdemo.model.User;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -100,9 +97,7 @@ public class ContactsFragment extends Fragment {
                 new FirebaseRecyclerAdapter<User, ContactsViewHolder>(options) {
                     @Override
                     protected void onBindViewHolder(@NonNull final ContactsViewHolder contactsViewHolder, int i, @NonNull User user) {
-
                         final String userIds = getRef(i).getKey();
-
                         userRef.child(userIds).addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
@@ -149,7 +144,7 @@ public class ContactsFragment extends Fragment {
 
                                     contactsViewHolder.tv_username.setText(userName);
                                     contactsViewHolder.tv_status_item.setText(userStatus);
-
+                                    //click item
                                     contactsViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                                         @Override
                                         public void onClick(View v) {
@@ -158,7 +153,7 @@ public class ContactsFragment extends Fragment {
                                             startActivity(chatIntent);
                                         }
                                     });
-
+                                    // long click item
                                     contactsViewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                                         @Override
                                         public boolean onLongClick(View v) {
@@ -171,7 +166,6 @@ public class ContactsFragment extends Fragment {
                                     });
                                 }
                             }
-
                             @Override
                             public void onCancelled(@NonNull DatabaseError databaseError) {
 

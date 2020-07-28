@@ -17,8 +17,14 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.media.MediaRecorder;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.SystemClock;
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -26,8 +32,10 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Chronometer;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +47,7 @@ import com.example.chatappdemo.fragment.EmoticonGIFKeyboardFragment;
 import com.example.chatappdemo.gifs.Gif;
 import com.example.chatappdemo.gifs.GifSelectListener;
 import com.example.chatappdemo.giphy.GiphyGifProvider;
+import com.example.chatappdemo.internet.MyApplication;
 import com.example.chatappdemo.model.GroupChat;
 import com.example.chatappdemo.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -58,6 +67,8 @@ import com.google.firebase.storage.UploadTask;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -69,13 +80,18 @@ import gun0912.tedbottompicker.TedBottomPicker;
 import hani.momanii.supernova_emoji_library.Actions.EmojIconActions;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
+import static android.Manifest.permission.RECORD_AUDIO;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+
 public class GroupChatActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
-    private CircleImageView backGroupChat, imgGif, groupIconIv, imgMore, img_smile;
-    private LinearLayout bottom_linear, sendImage, sendFile, sendGif, sendLocation;
+    private static TextView internetStatus;
+    private static int SPLASH_TIME_CONNECTED = 3000;
+    private CircleImageView backGroupChat, imgGif, groupIconIv, imgMore, img_smile, startbtn, stopbtn;
+    private LinearLayout bottom_linear, sendImage, sendFile, sendAudio, sendLocation, liner_record;
     private ImageButton ibAddParticipant, ibInformationGroup;
-    private TextView groupTitleTv;
+    private TextView groupTitleTv, mRecordLabel;
     private EmojiconEditText messageEt;
     private RecyclerView groupchatRv;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -106,6 +122,11 @@ public class GroupChatActivity extends AppCompatActivity {
     private EmoticonGIFKeyboardFragment mEmoticonGIFKeyboardFragment;
     private FrameLayout keyboard_container;
 
+    private MediaRecorder mRecorder;
+    private Chronometer chronometer;
+    private static String mFileName = null;
+    public static final int REQUEST_AUDIO_PERMISSION_CODE = 111;
+
     public static void toggleKeyboardVisibility(Context context) {
         InputMethodManager inputMethodManager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (inputMethodManager != null)
@@ -118,8 +139,18 @@ public class GroupChatActivity extends AppCompatActivity {
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         themeIdcurrent = locationpref.getInt("themeid", R.style.AppTheme);
         setTheme(themeIdcurrent);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
+
+        internetStatus = findViewById(R.id.internet_status);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            changeTextStatus(true);
+        } else {
+            changeTextStatus(false);
+        }
 
         backGroupChat = findViewById(R.id.backGroupChat);
         groupIconIv = findViewById(R.id.groupIconIv);
@@ -240,6 +271,7 @@ public class GroupChatActivity extends AppCompatActivity {
                     imgMore.startAnimation(animation);
                 } else if (bottom_linear.getVisibility() == View.VISIBLE) {
                     bottom_linear.setVisibility(View.GONE);
+                    liner_record.setVisibility(View.GONE);
                     imgMore.startAnimation(animation2);
                 }
             }
@@ -266,6 +298,7 @@ public class GroupChatActivity extends AppCompatActivity {
                                 imgMore.startAnimation(animation);
                             } else if (bottom_linear.getVisibility() == View.VISIBLE) {
                                 bottom_linear.setVisibility(View.GONE);
+                                liner_record.setVisibility(View.GONE);
                                 imgMore.startAnimation(animation2);
                             }
                         }
@@ -323,6 +356,130 @@ public class GroupChatActivity extends AppCompatActivity {
                 }
             }
         });
+
+        sendAudio = findViewById(R.id.sendAudio);
+        liner_record = findViewById(R.id.liner_record);
+        sendAudio.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (liner_record.getVisibility() == View.GONE){
+                    liner_record.setVisibility(View.VISIBLE);
+                } else if (liner_record.getVisibility() == View.VISIBLE) {
+                    liner_record.setVisibility(View.GONE);
+                }
+            }
+        });
+        mRecordLabel = findViewById(R.id.mRecordLabel);
+        startbtn = findViewById(R.id.btnRecord);
+        stopbtn = findViewById(R.id.btnStop);
+        chronometer = (Chronometer) findViewById(R.id.chronometerTimer);
+        chronometer.setBase(SystemClock.elapsedRealtime());
+        mFileName = Environment.getExternalStorageDirectory().getAbsolutePath();
+        mFileName += "/AudioRecording.3gp";
+        startbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(CheckPermissionsAudio()) {
+                    chronometer.setBase(SystemClock.elapsedRealtime());
+                    chronometer.start();
+                    stopbtn.setVisibility(View.VISIBLE);
+                    startbtn.setVisibility(View.GONE);
+                    mRecorder = new MediaRecorder();
+                    mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
+                    mRecorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
+                    mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                    mRecorder.setOutputFile(mFileName);
+                    try {
+                        mRecorder.prepare();
+                    } catch (IOException e) {
+                    }
+                    mRecorder.start();
+                    mRecordLabel.setText("Recording Started");
+                }
+                else
+                {
+                    RequestPermissionsAudio();
+                }
+            }
+        });
+        stopbtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                chronometer.stop();
+                chronometer.setBase(SystemClock.elapsedRealtime());
+                stopbtn.setVisibility(View.GONE);
+                startbtn.setVisibility(View.VISIBLE);
+                mRecorder.stop();
+                mRecorder.release();
+                mRecorder = null;
+                mRecordLabel.setText("Recording Stopped");
+                Uri uriAudio = Uri.fromFile(new File(mFileName));
+                new SweetAlertDialog(GroupChatActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                        .setTitleText("Send file recording?")
+                        .setConfirmText("Sent")
+                        .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sendFileAudio(uriAudio);
+                                sDialog.dismissWithAnimation();
+                            }
+                        })
+                        .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
+                            @Override
+                            public void onClick(SweetAlertDialog sDialog) {
+                                sDialog.dismissWithAnimation();
+                            }
+                        })
+                        .show();
+            }
+        });
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_AUDIO_PERMISSION_CODE:
+                if (grantResults.length> 0) {
+                    boolean permissionToRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    boolean permissionToStore = grantResults[1] ==  PackageManager.PERMISSION_GRANTED;
+                    if (permissionToRecord && permissionToStore) {
+                        Toasty.success(getApplicationContext(), "Permission Granted!", Toast.LENGTH_SHORT, true).show();
+                    } else {
+                        Toasty.error(getApplicationContext(), "Permission Denied", Toast.LENGTH_SHORT, true).show();
+                    }
+                }
+                break;
+        }
+    }
+
+    private void RequestPermissionsAudio() {
+        ActivityCompat.requestPermissions(GroupChatActivity.this, new String[]{RECORD_AUDIO, WRITE_EXTERNAL_STORAGE}, REQUEST_AUDIO_PERMISSION_CODE);
+    }
+
+    private boolean CheckPermissionsAudio() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), WRITE_EXTERNAL_STORAGE);
+        int result1 = ContextCompat.checkSelfPermission(getApplicationContext(), RECORD_AUDIO);
+        return result == PackageManager.PERMISSION_GRANTED && result1 == PackageManager.PERMISSION_GRANTED;
+    }
+
+    // Method to change the text status
+    public void changeTextStatus(boolean isConnected) {
+        // Change status according to boolean value
+        if (isConnected) {
+            internetStatus.setVisibility(View.VISIBLE);
+            internetStatus.setText("Connected");
+            internetStatus.setTextColor(Color.parseColor("#7ED321"));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    internetStatus.setVisibility(View.GONE);
+                }
+            }, SPLASH_TIME_CONNECTED);
+        } else {
+            internetStatus.setVisibility(View.VISIBLE);
+            internetStatus.setText("Disconnected");
+            internetStatus.setTextColor(Color.parseColor("#ff0000"));
+        }
     }
 
     private void readMessage() {
@@ -521,7 +678,6 @@ public class GroupChatActivity extends AppCompatActivity {
                         adapterGroupChat = new AdapterGroupChat(GroupChatActivity.this, groupChatList);
                         adapterGroupChat.notifyDataSetChanged();
                         groupchatRv.setAdapter(adapterGroupChat);
-                        groupchatRv.smoothScrollToPosition(groupchatRv.getAdapter().getItemCount());
                         swipeRefreshLayout.setRefreshing(false);
                     }
 
@@ -599,10 +755,66 @@ public class GroupChatActivity extends AppCompatActivity {
         }
     }
 
+    private void sendFileAudio(Uri uriAudio) {
+        SweetAlertDialog pDialog = new SweetAlertDialog(GroupChatActivity.this, SweetAlertDialog.PROGRESS_TYPE);
+        pDialog.getProgressHelper().setBarColor(Color.parseColor("#2cb9b0"));
+        pDialog.setTitleText("Sending Voice...");
+        pDialog.setCancelable(false);
+        pDialog.show();
+
+        String filenamePath = "ChatFiles/" + "" + System.currentTimeMillis();
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference(filenamePath);
+        //upload image
+        storageReference.putFile(uriAudio)
+                .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                    @Override
+                    public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                        Task<Uri> p_uriTask = taskSnapshot.getStorage().getDownloadUrl();
+                        while (!p_uriTask.isSuccessful()) ;
+                        Uri p_downloadUri = p_uriTask.getResult();
+                        if (p_uriTask.isSuccessful()) {
+                            String timestamp = "" + System.currentTimeMillis();
+                            HashMap<String, Object> hashMap = new HashMap<>();
+                            hashMap.put("sender", "" + firebaseAuth.getUid());
+                            hashMap.put("message", "" + p_downloadUri);
+                            hashMap.put("timestamp", "" + timestamp);
+                            hashMap.put("type", "" + "audio");
+                            hashMap.put("nameFile", ""+uriAudio.getLastPathSegment());
+                            // add in db
+                            DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+                            ref.child(groupId).child("Messages").child(timestamp)
+                                    .setValue(hashMap)
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            messageEt.setText("");
+                                            pDialog.dismiss();
+                                            mRecordLabel.setText("Uploading Finished");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                                            pDialog.dismiss();
+                                        }
+                                    });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                        pDialog.dismiss();
+                    }
+                });
+    }
+
     private void sendFileMessage(Uri fileUri) {
         SweetAlertDialog pDialog = new SweetAlertDialog(GroupChatActivity.this, SweetAlertDialog.PROGRESS_TYPE);
         pDialog.getProgressHelper().setBarColor(Color.parseColor("#2cb9b0"));
-        pDialog.setTitleText("Sending File");
+        pDialog.setTitleText("Sending File...");
         pDialog.setCancelable(false);
         pDialog.show();
 
@@ -659,5 +871,17 @@ public class GroupChatActivity extends AppCompatActivity {
                         pDialog.setTitleText("Uploaded: " + (int) progress + "%");
                     }
                 });
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();// On Pause notify the Application
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();// On Resume notify the Application
     }
 }

@@ -11,6 +11,7 @@ import android.Manifest;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
@@ -48,6 +49,8 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
 public class GroupEditActivity extends AppCompatActivity {
+    int themeIdcurrent;
+    String SHARED_PREFS = "codeTheme";
     private String groupId;
 
     private static final int CAMERA_REQUEST_CODE = 100;
@@ -68,6 +71,11 @@ public class GroupEditActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        SharedPreferences locationpref = getApplicationContext()
+                .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
+        themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
+        setTheme(themeIdcurrent);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_edit);
 

@@ -32,7 +32,7 @@ public class SettingActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
     private ImageButton btn_Light, btn_Dark;
-    private TextView txtTaiKhoanSetting, txtTaiKhoanProfile, user_Name, tv_Logout, tv_DelAccout;
+    private TextView txtTaiKhoanSetting, txtTaiKhoanProfile, user_Name, tv_Logout, tv_DelAccout, tv_Information;
     private ProgressDialog progressDialog;
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
@@ -46,6 +46,7 @@ public class SettingActivity extends AppCompatActivity {
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
         setTheme(themeIdcurrent);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_setting);
         btn_Back = findViewById(R.id.back_setting);
@@ -161,6 +162,15 @@ public class SettingActivity extends AppCompatActivity {
                 }
             }
         });
+
+        tv_Information = findViewById(R.id.tv_Information);
+        tv_Information.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(SettingActivity.this, InformationAppActivity.class));
+            }
+        });
+
         UserInfor();
     }
     public void restartApp() {

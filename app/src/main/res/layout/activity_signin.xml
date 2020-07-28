@@ -159,31 +159,18 @@
                 android:layout_width="250dp"
                 android:layout_height="1dp"/>
 
-            <LinearLayout
-                android:layout_gravity="center"
-                android:layout_margin="16dp"
-                android:orientation="horizontal"
+            <com.google.android.material.button.MaterialButton
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                android:text="continue with google"
+                android:textColor="#000000"
+                android:drawableLeft="@drawable/logo_google"
+                android:textAlignment="center"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:id="@+id/img_google"
+                android:layout_gravity="center_horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/logo_facebook"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/img_google"
-                    android:layout_marginRight="16dp"
-                    android:src="@drawable/logo_google"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:src="@drawable/logo_call"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-            </LinearLayout>
+                android:layout_height="55dp"/>
 
         </LinearLayout>
     </ScrollView>

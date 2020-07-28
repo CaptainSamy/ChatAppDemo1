@@ -190,6 +190,7 @@
                 android:layout_height="35dp"/>
 
             <TextView
+                android:id="@+id/tv_Information"
                 android:paddingRight="10dp"
                 android:paddingLeft="10dp"
                 android:background="?attr/cardbackground"

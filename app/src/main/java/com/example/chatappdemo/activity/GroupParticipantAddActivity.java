@@ -43,6 +43,8 @@ public class GroupParticipantAddActivity extends AppCompatActivity {
         SharedPreferences locationpref = getApplicationContext()
                 .getSharedPreferences(SHARED_PREFS, MODE_PRIVATE);
         themeIdcurrent = locationpref.getInt("themeid",R.style.AppTheme);
+        setTheme(themeIdcurrent);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_participant_add);
         firebaseAuth = FirebaseAuth.getInstance();

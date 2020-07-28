@@ -141,7 +141,7 @@ public final class GifFragment extends Fragment implements GifGridAdapter.ItemSe
         @Override
         protected List<Gif> doInBackground(Void... voids) {
             if (mGifProvider == null) throw new RuntimeException("Set GIF provider.");
-            return mGifProvider.getTrendingGifs(20);
+            return mGifProvider.getTrendingGifs(16);
         }
 
         @Override

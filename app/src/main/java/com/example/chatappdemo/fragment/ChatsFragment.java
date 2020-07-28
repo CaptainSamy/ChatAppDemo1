@@ -158,7 +158,7 @@ public class ChatsFragment extends Fragment {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 swipeRefreshLayout.setRefreshing(false);
-                Toasty.error(getActivity(), ""+error.getMessage(), Toast.LENGTH_SHORT, true).show();
+                Toasty.error(getActivity(), ""+error.getMessage(), Toast.LENGTH_LONG, true).show();
             }
         });
     }
@@ -190,6 +190,8 @@ public class ChatsFragment extends Fragment {
                             theLastMessage = "Sent a file.";
                         }else if (messages.getType().equals("image_gif")){
                             theLastMessage = "Sent a gif.";
+                        }else if (messages.getType().equals("audio")){
+                            theLastMessage = "Sent a voice.";
                         }else {
                             theLastMessage = messages.getMessage();
                         }
@@ -201,6 +203,8 @@ public class ChatsFragment extends Fragment {
                             theLastMessage = "You sent a file.";
                         }else if (messages.getType().equals("image_gif")){
                             theLastMessage = "You sent a gif.";
+                        }else if (messages.getType().equals("audio")){
+                            theLastMessage = "You sent a voice.";
                         }else {
                             theLastMessage = "You: " + messages.getMessage();
                         }

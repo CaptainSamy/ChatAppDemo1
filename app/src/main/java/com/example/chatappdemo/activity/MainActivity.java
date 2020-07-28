@@ -1,10 +1,14 @@
 package com.example.chatappdemo.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 import android.graphics.Color;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
@@ -24,6 +28,7 @@ import com.example.chatappdemo.fragment.ChatsFragment;
 import com.example.chatappdemo.fragment.ContactsFragment;
 import com.example.chatappdemo.fragment.GroupsFragment;
 import com.example.chatappdemo.fragment.RequestFragment;
+import com.example.chatappdemo.internet.MyApplication;
 import com.example.chatappdemo.model.Messages;
 import com.example.chatappdemo.notifications.Token;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -47,6 +52,8 @@ import static android.view.View.GONE;
 public class MainActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
+    private static TextView internetStatus;
+    private static int SPLASH_TIME_CONNECTED = 3000;
     private BottomNavigationView bottomNavigationView;
     private CircleImageView profile_image, user_on_off_chat;
     private ImageButton btnSearch, btnCreate;
@@ -66,6 +73,14 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         txtTitle = findViewById(R.id.txt_Title);
         user_on_off_chat = findViewById(R.id.user_on_off_chat);
+        internetStatus = findViewById(R.id.internet_status);
+        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+            changeTextStatus(true);
+        } else {
+            changeTextStatus(false);
+        }
         firebaseAuth = FirebaseAuth.getInstance();
 
         bottomNavigationView = findViewById(R.id.navigation);
@@ -90,6 +105,25 @@ public class MainActivity extends AppCompatActivity {
         updateToken(FirebaseInstanceId.getInstance().getToken());
     }
 
+    // Method to change the text status
+    public void changeTextStatus(boolean isConnected) {
+        // Change status according to boolean value
+        if (isConnected) {
+            internetStatus.setVisibility(View.VISIBLE);
+            internetStatus.setText("Connected");
+            internetStatus.setTextColor(Color.parseColor("#7ED321"));
+            new Handler().postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    internetStatus.setVisibility(View.GONE);
+                }
+            }, SPLASH_TIME_CONNECTED);
+        } else {
+            internetStatus.setVisibility(View.VISIBLE);
+            internetStatus.setText("Disconnected");
+            internetStatus.setTextColor(Color.parseColor("#ff0000"));
+        }
+    }
 
     private void BadgeChats() {
         DatabaseReference reference = FirebaseDatabase.getInstance().getReference("Chats");
@@ -177,10 +211,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
     private void checkUserStatus() {
-//        SweetAlertDialog pDialog = new SweetAlertDialog(MainActivity.this, SweetAlertDialog.PROGRESS_TYPE);
-//        pDialog.getProgressHelper().setBarColor(Color.parseColor("#A5DC86"));
-//        pDialog.setCancelable(false);
-//        pDialog.show();
         FirebaseUser user = firebaseAuth.getCurrentUser();
         DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference().child("Users");
         if (user == null) {
@@ -206,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                     } else {
                         //pDialog.dismiss();
-                        Intent intent = new Intent(MainActivity.this, UpdateProfileUserActivity.class);
+                        Intent intent = new Intent(MainActivity.this, CreateUserActivity.class);
                         startActivity(intent);
                     }
                 }
@@ -241,6 +271,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         checkUserStatus();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();// On Pause notify the Application
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();// On Resume notify the Application
     }
 
 }
