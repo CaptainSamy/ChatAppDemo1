@@ -1,7 +1,14 @@
 package com.example.chatappdemo.adapter;
 
+import android.Manifest;
+import android.app.DownloadManager;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
 import android.text.format.DateFormat;
 import android.util.Log;
@@ -12,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -21,6 +29,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.chatappdemo.R;
+import com.example.chatappdemo.activity.ViewImageChatActivity;
 import com.example.chatappdemo.model.GroupChat;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DataSnapshot;
@@ -34,7 +43,9 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
+import es.dmoral.toasty.Toasty;
 import hani.momanii.supernova_emoji_library.Helper.EmojiconTextView;
 
 public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.HolderGroupChat> {
@@ -85,16 +96,47 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
 
         if (messageType.equals("text")) {
             holder.messageIv.setVisibility(View.GONE);
+            holder.linearLayoutPlay.setVisibility(View.GONE);
             holder.messageTv.setVisibility(View.VISIBLE);
             holder.messageTv.setText(message);
+            //click text message
+            holder.messageTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (holder.timeTv.getVisibility() == View.GONE) {
+                        holder.timeTv.setVisibility(View.VISIBLE);
+                    } else {
+                        holder.timeTv.setVisibility(View.GONE);
+                    }
+                }
+            });
         } else if (messageType.equals("file")) {
             holder.messageTv.setVisibility(View.VISIBLE);
             holder.messageTv.setText(nameFile);
+            holder.linearLayoutPlay.setVisibility(View.GONE);
             holder.iV_file.setVisibility(View.VISIBLE);
             holder.messageIv.setVisibility(View.GONE);
+            holder.civ_download_file.setVisibility(View.VISIBLE);
+            //click download file
+            holder.civ_download_file.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                        if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                                PackageManager.PERMISSION_DENIED){
+                            Toasty.error(context, "Permission Denied!", Toast.LENGTH_SHORT, true).show();
+                        }else {
+                            startDownloading(message, nameFile);
+                        }
+                    }else {
+                        startDownloading(message, nameFile);
+                    }
+                }
+            });
         } else if (messageType.equals("image")){
             holder.messageIv.setVisibility(View.VISIBLE);
             holder.messageTv.setVisibility(View.GONE);
+            holder.linearLayoutPlay.setVisibility(View.GONE);
             try {
                 Glide.with(context)
                         .load(message)
@@ -105,9 +147,19 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             } catch (Exception e) {
                 holder.messageIv.setImageResource(R.drawable.image_iv);
             }
+            //click image
+            holder.messageIv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, ViewImageChatActivity.class);
+                    intent.putExtra("url_img", message);
+                    context.startActivity(intent);
+                }
+            });
         } else if (messageType.equals("image_gif")) {
             holder.messageTv.setVisibility(View.GONE);
             holder.messageIv.setVisibility(View.VISIBLE);
+            holder.linearLayoutPlay.setVisibility(View.GONE);
             try {
                 Glide.with(context)
                         .asGif()
@@ -218,23 +270,29 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
         holder.timeTv.setText(dateTime);
         setUserName(model, holder);
 
-        //click
-        holder.messageIv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
+    }
 
-            }
-        });
-        holder.messageTv.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (holder.timeTv.getVisibility() == View.GONE) {
-                    holder.timeTv.setVisibility(View.VISIBLE);
-                } else {
-                    holder.timeTv.setVisibility(View.GONE);
-                }
-            }
-        });
+    private void startDownloading(String url, String nameFile) {
+        new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("Downloading!")
+                .setConfirmText("OK!")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setTitle(nameFile);
+        request.setDescription("Downloading file...");
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, ""+ System.currentTimeMillis());
+
+        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        manager.enqueue(request);
     }
 
     private void setUserName(GroupChat model, HolderGroupChat holder) {
@@ -286,7 +344,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
         private TextView nameTv, timeTv;
         private EmojiconTextView messageTv;
         private ImageView messageIv, iV_file;
-        private CircleImageView imageViewPlay;
+        private CircleImageView imageViewPlay, civ_download_file;
         private LinearLayout linearLayoutPlay;
         private SeekBar seekBar;
 
@@ -301,6 +359,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             imageViewPlay = itemView.findViewById(R.id.imageViewPlay);
             linearLayoutPlay = itemView.findViewById(R.id.linearLayoutPlay);
             seekBar = itemView.findViewById(R.id.seekBar);
+            civ_download_file = itemView.findViewById(R.id.civ_download_file);
         }
     }
 }

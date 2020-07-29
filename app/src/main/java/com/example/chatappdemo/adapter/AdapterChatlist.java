@@ -157,7 +157,7 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
 
     class MyHolder extends RecyclerView.ViewHolder {
         CircleImageView profileIv, onlineStatusIv, seenCv;
-        TextView nameTv;
+        TextView nameTv, timeLastMess;
         EmojiconTextView lastMessageTv;
 
         public MyHolder(@NonNull View itemView) {
@@ -168,6 +168,7 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
             seenCv = itemView.findViewById(R.id.seenCv);
             nameTv = itemView.findViewById(R.id.nameTv);
             lastMessageTv = itemView.findViewById(R.id.lastMessageTv);
+            timeLastMess = itemView.findViewById(R.id.timeLastMess);
         }
     }
 

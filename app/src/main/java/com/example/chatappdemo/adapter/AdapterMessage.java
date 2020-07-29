@@ -1,12 +1,15 @@
 package com.example.chatappdemo.adapter;
 
-import android.annotation.SuppressLint;
+import android.Manifest;
+import android.app.DownloadManager;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
+import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
+import android.os.Build;
+import android.os.Environment;
 import android.os.Handler;
-import android.os.Message;
-import android.os.SystemClock;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,25 +17,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.bumptech.glide.load.DataSource;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 import com.example.chatappdemo.R;
+import com.example.chatappdemo.activity.ViewImageChatActivity;
 import com.example.chatappdemo.model.Messages;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -74,7 +71,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
     public class MessageViewHolder extends RecyclerView.ViewHolder {
         private TextView timeTv, isSeenTv;
         private EmojiconTextView MessageText;
-        private CircleImageView ProfileImage;
+        private CircleImageView ProfileImage, civ_download_file;
         private RelativeLayout messageLayout;
         private ImageView message_image, iV_file;
         private CircleImageView imageViewPlay;
@@ -93,6 +90,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             imageViewPlay = itemView.findViewById(R.id.imageViewPlay);
             linearLayoutPlay = itemView.findViewById(R.id.linearLayoutPlay);
             seekBar = itemView.findViewById(R.id.seekBar);
+            civ_download_file = itemView.findViewById(R.id.civ_download_file);
         }
     }
 
@@ -137,18 +135,54 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             } catch (Exception e) {
                 messageViewHolder.message_image.setImageResource(R.drawable.image_iv);
             }
+            //click image
+            messageViewHolder.message_image.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Intent intent = new Intent(context, ViewImageChatActivity.class);
+                    intent.putExtra("url_img", message);
+                    context.startActivity(intent);
+                }
+            });
         } else if (type.equals("text")) {
             messageViewHolder.iV_file.setVisibility(View.GONE);
             messageViewHolder.MessageText.setVisibility(View.VISIBLE);
             messageViewHolder.message_image.setVisibility(View.GONE);
             messageViewHolder.linearLayoutPlay.setVisibility(View.GONE);
             messageViewHolder.MessageText.setText(message);
+            //click to mess text
+            messageViewHolder.MessageText.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (messageViewHolder.timeTv.getVisibility() == View.GONE) {
+                        messageViewHolder.timeTv.setVisibility(View.VISIBLE);
+                    } else {
+                        messageViewHolder.timeTv.setVisibility(View.GONE);
+                    }
+                }
+            });
         } else if (type.equals("file")) {
             messageViewHolder.MessageText.setVisibility(View.VISIBLE);
             messageViewHolder.MessageText.setText(nameFile);
             messageViewHolder.iV_file.setVisibility(View.VISIBLE);
             messageViewHolder.message_image.setVisibility(View.GONE);
             messageViewHolder.linearLayoutPlay.setVisibility(View.GONE);
+            messageViewHolder.civ_download_file.setVisibility(View.VISIBLE);
+            messageViewHolder.civ_download_file.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                        if (context.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) ==
+                                 PackageManager.PERMISSION_DENIED){
+                            Toasty.error(context, "Permission Denied!", Toast.LENGTH_SHORT, true).show();
+                        }else {
+                            startDownloading(message, nameFile);
+                        }
+                    }else {
+                        startDownloading(message, nameFile);
+                    }
+                }
+            });
         } else if (type.equals("image_gif")) {
             messageViewHolder.iV_file.setVisibility(View.GONE);
             messageViewHolder.MessageText.setVisibility(View.GONE);
@@ -211,7 +245,6 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
                     messageViewHolder.seekBar.setMax(mPlayer.getDuration());
                     seekUpdation();
 
-
                     mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                         @Override
                         public void onCompletion(MediaPlayer mp) {
@@ -241,6 +274,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
 
                         }
                     });
+
                 }
 
                 Runnable runnable = new Runnable() {
@@ -259,6 +293,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
                     mHandler.postDelayed(runnable, 1000);
                 }
             });
+
         }
 
             messageViewHolder.timeTv.setText(dateTime);
@@ -267,26 +302,8 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             } catch (Exception e) {
 
             }
-            // click to mess image
-            messageViewHolder.message_image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
 
-                }
-            });
-            //click to mess text
-            messageViewHolder.MessageText.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (messageViewHolder.timeTv.getVisibility() == View.GONE) {
-                        messageViewHolder.timeTv.setVisibility(View.VISIBLE);
-                    } else {
-                        messageViewHolder.timeTv.setVisibility(View.GONE);
-                    }
-                }
-            });
-
-            // delete dialog
+            // delete message
             messageViewHolder.MessageText.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
@@ -322,6 +339,31 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
                 messageViewHolder.isSeenTv.setVisibility(View.GONE);
             }
 
+
+
+    }
+
+    private void startDownloading(String url, String nameFile) {
+        new SweetAlertDialog(context, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("Downloading!")
+                .setConfirmText("OK!")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+        DownloadManager.Request request = new DownloadManager.Request(Uri.parse(url));
+        request.setAllowedNetworkTypes(DownloadManager.Request.NETWORK_WIFI | DownloadManager.Request.NETWORK_MOBILE);
+        request.setTitle(nameFile);
+        request.setDescription("Downloading file...");
+        request.allowScanningByMediaScanner();
+        request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+        request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, ""+ System.currentTimeMillis());
+
+        DownloadManager manager = (DownloadManager) context.getSystemService(Context.DOWNLOAD_SERVICE);
+        manager.enqueue(request);
     }
 
     private void deleteMessage(int i) {

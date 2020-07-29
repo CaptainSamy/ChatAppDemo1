@@ -29,6 +29,7 @@ import com.google.firebase.iid.FirebaseInstanceId;
 
 import java.util.regex.Pattern;
 
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
 
@@ -120,15 +121,18 @@ public class SignupActivity extends AppCompatActivity {
                 @Override
                 public void onComplete(@NonNull Task<Void> task) {
                     if (task.isSuccessful()) {
-                        AlertDialog.Builder builder = new AlertDialog.Builder(SignupActivity.this);
-                        builder.setTitle("Notification").setMessage("We have sent an email to you. Please check your email!");
-                        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                onBackPressed();
-                            }
-                        });
-                        builder.show();
+                        new SweetAlertDialog(SignupActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                                .setTitleText("Notification")
+                                .setContentText("We have sent an email to you. Please check your email!")
+                                .setConfirmText("OK!")
+                                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                                    @Override
+                                    public void onClick(SweetAlertDialog sDialog) {
+                                        sDialog.dismissWithAnimation();
+                                        onBackPressed();
+                                    }
+                                })
+                                .show();
                         firebaseAuth.signOut();
                     } else {
                         String error = task.getException().getMessage();

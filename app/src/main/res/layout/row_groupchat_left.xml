@@ -2,7 +2,8 @@
 <RelativeLayout android:layout_margin="8dp"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/message_profile_image"
         android:layout_width="47dp"
@@ -12,7 +13,7 @@
     <LinearLayout
         android:layout_marginLeft="5dp"
         android:layout_marginTop="8dp"
-        android:padding="5dp"
+        android:padding="3dp"
         android:orientation="vertical"
         android:id="@+id/liner_gr"
         android:background="@drawable/receiver_messages_layout"
@@ -42,15 +43,31 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
-                android:textSize="15sp"
-                android:maxWidth="200dp"
-                android:id="@+id/messageTv"
+            <RelativeLayout
                 android:layout_below="@id/nameTv"
-                android:layout_marginLeft="8dp"
-                android:text="Message"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
+                <hani.momanii.supernova_emoji_library.Helper.EmojiconTextView
+                    android:textSize="15sp"
+                    android:maxWidth="200dp"
+                    android:id="@+id/messageTv"
+                    android:layout_marginLeft="8dp"
+                    android:text="Message"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:paddingRight="5dp"
+                    android:id="@+id/civ_download_file"
+                    app:civ_border_width="1dp"
+                    app:civ_border_color="?attr/backgroundcolor"
+                    android:visibility="gone"
+                    android:layout_centerVertical="true"
+                    android:layout_toRightOf="@id/messageTv"
+                    android:src="@drawable/download_file"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </RelativeLayout>
 
             <LinearLayout
                 android:id="@+id/linearLayoutPlay"

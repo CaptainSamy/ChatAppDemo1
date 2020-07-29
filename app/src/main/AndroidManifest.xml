@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.InformationAppActivity"></activity>
+        <activity android:name=".activity.ViewImageChatActivity"></activity>
+        <activity android:name=".activity.InformationAppActivity" />
         <activity android:name=".activity.CreateUserActivity" />
         <activity android:name=".activity.GroupEditActivity" />
         <activity android:name=".activity.InforGroupActivity" />
