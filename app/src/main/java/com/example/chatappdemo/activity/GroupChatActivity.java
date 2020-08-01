@@ -88,9 +88,8 @@ public class GroupChatActivity extends AppCompatActivity {
     String SHARED_PREFS = "codeTheme";
     private static TextView internetStatus;
     private static int SPLASH_TIME_CONNECTED = 3000;
-    private CircleImageView backGroupChat, imgGif, groupIconIv, imgMore, img_smile, startbtn, stopbtn;
+    private CircleImageView backGroupChat, imgGif, groupIconIv, imgMore, img_smile, startbtn, stopbtn, ibAddParticipant, ibInformationGroup;
     private LinearLayout bottom_linear, sendImage, sendFile, sendAudio, sendLocation, liner_record;
-    private ImageButton ibAddParticipant, ibInformationGroup;
     private TextView groupTitleTv, mRecordLabel;
     private EmojiconEditText messageEt;
     private RecyclerView groupchatRv;

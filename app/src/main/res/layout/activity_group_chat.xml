@@ -46,7 +46,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
 
-        <ImageButton
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ibAddParticipant"
             android:background="?attr/tabcolor"
             android:layout_gravity="center_vertical"
@@ -55,14 +55,14 @@
             android:layout_width="35dp"
             android:layout_height="35dp"/>
 
-        <ImageButton
+        <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/ibInformationGroup"
             android:background="?attr/tabcolor"
             android:layout_gravity="center_vertical"
             android:layout_marginRight="8dp"
             android:src="@drawable/information_icon"
-            android:layout_width="35dp"
-            android:layout_height="35dp"/>
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <TextView

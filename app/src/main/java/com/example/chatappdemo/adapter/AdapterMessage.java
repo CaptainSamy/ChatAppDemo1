@@ -69,9 +69,9 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
     }
 
     public class MessageViewHolder extends RecyclerView.ViewHolder {
-        private TextView timeTv, isSeenTv;
+        private TextView timeTv;
         private EmojiconTextView MessageText;
-        private CircleImageView ProfileImage, civ_download_file;
+        private CircleImageView ProfileImage, civ_download_file, isSeenIv;
         private RelativeLayout messageLayout;
         private ImageView message_image, iV_file;
         private CircleImageView imageViewPlay;
@@ -83,7 +83,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             MessageText = itemView.findViewById(R.id.message_text);
             ProfileImage = itemView.findViewById(R.id.message_profile_image);
             timeTv = itemView.findViewById(R.id.timeTv);
-            isSeenTv = itemView.findViewById(R.id.isSeenTv);
+            isSeenIv = itemView.findViewById(R.id.isSeenIv);
             messageLayout = itemView.findViewById(R.id.messageLayout);
             message_image = itemView.findViewById(R.id.message_image);
             iV_file = itemView.findViewById(R.id.iV_file);
@@ -300,7 +300,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             try {
                 Glide.with(context).load(imageUrl).placeholder(R.drawable.user_profile).into(messageViewHolder.ProfileImage);
             } catch (Exception e) {
-
+                messageViewHolder.ProfileImage.setImageResource(R.drawable.user_profile);
             }
 
             // delete message
@@ -331,12 +331,16 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
 
             if (i == userMessagesList.size() - 1) {
                 if (userMessagesList.get(i).isSeen()) {
-                    messageViewHolder.isSeenTv.setText("Seen");
+                    try {
+                        Glide.with(context).load(imageUrl).placeholder(R.drawable.user_profile).into(messageViewHolder.isSeenIv);
+                    }catch (Exception e){
+                        messageViewHolder.isSeenIv.setImageResource(R.drawable.user_profile);
+                    }
                 } else {
-                    messageViewHolder.isSeenTv.setText("Delivered");
+                    messageViewHolder.isSeenIv.setImageResource(R.drawable.is_seen_circle);
                 }
             } else {
-                messageViewHolder.isSeenTv.setVisibility(View.GONE);
+                messageViewHolder.isSeenIv.setVisibility(View.INVISIBLE);
             }
 
 

@@ -71,6 +71,16 @@
                 android:layout_height="wrap_content"/>
         </LinearLayout>
 
+        <TextView
+            android:text="Block"
+            android:id="@+id/tv_Block_UnBlock"
+            android:textColor="?attr/textcolor"
+            android:layout_gravity="center_vertical"
+            android:textSize="14sp"
+            android:layout_marginRight="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
 
     <TextView
@@ -98,6 +108,7 @@
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <LinearLayout
+        android:background="?attr/backgroundcolor"
         android:id="@+id/bottom_container"
         android:layout_alignParentBottom="true"
         android:orientation="vertical"
@@ -105,6 +116,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:background="?attr/cardbackground"
             android:id="@+id/bottom_linear"
             android:visibility="gone"
             android:orientation="horizontal"
@@ -212,6 +224,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/ln_chatInput"
             android:orientation="horizontal"
             android:layout_margin="8dp"
             android:gravity="center"
@@ -220,6 +233,7 @@
             android:layout_height="wrap_content">
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:background="?attr/backgroundcolor"
                 android:layout_marginLeft="5dp"
                 android:id="@+id/img_smile"
                 android:src="@drawable/smile"
@@ -227,22 +241,25 @@
                 android:layout_height="match_parent"/>
 
             <FrameLayout
+                android:background="?attr/backgroundcolor"
                 android:layout_weight="1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
+
                 <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
                     android:id="@+id/input_message"
-                    android:hint="Enter message"
-                    android:background="@drawable/bg_input_message"
-                    android:inputType="textCapSentences|textMultiLine"
+                    android:layout_width="307dp"
+                    android:layout_height="43dp"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:textColor="#000000"
-                    android:textSize="16sp"
+                    android:background="@drawable/bg_input_message"
+                    android:hint="Enter message"
+                    android:inputType="textCapSentences|textMultiLine"
                     android:maxHeight="70dp"
                     android:paddingRight="40dp"
-                    android:layout_width="match_parent"
-                    android:layout_height="40dp"/>
+                    android:textColor="?attr/tintcolor"
+                    android:textColorHint="?attr/tintcolor"
+                    android:textSize="18sp" />
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_marginRight="12dp"
@@ -254,6 +271,7 @@
             </FrameLayout>
 
             <de.hdodenhof.circleimageview.CircleImageView
+                android:background="?attr/backgroundcolor"
                 android:id="@+id/imgMore"
                 android:layout_gravity="center"
                 android:src="@drawable/add"
@@ -262,7 +280,39 @@
 
         </LinearLayout>
 
+        <androidx.cardview.widget.CardView
+            android:id="@+id/cv_blockUser"
+            app:cardCornerRadius="10dp"
+            android:background="?attr/cardbackground"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:layout_gravity="center_horizontal"
+                android:orientation="vertical"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/tv_View_Block_Unblock"
+                    android:layout_gravity="center_horizontal"
+                    android:padding="8dp"
+                    android:textColor="#F44336"
+                    android:textSize="20dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:layout_gravity="center_horizontal"
+                    android:text="You cannot continue chatting with them."
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
         <LinearLayout
+            android:background="?attr/cardbackground"
             android:id="@+id/liner_record"
             android:visibility="gone"
             android:orientation="vertical"

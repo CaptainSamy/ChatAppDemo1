@@ -32,6 +32,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
@@ -102,10 +103,11 @@ public class ChatActivity extends AppCompatActivity {
     private static TextView internetStatus;
     private static int SPLASH_TIME_CONNECTED = 3000;
     private String messReceiverId, messReceiverImage, messReceiverName, messSenderId;
-    private CircleImageView imgMore, imgGif, imgProfileFriend, back_user_chat, imgSmile, onlineStatusIv, startbtn, stopbtn, blockIv;
-    private LinearLayout bottom_linear, sendImage, sendFile, sendAudio, sendLocation, liner_record;
-    private TextView name_user_chat, userLastSeen, mRecordLabel;
+    private CircleImageView imgMore, imgGif, imgProfileFriend, back_user_chat, imgSmile, onlineStatusIv, startbtn, stopbtn;
+    private LinearLayout bottom_linear, ln_chatInput, sendImage, sendFile, sendAudio, sendLocation, liner_record;
+    private TextView name_user_chat, userLastSeen, mRecordLabel, tv_Block_UnBlock, tv_View_Block_Unblock;
     private EmojiconEditText messageInput;
+    private CardView cv_blockUser;
     private FirebaseAuth firebaseAuth;
     private FirebaseDatabase firebaseDatabase;
     private DatabaseReference RootRef;
@@ -182,6 +184,20 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        tv_Block_UnBlock = findViewById(R.id.tv_Block_UnBlock);
+        cv_blockUser = findViewById(R.id.cv_blockUser);
+        tv_View_Block_Unblock = findViewById(R.id.tv_View_Block_Unblock);
+        tv_Block_UnBlock.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (isBlocked){
+                    unBlockUser();
+                }else {
+                    blockUser();
+                }
+            }
+        });
+
         imgProfileFriend = findViewById(R.id.image_user_chat);
         name_user_chat = findViewById(R.id.name_user_chat);
         sendImage = findViewById(R.id.sendImage);
@@ -189,6 +205,7 @@ public class ChatActivity extends AppCompatActivity {
         onlineStatusIv = findViewById(R.id.onlineStatusIv);
         userLastSeen = findViewById(R.id.user_last_seen);
         userMessageList = (RecyclerView) findViewById(R.id.messager_list_of_users);
+        ln_chatInput = findViewById(R.id.ln_chatInput);
 
         swipeRefreshLayout = findViewById(R.id.swiperefreshlayout);
         swipeRefreshLayout.setColorSchemeResources(R.color.orange, R.color.green, R.color.blue);
@@ -490,8 +507,147 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        checkIsBlocked();
         readMessages();
         seenMessage();
+    }
+
+    private void checkHisBlocked() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Contacts");
+        ref.child(messReceiverId).child(messSenderId).child("BlockedUsers").orderByChild("uid").equalTo(messSenderId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot ds: snapshot.getChildren()){
+                            if (ds.exists()){
+                                ln_chatInput.setVisibility(View.GONE);
+                                cv_blockUser.setVisibility(View.VISIBLE);
+                                tv_View_Block_Unblock.setText(messReceiverName + " has blocked you");
+                                isBlocked = true;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+    }
+
+    private void unBlockUser() {
+        new SweetAlertDialog(ChatActivity.this, SweetAlertDialog.NORMAL_TYPE)
+                .setTitleText("Unblock " + messReceiverName + "?")
+                .setConfirmText("Unblock!")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Contacts");
+                        ref.child(messSenderId).child(messReceiverId).child("BlockedUsers").orderByChild("uid").equalTo(messReceiverId)
+                                .addListenerForSingleValueEvent(new ValueEventListener() {
+                                    @Override
+                                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                        for (DataSnapshot ds: snapshot.getChildren()) {
+                                            if (ds.exists()){
+                                                ds.getRef().removeValue()
+                                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                                            @Override
+                                                            public void onSuccess(Void aVoid) {
+                                                                tv_Block_UnBlock.setText("Block");
+                                                                ln_chatInput.setVisibility(View.VISIBLE);
+                                                                cv_blockUser.setVisibility(View.GONE);
+                                                                Toasty.success(ChatActivity.this, "Unblocked Successfully!", Toast.LENGTH_SHORT, true).show();
+                                                            }
+                                                        })
+                                                        .addOnFailureListener(new OnFailureListener() {
+                                                            @Override
+                                                            public void onFailure(@NonNull Exception e) {
+                                                                Toasty.error(ChatActivity.this, ""+ e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                                                            }
+                                                        });
+                                            }
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onCancelled(@NonNull DatabaseError error) {
+
+                                    }
+                                });
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+    }
+
+    private void blockUser() {
+        new SweetAlertDialog(ChatActivity.this, SweetAlertDialog.WARNING_TYPE)
+                .setTitleText("Block " + messReceiverName + "?")
+                .setContentText("You will no longer receive messages from this person!")
+                .setConfirmText("Block")
+                .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        HashMap<String, String> hashMap = new HashMap<>();
+                        hashMap.put("uid",messReceiverId);
+                        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Contacts");
+                        ref.child(messSenderId).child(messReceiverId).child("BlockedUsers").child(messReceiverId).setValue(hashMap)
+                                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                    @Override
+                                    public void onSuccess(Void aVoid) {
+                                        tv_Block_UnBlock.setText("Unblock");
+                                        ln_chatInput.setVisibility(View.GONE);
+                                        cv_blockUser.setVisibility(View.VISIBLE);
+                                        tv_View_Block_Unblock.setText("You blocked " + messReceiverName);
+                                        Toasty.success(ChatActivity.this, "Blocked Successfully!", Toast.LENGTH_SHORT, true).show();
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Toasty.error(ChatActivity.this, ""+ e.getMessage(), Toast.LENGTH_SHORT, true).show();
+                                    }
+                                });
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .setCancelButton("Cancel", new SweetAlertDialog.OnSweetClickListener() {
+                    @Override
+                    public void onClick(SweetAlertDialog sDialog) {
+                        sDialog.dismissWithAnimation();
+                    }
+                })
+                .show();
+    }
+
+    private void checkIsBlocked() {
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Contacts");
+        ref.child(messSenderId).child(messReceiverId).child("BlockedUsers").orderByChild("uid").equalTo(messReceiverId)
+                .addValueEventListener(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        for (DataSnapshot ds: snapshot.getChildren()){
+                            if (ds.exists()){
+                                ln_chatInput.setVisibility(View.GONE);
+                                cv_blockUser.setVisibility(View.VISIBLE);
+                                tv_Block_UnBlock.setText("Unblock");
+                                tv_View_Block_Unblock.setText("You blocked " + messReceiverName);
+                                isBlocked = true;
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
     }
 
     @Override
@@ -1194,6 +1350,7 @@ public class ChatActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         checkOnlineStatus("online");
+        checkHisBlocked();
     }
 
     @Override

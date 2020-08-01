@@ -7,9 +7,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/message_profile_image"
-        android:layout_width="47dp"
-        android:layout_height="47dp"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
         android:src="@drawable/user_profile" />
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/isSeenIv"
+        android:visibility="gone"
+        android:textColor="?attr/tintcolor"
+        android:src="@drawable/is_seen_circle"
+        android:layout_alignBottom="@id/liner_chat"
+        android:layout_width="16dp"
+        android:layout_height="16dp"/>
 
     <LinearLayout
         android:padding="5dp"
@@ -111,14 +120,5 @@
         android:layout_height="wrap_content"
         android:textSize="12sp"
         android:layout_marginLeft="5dp" />
-
-    <TextView
-        android:id="@+id/isSeenTv"
-        android:textAlignment="textEnd"
-        android:text="Delivered"
-        android:gravity="end"
-        android:visibility="gone"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
 
 </RelativeLayout>

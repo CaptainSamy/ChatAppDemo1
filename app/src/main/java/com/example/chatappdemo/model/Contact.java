@@ -2,11 +2,12 @@ package com.example.chatappdemo.model;
 
 public class Contact {
     private String Contact, imgAnhBia, imgAnhDD, name, status, gioiTinh, phone, onlineStatus, typingTo, uid;
+    private boolean isBlocked = false;
 
     public Contact() {
     }
 
-    public Contact(String contact, String imgAnhBia, String imgAnhDD, String name, String status, String gioiTinh, String phone, String onlineStatus, String typingTo, String uid) {
+    public Contact(String contact, String imgAnhBia, String imgAnhDD, String name, String status, String gioiTinh, String phone, String onlineStatus, String typingTo, String uid, boolean isBlocked) {
         Contact = contact;
         this.imgAnhBia = imgAnhBia;
         this.imgAnhDD = imgAnhDD;
@@ -17,6 +18,7 @@ public class Contact {
         this.onlineStatus = onlineStatus;
         this.typingTo = typingTo;
         this.uid = uid;
+        this.isBlocked = isBlocked;
     }
 
     public String getContact() {
@@ -97,5 +99,13 @@ public class Contact {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
     }
 }
