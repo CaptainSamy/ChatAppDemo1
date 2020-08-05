@@ -52,7 +52,7 @@ import static android.view.View.GONE;
 public class MainActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
-    private static TextView internetStatus;
+    private static TextView internet_status_on, internet_status_off;
     private static int SPLASH_TIME_CONNECTED = 3000;
     private BottomNavigationView bottomNavigationView;
     private CircleImageView profile_image, user_on_off_chat;
@@ -73,7 +73,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         txtTitle = findViewById(R.id.txt_Title);
         user_on_off_chat = findViewById(R.id.user_on_off_chat);
-        internetStatus = findViewById(R.id.internet_status);
+
+        internet_status_on = findViewById(R.id.internet_status_on);
+        internet_status_off = findViewById(R.id.internet_status_off);
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
@@ -109,19 +111,17 @@ public class MainActivity extends AppCompatActivity {
     public void changeTextStatus(boolean isConnected) {
         // Change status according to boolean value
         if (isConnected) {
-            internetStatus.setVisibility(View.VISIBLE);
-            internetStatus.setText("Connected");
-            internetStatus.setTextColor(Color.parseColor("#7ED321"));
+            internet_status_on.setVisibility(View.VISIBLE);
+            internet_status_off.setVisibility(View.GONE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    internetStatus.setVisibility(View.GONE);
+                    internet_status_on.setVisibility(View.GONE);
                 }
             }, SPLASH_TIME_CONNECTED);
         } else {
-            internetStatus.setVisibility(View.VISIBLE);
-            internetStatus.setText("Disconnected");
-            internetStatus.setTextColor(Color.parseColor("#ff0000"));
+            internet_status_off.setVisibility(View.VISIBLE);
+            internet_status_on.setVisibility(GONE);
         }
     }
 
@@ -227,15 +227,12 @@ public class MainActivity extends AppCompatActivity {
                         txtTitle.setText(userName);
                         try {
                             Glide.with(MainActivity.this).load(userImage).placeholder(R.drawable.user_profile).into(profile_image);
-                            //pDialog.dismiss();
                             user_on_off_chat.setVisibility(View.VISIBLE);
                         }catch (Exception e) {
                             profile_image.setImageResource(R.drawable.user_profile);
-                            //pDialog.dismiss();
                             user_on_off_chat.setVisibility(View.VISIBLE);
                         }
                     } else {
-                        //pDialog.dismiss();
                         Intent intent = new Intent(MainActivity.this, CreateUserActivity.class);
                         startActivity(intent);
                     }
@@ -267,6 +264,18 @@ public class MainActivity extends AppCompatActivity {
     }
     // end notification
 
+    private void checkOnlineStatus(String status){
+        try {
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("onlineStatus", status);
+            dbRef.updateChildren(hashMap);
+        }catch (Exception e){
+
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -274,15 +283,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        MyApplication.activityPaused();// On Pause notify the Application
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+        checkOnlineStatus("online");
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
-        MyApplication.activityResumed();// On Resume notify the Application
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        checkOnlineStatus(timestamp);
     }
-
 }

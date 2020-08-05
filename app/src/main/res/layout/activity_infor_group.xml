@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.core.widget.NestedScrollView
+    android:background="?attr/backgroundcolor"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,6 +9,7 @@
     tools:context=".activity.InforGroupActivity">
 
     <LinearLayout
+        android:background="?attr/backgroundcolor"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -87,6 +89,7 @@
         </RelativeLayout>
 
         <TextView
+            android:background="?attr/cardbackground"
             android:drawableLeft="@drawable/edit_icon"
             android:gravity="center_vertical"
             android:drawablePadding="10dp"
@@ -103,6 +106,7 @@
             android:layout_height="1dp"/>
 
         <TextView
+            android:background="?attr/cardbackground"
             android:drawableLeft="@drawable/add_participant_icon"
             android:gravity="center_vertical"
             android:drawablePadding="10dp"
@@ -119,6 +123,7 @@
             android:layout_height="1dp"/>
 
         <TextView
+            android:background="?attr/cardbackground"
             android:drawableLeft="@drawable/delete_group_icon"
             android:gravity="center_vertical"
             android:drawablePadding="10dp"
@@ -135,6 +140,7 @@
             android:layout_height="1dp"/>
 
         <TextView
+            android:background="?attr/cardbackground"
             android:drawableLeft="@drawable/participant_group_icon"
             android:gravity="center_vertical"
             android:drawablePadding="10dp"
@@ -146,6 +152,7 @@
             android:layout_height="wrap_content"/>
 
         <androidx.recyclerview.widget.RecyclerView
+            android:background="?attr/backgroundcolor"
             android:id="@+id/participantsRv"
             app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
             tools:listitem="@layout/row_panticipant_add"

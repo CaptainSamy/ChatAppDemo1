@@ -46,12 +46,16 @@ final class GifSearchAdapter extends RecyclerView.Adapter<GifSearchAdapter.GifVi
     public void onBindViewHolder(GifViewHolder holder, int position) {
         final Gif gif = mData.get(position);
         if (gif != null) {
-            Glide.with(mContext)
-                    .asGif()
-                    .load(gif.getPreviewGifUrl())
-                    .transition(new DrawableTransitionOptions().crossFade())
-                    .centerCrop()
-                    .into(holder.gifIv);
+            try {
+                Glide.with(mContext)
+                        .asGif()
+                        .load(gif.getPreviewGifUrl())
+                        .transition(new DrawableTransitionOptions().crossFade())
+                        .centerCrop()
+                        .into(holder.gifIv);
+            }catch (Exception e){
+
+            }
 
             holder.gifIv.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -43,68 +43,85 @@
             android:layout_height="wrap_content">
 
             <com.google.android.material.textfield.TextInputLayout
-                app:errorEnabled="true"
+                style="@style/AppTextField"
                 android:id="@+id/old_email"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                app:boxBackgroundMode="outline"
+                app:errorEnabled="true">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:background="@drawable/edit_style"
-                    android:textColorHint="#ffffff"
-                    android:textColor="#ffffff"
-                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="8dp"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"/>
-
+                    android:maxLines="1"
+                    android:textColorHint="?attr/tintcolor"
+                    android:textColor="?attr/tintcolor" />
             </com.google.android.material.textfield.TextInputLayout>
+
             <com.google.android.material.textfield.TextInputLayout
-                app:errorEnabled="true"
+                style="@style/AppTextField"
                 android:id="@+id/new_email"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                app:boxBackgroundMode="outline"
+                app:errorEnabled="true">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:background="@drawable/edit_style"
-                    android:textColorHint="#ffffff"
-                    android:textColor="#ffffff"
-                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="8dp"
                     android:hint="New Email"
                     android:inputType="textEmailAddress"
-                    android:layout_width="match_parent"
-                    android:layout_height="45dp"/>
+                    android:maxLines="1"
+                    android:textColorHint="?attr/tintcolor"
+                    android:textColor="?attr/tintcolor" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-            </com.google.android.material.textfield.TextInputLayout>
             <com.google.android.material.textfield.TextInputLayout
+                style="@style/AppTextField"
                 android:id="@+id/password"
-                app:passwordToggleEnabled="true"
-                app:errorEnabled="true"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                app:boxBackgroundMode="outline"
+                app:errorEnabled="true"
+                app:passwordToggleEnabled="true">
                 <com.google.android.material.textfield.TextInputEditText
-                    android:background="@drawable/edit_style"
-                    android:textColorHint="#ffffff"
-                    android:textColor="#ffffff"
-                    android:maxLines="1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
                     android:hint="Password"
+                    android:drawablePadding="8dp"
                     android:inputType="textPassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
-            </com.google.android.material.textfield.TextInputLayout>
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/newPassword"
-                app:passwordToggleEnabled="true"
-                app:errorEnabled="true"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-                <com.google.android.material.textfield.TextInputEditText
-                    android:background="@drawable/edit_style"
-                    android:textColorHint="#ffffff"
-                    android:textColor="#ffffff"
                     android:maxLines="1"
-                    android:hint="New Password"
-                    android:inputType="textPassword"
+                    android:textColorHint="?attr/tintcolor"
+                    android:textColor="?attr/tintcolor" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/AppTextField"
+                android:id="@+id/newPassword"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                app:boxBackgroundMode="outline"
+                app:errorEnabled="true"
+                app:passwordToggleEnabled="true">
+                <com.google.android.material.textfield.TextInputEditText
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:hint="New Password"
+                    android:drawablePadding="8dp"
+                    android:inputType="textPassword"
+                    android:maxLines="1"
+                    android:textColorHint="?attr/tintcolor"
+                    android:textColor="?attr/tintcolor" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -113,16 +130,17 @@
                 android:layout_marginTop="16dp"
                 android:text="Confirm"
                 app:icon="@drawable/refresh"
-                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
+
             <com.google.android.material.button.MaterialButton
                 android:layout_gravity="center_horizontal"
                 android:id="@+id/changePass"
                 android:layout_marginTop="16dp"
                 android:text="Confirm"
                 app:icon="@drawable/refresh"
-                style="@style/Widget.MaterialComponents.Button.TextButton.Icon"
+                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
@@ -133,25 +151,33 @@
                 android:layout_height="30dp"
                 android:visibility="gone" />
 
-            <com.google.android.material.button.MaterialButton
-                style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                android:id="@+id/change_email_button"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_marginTop="20dp"
                 android:layout_gravity="center_horizontal"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Đổi email"
-                android:textStyle="bold" />
+                android:orientation="horizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <com.google.android.material.button.MaterialButton
+                    android:layout_marginRight="16dp"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                    android:id="@+id/change_email_button"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="change email"
+                    android:textStyle="bold" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/change_password_button"
-                style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
-                android:layout_width="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:text="Đổi mật khẩu"
-                android:textStyle="bold" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/change_password_button"
+                    style="@style/Widget.MaterialComponents.Button.UnelevatedButton"
+                    android:layout_width="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="change Pass"
+                    android:textStyle="bold" />
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

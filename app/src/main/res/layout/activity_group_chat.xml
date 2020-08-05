@@ -68,13 +68,25 @@
     <TextView
         android:visibility="gone"
         android:layout_below="@id/liner"
-        android:id="@+id/internet_status"
+        android:id="@+id/internet_status_on"
+        android:text="Connected"
+        android:textColor="#7ED321"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:visibility="gone"
+        android:layout_below="@id/liner"
+        android:text="Disconnected"
+        android:textColor="#ff0000"
+        android:id="@+id/internet_status_off"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"/>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:layout_below="@id/internet_status"
+        android:layout_below="@id/liner"
         android:layout_above="@id/bottom_container"
         android:id="@+id/swiperefreshlayout"
         android:layout_width="match_parent"
@@ -224,17 +236,20 @@
                 android:layout_height="wrap_content">
                 <hani.momanii.supernova_emoji_library.Helper.EmojiconEditText
                     android:id="@+id/messageEt"
+                    android:layout_gravity="center_vertical"
                     android:hint="Enter message"
                     android:background="@drawable/bg_input_message"
                     android:inputType="textCapSentences|textMultiLine"
                     android:layout_marginLeft="8dp"
                     android:layout_marginRight="8dp"
-                    android:textColor="#000000"
-                    android:textSize="16sp"
+                    android:textColor="?attr/tintcolor"
+                    android:textColorHint="?attr/tintcolor"
+                    android:textSize="18sp"
                     android:maxHeight="70dp"
                     android:paddingRight="32dp"
+                    android:paddingLeft="5dp"
                     android:layout_width="match_parent"
-                    android:layout_height="40dp"/>
+                    android:layout_height="wrap_content"/>
 
                 <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_marginRight="12dp"

@@ -19,11 +19,17 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.chatappdemo.R;
+import com.example.chatappdemo.internet.MyApplication;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -55,21 +61,25 @@ public class ViewImageChatActivity extends AppCompatActivity {
         });
         Intent intent = getIntent();
         url_img = intent.getStringExtra("url_img");
-        Glide.with(this).load(url_img).into(iv_imgChat);
-        fab_download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Glide.with(ViewImageChatActivity.this)
-                        .asBitmap()
-                        .load(url_img)
-                        .into(new SimpleTarget<Bitmap>() {
-                            @Override
-                            public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
-                                saveImage(resource);
-                            }
-                        });
-            }
-        });
+        try {
+            Glide.with(this).load(url_img).into(iv_imgChat);
+            fab_download.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Glide.with(ViewImageChatActivity.this)
+                            .asBitmap()
+                            .load(url_img)
+                            .into(new SimpleTarget<Bitmap>() {
+                                @Override
+                                public void onResourceReady(@NonNull Bitmap resource, @Nullable Transition<? super Bitmap> transition) {
+                                    saveImage(resource);
+                                }
+                            });
+                }
+            });
+        }catch (Exception e){
+
+        }
     }
 
     private String saveImage(Bitmap image) {
@@ -106,5 +116,32 @@ public class ViewImageChatActivity extends AppCompatActivity {
         Uri contentUri = Uri.fromFile(f);
         mediaScanIntent.setData(contentUri);
         sendBroadcast(mediaScanIntent);
+    }
+
+    private void checkOnlineStatus(String status){
+        try {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("onlineStatus", status);
+            dbRef.updateChildren(hashMap);
+        }catch (Exception e){
+
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+        checkOnlineStatus("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        checkOnlineStatus(timestamp);
     }
 }

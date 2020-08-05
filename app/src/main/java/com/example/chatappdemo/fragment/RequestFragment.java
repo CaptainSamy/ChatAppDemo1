@@ -34,6 +34,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import de.hdodenhof.circleimageview.CircleImageView;
@@ -113,7 +114,11 @@ public class RequestFragment extends Fragment {
                                             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                                 if (dataSnapshot.hasChild("imgAnhDD")) {
                                                     requestUserAnhDD = dataSnapshot.child("imgAnhDD").getValue().toString();
-                                                    Glide.with(getActivity()).load(requestUserAnhDD).placeholder(R.drawable.user_profile).into(requestsViewHolder.profileImage);
+                                                    try {
+                                                        Glide.with(getActivity()).load(requestUserAnhDD).placeholder(R.drawable.user_profile).into(requestsViewHolder.profileImage);
+                                                    }catch (Exception e){
+
+                                                    }
                                                 }
                                                 requestUserName = dataSnapshot.child("name").getValue().toString();
                                                 requestUserStatus = dataSnapshot.child("status").getValue().toString();

@@ -46,6 +46,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
+        android:background="?attr/backgroundcolor"
         android:layout_below="@id/liner"
         android:id="@+id/usersRv"
         tools:listitem="@layout/row_panticipant_add"

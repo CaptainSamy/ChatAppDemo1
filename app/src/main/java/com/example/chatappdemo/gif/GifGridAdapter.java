@@ -60,12 +60,16 @@ final class GifGridAdapter extends ArrayAdapter<Gif> {
 
         final Gif gif = getItem(position);
         if (gif != null) {
-            Glide.with(mContext)
-                    .asGif()
-                    .load(gif.getPreviewGifUrl())
-                    .transition(new DrawableTransitionOptions().crossFade())
-                    .centerCrop()
-                    .into(holder.gifIv);
+            try {
+                Glide.with(mContext)
+                        .asGif()
+                        .load(gif.getPreviewGifUrl())
+                        .transition(new DrawableTransitionOptions().crossFade())
+                        .centerCrop()
+                        .into(holder.gifIv);
+            }catch (Exception e){
+
+            }
 
             holder.gifIv.setOnClickListener(new View.OnClickListener() {
                 @Override

@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
+import com.example.chatappdemo.internet.MyApplication;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -24,6 +25,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -192,7 +195,11 @@ public class SettingActivity extends AppCompatActivity {
                             String retrieveUserName = dataSnapshot.child("name").getValue().toString();
 
                             user_Name.setText(retrieveUserName);
-                            Glide.with(SettingActivity.this).load(retrieveImage).into(userProfileImage);
+                            try {
+                                Glide.with(SettingActivity.this).load(retrieveImage).placeholder(R.drawable.user_profile).into(userProfileImage);
+                            }catch (Exception e) {
+                                userProfileImage.setImageResource(R.drawable.user_profile);
+                            }
                         }
                             String retrieveUserName = dataSnapshot.child("name").getValue().toString();
                             user_Name.setText(retrieveUserName);
@@ -205,10 +212,37 @@ public class SettingActivity extends AppCompatActivity {
                 });
     }
 
+    private void checkOnlineStatus(String status){
+        try {
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("onlineStatus", status);
+            dbRef.updateChildren(hashMap);
+        }catch (Exception e){
+
+        }
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
         firebaseAuth.addAuthStateListener(authStateListener);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+        checkOnlineStatus("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        checkOnlineStatus(timestamp);
     }
 
     @Override

@@ -306,15 +306,19 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
                             String imgDD = "" + ds.child("imgAnhDD").getValue();
 
                             holder.nameTv.setText(name);
-                            Glide.with(context)
-                                    .load(imgDD)
-                                    .placeholder(R.drawable.user_profile)
-                                    .apply(new RequestOptions()
-                                            .transform(new RoundedCorners(50))
-                                            .error(R.drawable.image_iv)
-                                            .skipMemoryCache(true)
-                                            .diskCacheStrategy(DiskCacheStrategy.NONE))
-                                    .into(holder.message_profile_image);
+                            try {
+                                Glide.with(context)
+                                        .load(imgDD)
+                                        .placeholder(R.drawable.user_profile)
+                                        .apply(new RequestOptions()
+                                                .transform(new RoundedCorners(50))
+                                                .error(R.drawable.image_iv)
+                                                .skipMemoryCache(true)
+                                                .diskCacheStrategy(DiskCacheStrategy.NONE))
+                                        .into(holder.message_profile_image);
+                            }catch (Exception e){
+
+                            }
                         }
                     }
 

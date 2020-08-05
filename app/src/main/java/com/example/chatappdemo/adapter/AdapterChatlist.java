@@ -20,8 +20,12 @@ import com.example.chatappdemo.model.User;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
 import java.util.List;
@@ -85,11 +89,26 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
             holder.profileIv.setImageResource(R.drawable.user_profile);
         }
 
-        if (userList.get(position).getOnlineStatus().equals("online")) {
-            holder.onlineStatusIv.setVisibility(View.VISIBLE);
-        } else {
-            holder.onlineStatusIv.setVisibility(View.INVISIBLE);
-        }
+        DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference("Users");
+        Query query = RootRef.orderByChild("uid").equalTo(userList.get(position).getUid());
+        query.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot ds: snapshot.getChildren()){
+                    String onlineStatus = ds.child("onlineStatus").getValue().toString();
+                    if (onlineStatus.equals("online")) {
+                        holder.onlineStatusIv.setVisibility(View.VISIBLE);
+                    }else {
+                        holder.onlineStatusIv.setVisibility(View.GONE);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
 
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

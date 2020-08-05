@@ -30,6 +30,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.HashMap;
@@ -104,7 +105,11 @@ public class ContactsFragment extends Fragment {
                                 if (dataSnapshot.exists()) {
                                     if (dataSnapshot.hasChild("imgAnhDD")) {
                                         userImage = dataSnapshot.child("imgAnhDD").getValue().toString();
-                                        Glide.with(getActivity()).load(userImage).placeholder(R.drawable.user_profile).into(contactsViewHolder.profileImage);
+                                        try {
+                                            Glide.with(getActivity()).load(userImage).placeholder(R.drawable.user_profile).into(contactsViewHolder.profileImage);
+                                        }catch (Exception e){
+
+                                        }
                                     }
 
                                     final String userName = dataSnapshot.child("name").getValue().toString();
@@ -141,6 +146,26 @@ public class ContactsFragment extends Fragment {
                                                 }
                                             });
 
+                                    DatabaseReference RootRef = FirebaseDatabase.getInstance().getReference("Users");
+                                    Query query = RootRef.orderByChild("uid").equalTo(user.getUid());
+                                    query.addValueEventListener(new ValueEventListener() {
+                                        @Override
+                                        public void onDataChange(@NonNull DataSnapshot snapshot) {
+                                            for (DataSnapshot ds: snapshot.getChildren()){
+                                                String onlineStatus = ds.child("onlineStatus").getValue().toString();
+                                                if (onlineStatus.equals("online")) {
+                                                    contactsViewHolder.onlineIcon.setVisibility(View.VISIBLE);
+                                                }else {
+                                                    contactsViewHolder.onlineIcon.setVisibility(View.GONE);
+                                                }
+                                            }
+                                        }
+
+                                        @Override
+                                        public void onCancelled(@NonNull DatabaseError error) {
+
+                                        }
+                                    });
 
                                     contactsViewHolder.tv_username.setText(userName);
                                     contactsViewHolder.tv_status_item.setText(userStatus);

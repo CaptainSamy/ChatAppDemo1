@@ -21,11 +21,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.chatappdemo.R;
+import com.example.chatappdemo.internet.MyApplication;
 import com.example.chatappdemo.model.FindFriend;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import es.dmoral.toasty.Toasty;
@@ -121,7 +126,11 @@ public class SearchFriendActivity extends AppCompatActivity {
                     @Override
                     protected void onBindViewHolder(@NonNull FindFriendViewHolder findFriendViewHolder, final int i, @NonNull FindFriend findFriend) {
                         findFriendViewHolder.tv_username.setText(findFriend.getName());
-                        Glide.with(SearchFriendActivity.this).load(findFriend.getImgAnhDD()).placeholder(R.drawable.user_profile).into(findFriendViewHolder.profileImage);
+                        try {
+                            Glide.with(SearchFriendActivity.this).load(findFriend.getImgAnhDD()).placeholder(R.drawable.user_profile).into(findFriendViewHolder.profileImage);
+                        }catch (Exception e){
+
+                        }
 
                         findFriendViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -156,5 +165,32 @@ public class SearchFriendActivity extends AppCompatActivity {
             profileImage = (CircleImageView) itemView.findViewById(R.id.user_profile);
             img_On_Off = (CircleImageView) itemView.findViewById(R.id.user_on_off);
         }
+    }
+
+    private void checkOnlineStatus(String status){
+        try {
+            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("onlineStatus", status);
+            dbRef.updateChildren(hashMap);
+        }catch (Exception e){
+
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MyApplication.activityResumed();
+        checkOnlineStatus("online");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        MyApplication.activityPaused();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        checkOnlineStatus(timestamp);
     }
 }

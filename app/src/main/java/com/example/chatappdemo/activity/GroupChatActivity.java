@@ -54,6 +54,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -82,11 +83,13 @@ import hani.momanii.supernova_emoji_library.Helper.EmojiconEditText;
 
 import static android.Manifest.permission.RECORD_AUDIO;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.view.View.GONE;
 
 public class GroupChatActivity extends AppCompatActivity {
     int themeIdcurrent;
     String SHARED_PREFS = "codeTheme";
-    private static TextView internetStatus;
+
+    private static TextView internet_status_on, internet_status_off;
     private static int SPLASH_TIME_CONNECTED = 3000;
     private CircleImageView backGroupChat, imgGif, groupIconIv, imgMore, img_smile, startbtn, stopbtn, ibAddParticipant, ibInformationGroup;
     private LinearLayout bottom_linear, sendImage, sendFile, sendAudio, sendLocation, liner_record;
@@ -142,7 +145,8 @@ public class GroupChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_chat);
 
-        internetStatus = findViewById(R.id.internet_status);
+        internet_status_on = findViewById(R.id.internet_status_on);
+        internet_status_off = findViewById(R.id.internet_status_off);
         ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
@@ -465,19 +469,17 @@ public class GroupChatActivity extends AppCompatActivity {
     public void changeTextStatus(boolean isConnected) {
         // Change status according to boolean value
         if (isConnected) {
-            internetStatus.setVisibility(View.VISIBLE);
-            internetStatus.setText("Connected");
-            internetStatus.setTextColor(Color.parseColor("#7ED321"));
+            internet_status_on.setVisibility(View.VISIBLE);
+            internet_status_off.setVisibility(View.GONE);
             new Handler().postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    internetStatus.setVisibility(View.GONE);
+                    internet_status_on.setVisibility(View.GONE);
                 }
             }, SPLASH_TIME_CONNECTED);
         } else {
-            internetStatus.setVisibility(View.VISIBLE);
-            internetStatus.setText("Disconnected");
-            internetStatus.setTextColor(Color.parseColor("#ff0000"));
+            internet_status_off.setVisibility(View.VISIBLE);
+            internet_status_on.setVisibility(GONE);
         }
     }
 
@@ -872,15 +874,30 @@ public class GroupChatActivity extends AppCompatActivity {
                 });
     }
 
+    private void checkOnlineStatus(String status){
+        try {
+            FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+            DatabaseReference dbRef = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
+            HashMap<String, Object> hashMap = new HashMap<>();
+            hashMap.put("onlineStatus", status);
+            dbRef.updateChildren(hashMap);
+        }catch (Exception e){
+
+        }
+    }
+
     @Override
     protected void onPause() {
         super.onPause();
-        MyApplication.activityPaused();// On Pause notify the Application
+        MyApplication.activityPaused();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        checkOnlineStatus(timestamp);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        MyApplication.activityResumed();// On Resume notify the Application
+        MyApplication.activityResumed();
+        checkOnlineStatus("online");
     }
 }

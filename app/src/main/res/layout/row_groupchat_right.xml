@@ -93,7 +93,7 @@
         android:layout_below="@id/liner_gr"
         android:layout_alignParentRight="true"
         android:id="@+id/messageIv"
-        android:scaleType="fitXY"
+        android:scaleType="centerCrop"
         android:src="@drawable/image_iv"
         android:maxHeight="400dp"
         android:minHeight="150dp"

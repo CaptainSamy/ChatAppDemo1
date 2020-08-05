@@ -139,7 +139,11 @@ public class AdapterGroupList extends RecyclerView.Adapter<AdapterGroupList.Hold
                                         public void onDataChange(@NonNull DataSnapshot snapshot) {
                                             for (DataSnapshot ds: snapshot.getChildren()) {
                                                 String imgDD = ""+ds.child("imgAnhDD").getValue();
-                                                Glide.with(context).load(imgDD).placeholder(R.drawable.user_profile).into(holder.imgDDuser1);
+                                                try {
+                                                    Glide.with(context).load(imgDD).placeholder(R.drawable.user_profile).into(holder.imgDDuser1);
+                                                }catch (Exception e){
+
+                                                }
                                             }
                                         }
 

@@ -20,10 +20,7 @@ public class InternetConnector_Receiver extends BroadcastReceiver {
         try {
 
             boolean isVisible = MyApplication.isActivityVisible();// Check if
-            // activity
-            // is
-            // visible
-            // or not
+
             Log.i("Activity is Visible ", "Is activity visible : " + isVisible);
 
             // If it is visible then trigger the task else do nothing
