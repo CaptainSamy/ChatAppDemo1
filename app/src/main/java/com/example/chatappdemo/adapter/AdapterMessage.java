@@ -5,6 +5,8 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -61,6 +63,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
     private int lastProgress = 0;
     private Handler mHandler = new Handler();
     private boolean isPlaying = false;
+    private List<Address> addresses;
 
     public AdapterMessage(List<Messages> userMessagesList, Context context, String imageUrl) {
         this.userMessagesList = userMessagesList;
@@ -115,6 +118,8 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
         String timeStamp = userMessagesList.get(i).getTimeStamp();
         String type = userMessagesList.get(i).getType();
         String nameFile = userMessagesList.get(i).getNameFile();
+        String lat = userMessagesList.get(i).getLatitude();
+        String lng = userMessagesList.get(i).getLongitude();
 
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(Long.parseLong(timeStamp));
@@ -150,6 +155,7 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             messageViewHolder.message_image.setVisibility(View.GONE);
             messageViewHolder.linearLayoutPlay.setVisibility(View.GONE);
             messageViewHolder.MessageText.setText(message);
+            messageViewHolder.MessageText.setEmojiconSize(80);
             //click to mess text
             messageViewHolder.MessageText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -294,6 +300,19 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
                 }
             });
 
+        }else if (type.equals("location")) {
+            messageViewHolder.iV_file.setVisibility(View.GONE);
+            messageViewHolder.MessageText.setVisibility(View.VISIBLE);
+            messageViewHolder.linearLayoutPlay.setVisibility(View.GONE);
+            messageViewHolder.message_image.setVisibility(View.GONE);
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            try {
+                addresses = geocoder.getFromLocation(Double.parseDouble(lat), Double.parseDouble(lng), 1);
+                String address = addresses.get(0).getAddressLine(0);
+                messageViewHolder.MessageText.setText("My location: " + address);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
             messageViewHolder.timeTv.setText(dateTime);
@@ -380,7 +399,6 @@ public class AdapterMessage extends RecyclerView.Adapter<AdapterMessage.MessageV
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     if (ds.child("from").getValue().equals(myUID)) {
-                        //remove from chats
                         ds.getRef().removeValue();
                         Toasty.success(context, "Message deleted!", Toast.LENGTH_SHORT, true).show();
                     } else {

@@ -34,14 +34,18 @@ public class FirebaseMessaging extends FirebaseMessagingService {
         String sent = remoteMessage.getData().get("sent");
         String user = remoteMessage.getData().get("user");
         FirebaseUser fUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (fUser != null && sent.equals(fUser.getUid())) {
-            if (!savedCurrentUser.equals(user)) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                    sendOAndAboveNotification(remoteMessage);
-                } else {
-                    sendNormalNotification(remoteMessage);
+        try {
+            if (fUser != null && sent.equals(fUser.getUid())) {
+                if (!savedCurrentUser.equals(user)) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        sendOAndAboveNotification(remoteMessage);
+                    } else {
+                        sendNormalNotification(remoteMessage);
+                    }
                 }
             }
+        }catch (Exception e){
+
         }
     }
 

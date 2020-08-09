@@ -159,6 +159,7 @@ public class AdapterChatlist extends RecyclerView.Adapter<AdapterChatlist.MyHold
                 return false;
             }
         });
+
     }
 
     public void setLastMessageMap(String userId, String lastMessage) {

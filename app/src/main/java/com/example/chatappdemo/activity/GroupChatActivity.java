@@ -50,6 +50,11 @@ import com.example.chatappdemo.giphy.GiphyGifProvider;
 import com.example.chatappdemo.internet.MyApplication;
 import com.example.chatappdemo.model.GroupChat;
 import com.example.chatappdemo.model.User;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -67,10 +72,16 @@ import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -113,6 +124,7 @@ public class GroupChatActivity extends AppCompatActivity {
 
     private static final int STORAGE_REQUEST_CODE = 400;
     private static final int FILE_PICK_CODE = 3000;
+    private static final int PLACE_PICKER_REQUEST = 123;
     private String[] storagePermission;
 
     private Uri myUri = null;
@@ -360,6 +372,14 @@ public class GroupChatActivity extends AppCompatActivity {
             }
         });
 
+        sendLocation = findViewById(R.id.sendLocation);
+        sendLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requestLocationPermission();
+            }
+        });
+
         sendAudio = findViewById(R.id.sendAudio);
         liner_record = findViewById(R.id.liner_record);
         sendAudio.setOnClickListener(new View.OnClickListener() {
@@ -436,6 +456,32 @@ public class GroupChatActivity extends AppCompatActivity {
                         .show();
             }
         });
+    }
+
+    private void requestLocationPermission() {
+        Dexter.withContext(this)
+                .withPermissions(Arrays.asList(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION))
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                        locationPlacesIntent();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                        Toasty.error(GroupChatActivity.this, "You must anable this permission.", Toast.LENGTH_SHORT, true).show();
+                    }
+                }).check();
+    }
+
+    private void locationPlacesIntent() {
+        try {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
@@ -753,7 +799,44 @@ public class GroupChatActivity extends AppCompatActivity {
                 myUri = data.getData();
                 sendFileMessage(myUri);
             }
+            if (requestCode == PLACE_PICKER_REQUEST){
+                Place place = PlacePicker.getPlace(this, data);
+                if (place != null){
+                    LatLng latLng = place.getLatLng();
+                    String Lat = latLng.latitude + "";
+                    String Lng = latLng.longitude + "";
+                    sendLocation(Lat, Lng);
+                }
+            }
         }
+    }
+
+    private void sendLocation(String Lat, String Lng) {
+        String timestamp = "" + System.currentTimeMillis();
+        //setup data
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("sender", "" + firebaseAuth.getUid());
+        hashMap.put("message", "");
+        hashMap.put("timestamp", "" + timestamp);
+        hashMap.put("type", "" + "location");
+        hashMap.put("latitude", Lat);
+        hashMap.put("longitude", Lng);
+
+        //add in db
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference("Groups");
+        ref.child(groupId).child("Messages").child(timestamp)
+                .setValue(hashMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        messageEt.setText("");
+                    }
+                }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toasty.error(GroupChatActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT, true).show();
+            }
+        });
     }
 
     private void sendFileAudio(Uri uriAudio) {

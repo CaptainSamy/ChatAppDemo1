@@ -6,10 +6,12 @@ import com.google.firebase.database.PropertyName;
 public class Messages {
     private String from, message, type, to, timeStamp, nameFile;
     private boolean isSeen;
+    private String latitude;
+    private String longitude;
     public Messages() {
     }
 
-    public Messages(String from, String message, String type, String to, String timeStamp, String nameFile, boolean isSeen) {
+    public Messages(String from, String message, String type, String to, String timeStamp, String nameFile, boolean isSeen, String latitude, String longitude) {
         this.from = from;
         this.message = message;
         this.type = type;
@@ -17,6 +19,8 @@ public class Messages {
         this.timeStamp = timeStamp;
         this.nameFile = nameFile;
         this.isSeen = isSeen;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getFrom() {
@@ -75,5 +79,21 @@ public class Messages {
     @PropertyName("isSeen")
     public void setSeen(boolean seen) {
         isSeen = seen;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

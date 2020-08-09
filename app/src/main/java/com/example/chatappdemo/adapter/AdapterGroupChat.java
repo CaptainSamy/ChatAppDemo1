@@ -5,6 +5,8 @@ import android.app.DownloadManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -41,6 +43,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -61,6 +64,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
     private int lastProgress = 0;
     private Handler mHandler = new Handler();
     private boolean isPlaying = false;
+    private List<Address> addresses;
 
     public AdapterGroupChat(Context context, ArrayList<GroupChat> modelGroupChatList) {
         this.context = context;
@@ -89,6 +93,8 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
         String senderUid = model.getSender();
         String messageType = model.getType();
         String nameFile = model.getNameFile();
+        String lat = model.getLatitude();
+        String lng = model.getLongitude();
 
         Calendar calendar = Calendar.getInstance(Locale.ENGLISH);
         calendar.setTimeInMillis(Long.parseLong(timestamp));
@@ -99,6 +105,7 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
             holder.linearLayoutPlay.setVisibility(View.GONE);
             holder.messageTv.setVisibility(View.VISIBLE);
             holder.messageTv.setText(message);
+            holder.messageTv.setEmojiconSize(80);
             //click text message
             holder.messageTv.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -264,6 +271,19 @@ public class AdapterGroupChat extends RecyclerView.Adapter<AdapterGroupChat.Hold
                     mHandler.postDelayed(runnable, 1000);
                 }
             });
+        }else if (messageType.equals("location")) {
+            holder.iV_file.setVisibility(View.GONE);
+            holder.messageTv.setVisibility(View.VISIBLE);
+            holder.linearLayoutPlay.setVisibility(View.GONE);
+            holder.messageIv.setVisibility(View.GONE);
+            Geocoder geocoder = new Geocoder(context, Locale.getDefault());
+            try {
+                addresses = geocoder.getFromLocation(Double.parseDouble(lat), Double.parseDouble(lng), 1);
+                String address = addresses.get(0).getAddressLine(0);
+                holder.messageTv.setText("My location: " + address);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
 

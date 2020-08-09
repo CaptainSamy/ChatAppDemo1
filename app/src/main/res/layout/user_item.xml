@@ -75,13 +75,11 @@
 
                 <com.google.android.material.button.MaterialButton
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-                    android:id="@+id/request_cancel_btn"
-                    android:text="Cancel"
-                    android:layout_marginLeft="16dp"
                     android:visibility="gone"
                     android:textSize="16sp"
-                    android:textAllCaps="false"
-                    android:background="@android:color/holo_blue_dark"
+                    android:layout_marginLeft="16dp"
+                    android:id="@+id/request_cancel_btn"
+                    android:text="Cancel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 

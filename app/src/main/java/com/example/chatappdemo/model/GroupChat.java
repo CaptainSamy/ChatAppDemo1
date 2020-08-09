@@ -2,16 +2,20 @@ package com.example.chatappdemo.model;
 
 public class GroupChat {
     String message, sender, timestamp, type, nameFile;
+    private String latitude;
+    private String longitude;
 
     public GroupChat() {
     }
 
-    public GroupChat(String message, String sender, String timestamp, String type, String nameFile) {
+    public GroupChat(String message, String sender, String timestamp, String type, String nameFile, String latitude, String longitude) {
         this.message = message;
         this.sender = sender;
         this.timestamp = timestamp;
         this.type = type;
         this.nameFile = nameFile;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
     public String getMessage() {
@@ -52,5 +56,21 @@ public class GroupChat {
 
     public void setNameFile(String nameFile) {
         this.nameFile = nameFile;
+    }
+
+    public String getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(String latitude) {
+        this.latitude = latitude;
+    }
+
+    public String getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(String longitude) {
+        this.longitude = longitude;
     }
 }

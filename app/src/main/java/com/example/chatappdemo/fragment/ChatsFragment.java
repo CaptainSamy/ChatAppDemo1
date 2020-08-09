@@ -66,7 +66,6 @@ public class ChatsFragment extends Fragment {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //swipeRefreshLayout.setRefreshing(true);
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
@@ -192,6 +191,8 @@ public class ChatsFragment extends Fragment {
                             theLastMessage = "Sent a gif.";
                         }else if (messages.getType().equals("audio")){
                             theLastMessage = "Sent a voice.";
+                        }else if (messages.getType().equals("location")){
+                            theLastMessage = "Sent a location.";
                         }else {
                             theLastMessage = messages.getMessage();
                         }
@@ -205,6 +206,8 @@ public class ChatsFragment extends Fragment {
                             theLastMessage = "You sent a gif.";
                         }else if (messages.getType().equals("audio")){
                             theLastMessage = "You sent a voice.";
+                        }else if (messages.getType().equals("location")){
+                            theLastMessage = "You sent a location.";
                         }else {
                             theLastMessage = "You: " + messages.getMessage();
                         }

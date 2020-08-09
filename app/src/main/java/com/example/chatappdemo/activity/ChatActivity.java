@@ -57,6 +57,11 @@ import com.example.chatappdemo.model.User;
 import com.example.chatappdemo.notifications.Data;
 import com.example.chatappdemo.notifications.Sender;
 import com.example.chatappdemo.notifications.Token;
+import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
+import com.google.android.gms.common.GooglePlayServicesRepairableException;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlacePicker;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -74,6 +79,11 @@ import com.google.firebase.storage.UploadTask;
 import com.google.gson.Gson;
 import com.gun0912.tedpermission.PermissionListener;
 import com.gun0912.tedpermission.TedPermission;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -81,6 +91,7 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
@@ -135,6 +146,7 @@ public class ChatActivity extends AppCompatActivity {
 
     private static final int STORAGE_REQUEST_CODE = 400;
     private static final int FILE_PICK_CODE = 3000;
+    private static final int PLACE_PICKER_REQUEST = 123;
     private String[] storagePermission;
 
     private Uri myUri = null;
@@ -510,9 +522,34 @@ public class ChatActivity extends AppCompatActivity {
             }
         });
 
+        sendLocation = findViewById(R.id.sendLocation);
+        sendLocation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                requestLocationPermission();
+            }
+        });
+
         checkIsBlocked();
         readMessages();
         seenMessage();
+    }
+
+    private void requestLocationPermission() {
+        Dexter.withContext(this)
+                .withPermissions(Arrays.asList(Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION))
+                .withListener(new MultiplePermissionsListener() {
+                    @Override
+                    public void onPermissionsChecked(MultiplePermissionsReport multiplePermissionsReport) {
+                        locationPlacesIntent();
+                    }
+
+                    @Override
+                    public void onPermissionRationaleShouldBeShown(List<PermissionRequest> list, PermissionToken permissionToken) {
+                        Toasty.error(ChatActivity.this, "You must anable this permission.", Toast.LENGTH_SHORT, true).show();
+                    }
+                }).check();
     }
 
     private void checkHisBlocked() {
@@ -895,6 +932,95 @@ public class ChatActivity extends AppCompatActivity {
                 myUri = data.getData();
                 sendFileMessage(myUri);
             }
+            if (requestCode == PLACE_PICKER_REQUEST){
+                Place place = PlacePicker.getPlace(this, data);
+                if (place != null){
+                    LatLng latLng = place.getLatLng();
+                    String Lat = latLng.latitude + "";
+                    String Lng = latLng.longitude + "";
+                    sendLocation(Lat, Lng);
+                }
+            }
+        }
+    }
+
+    private void sendLocation(String Lat, String Lng) {
+        notify = true;
+
+        DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+        String timestamp = String.valueOf(System.currentTimeMillis());
+        HashMap<String, Object> hashMap = new HashMap<>();
+        hashMap.put("from", messSenderId);
+        hashMap.put("message", "");
+        hashMap.put("type", "location");
+        hashMap.put("to", messReceiverId);
+        hashMap.put("timeStamp", timestamp);
+        hashMap.put("isSeen", false);
+        hashMap.put("latitude", Lat);
+        hashMap.put("longitude", Lng);
+        databaseReference.child("Chats").push().setValue(hashMap);
+
+
+        //create chatlist
+        DatabaseReference chatRef1 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(messSenderId)
+                .child(messReceiverId);
+        chatRef1.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    chatRef1.child("id").setValue(messReceiverId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        DatabaseReference chatRef2 = FirebaseDatabase.getInstance().getReference("Chatlist")
+                .child(messReceiverId)
+                .child(messSenderId);
+        chatRef2.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                if (!snapshot.exists()) {
+                    chatRef2.child("id").setValue(messSenderId);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+
+        // notification
+        DatabaseReference database = FirebaseDatabase.getInstance().getReference("Users").child(messSenderId);
+        database.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                User user = snapshot.getValue(User.class);
+                if (notify) {
+                    senNotification(messReceiverId, user.getName(), "Share you a location.");
+                }
+                notify = false;
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void locationPlacesIntent(){
+        try {
+            PlacePicker.IntentBuilder builder = new PlacePicker.IntentBuilder();
+            startActivityForResult(builder.build(this), PLACE_PICKER_REQUEST);
+        } catch (GooglePlayServicesRepairableException | GooglePlayServicesNotAvailableException e) {
+            e.printStackTrace();
         }
     }
 

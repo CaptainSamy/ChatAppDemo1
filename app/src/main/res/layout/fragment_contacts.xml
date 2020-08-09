@@ -7,6 +7,23 @@
     android:background="?attr/cardbackground"
     tools:context=".fragment.ContactsFragment">
 
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_gravity="center"
+            android:textSize="18sp"
+            android:text="No contact list"
+            android:visibility="visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipeRefreshLayout"
         android:layout_width="match_parent"
