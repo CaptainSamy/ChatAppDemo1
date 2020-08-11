@@ -56,7 +56,6 @@ public class CreateUserActivity extends AppCompatActivity {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Toasty.success(CreateUserActivity.this, "Updated!", Toast.LENGTH_SHORT, true).show();
                         startActivity(new Intent(CreateUserActivity.this, UpdateProfileUserActivity.class));
                     }
                 })
