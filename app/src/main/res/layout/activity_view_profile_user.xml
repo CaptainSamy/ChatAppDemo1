@@ -46,7 +46,7 @@
             android:background="?attr/cardbackground"
             android:layout_margin="16dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -204,4 +204,12 @@
             </RelativeLayout>
         </androidx.cardview.widget.CardView>
 
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/viewProfileBanner"
+        app:adSize = "BANNER"
+        app:adUnitId = "@string/banner_ad_unit_id"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 </RelativeLayout>

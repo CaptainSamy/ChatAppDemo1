@@ -26,6 +26,10 @@
             android:name="com.google.android.geo.API_KEY"
             android:value="@string/api_key_google_places" />
 
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-3940256099942544~3347511713"/>
+
         <activity android:name=".activity.ViewImageChatActivity"></activity>
         <activity android:name=".activity.InformationAppActivity" />
         <activity android:name=".activity.CreateUserActivity" />
